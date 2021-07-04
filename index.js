@@ -15,7 +15,10 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// Routes
+
 app.use('/talker', routes.talker);
+app.use('/login', routes.login);
 
 // Error Handler
 
