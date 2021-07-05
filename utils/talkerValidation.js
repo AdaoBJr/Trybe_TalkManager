@@ -25,7 +25,8 @@ const testRate = (rate) => {
 };
 
 const testTalkField = ({ watchedAt, rate }) => {
-  if (!(watchedAt && rate)) {
+  console.log('watchedAt: ', watchedAt, ' rate: ', rate);
+  if (typeof watchedAt === 'undefined' || typeof rate === 'undefined') {
     return new Error(
       'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     );

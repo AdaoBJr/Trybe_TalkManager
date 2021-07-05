@@ -40,4 +40,25 @@ router.post('/', async (req, res, next) => {
   return res.status(201).json(newTalker);
 });
 
+router.put('/:id', async (req, res, next) => {
+  const validation = talker.talkerInputValidation(req.body);
+  const { data } = req.context;
+  const { id } = req.params;
+  if (validation instanceof Error) {
+    validation.errCode = 400;
+    return next(validation);
+  }
+  const newTalker = {
+    id: parseInt(id, 10),
+    ...req.body,
+  };
+  const newData = data.map((talkerData) => {
+    if (talkerData.id === parseInt(id, 10)) return newTalker;
+    return talkerData;
+  });
+  await db.writeData(newData).catch(next);
+
+  return res.status(200).json(newTalker);
+});
+
 module.exports = router;
