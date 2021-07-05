@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const utils = require('./utils');
+const { error } = require('./utils');
 const routes = require('./routes');
 
 const app = express();
@@ -22,7 +22,7 @@ app.use('/login', routes.login);
 
 // Error Handler
 
-app.use(utils.errorHandler);
+app.use(error.errorHandler);
 
 app.listen(PORT, () => {
   console.log('Online');

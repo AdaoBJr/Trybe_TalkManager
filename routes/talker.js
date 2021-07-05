@@ -1,16 +1,10 @@
 const express = require('express');
 const db = require('../db');
+const { talker, token, ctx } = require('../utils');
 
 const router = express.Router();
 
-router.use(async (req, res, next) => {
-  const data = await db.readData().catch(next);
-  if (!data) return next(data);
-  req.context = {
-    data,
-  };
-  return next();
-});
+router.use(ctx.createReqCtx);
 
 router.get('/', (req, res) => res.status(200).json(req.context.data));
 
@@ -23,6 +17,27 @@ router.get('/:id', (req, res, next) => {
     return next(result);
   }
   return res.status(200).json(result);
+});
+
+router.use(token.tokenValidation);
+
+router.post('/', async (req, res, next) => {
+  const validation = talker.talkerInputValidation(req.body);
+  const { data } = req.context;
+  if (validation instanceof Error) {
+    validation.errCode = 400;
+    return next(validation);
+  }
+
+  const newTalker = {
+    id: data[data.length - 1].id + 1,
+    ...req.body,
+  };
+
+  req.context.data.push(newTalker);
+  await db.writeData(req.context.data).catch(next);
+
+  return res.status(201).json(newTalker);
 });
 
 module.exports = router;
