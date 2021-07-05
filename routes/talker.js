@@ -61,4 +61,11 @@ router.put('/:id', async (req, res, next) => {
   return res.status(200).json(newTalker);
 });
 
+router.delete('/:id', async (req, res, next) => {
+  const { id } = req.params;
+  const result = req.context.data.filter((value) => value.id !== Number(id));
+  await db.writeData(result).catch(next);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;
