@@ -5,6 +5,8 @@ const { error } = require('./utils');
 const routes = require('./routes');
 
 const app = express();
+
+app.disable('x-powered-by');
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
