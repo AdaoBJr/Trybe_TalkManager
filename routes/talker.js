@@ -8,6 +8,13 @@ router.use(ctx.createReqCtx);
 
 router.get('/', (req, res) => res.status(200).json(req.context.data));
 
+router.get('/search', token.tokenValidation, (req, res) => {
+  const { q } = req.query;
+  const regexQuery = new RegExp(`.*${q}.*`);
+  const result = req.context.data.filter((value) => regexQuery.test(value.name));
+  res.status(200).json(result);
+});
+
 router.get('/:id', (req, res, next) => {
   const { id } = req.params;
   const result = req.context.data.find((value) => value.id === Number(id))
