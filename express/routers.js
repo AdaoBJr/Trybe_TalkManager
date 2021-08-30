@@ -1,12 +1,12 @@
 const express = require('express');
-const { getAllTalker } = require('./controllers');
+const { getAllTalker, getTalker } = require('./controllers');
 
 const router = express.Router();
 
 router.route('/')
   .get(getAllTalker);
 
-// router.route('/:id')
-//   .get();
+router.route('/:id')
+  .get(getTalker);
 
 module.exports = router;
