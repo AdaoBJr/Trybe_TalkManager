@@ -83,15 +83,14 @@ next();
 const verifyRate = (req, res, next) => {
   const { talk } = req.body;
   const { rate } = talk;
-
+  if (rate < 1 || rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+   }
   if (!rate) {
     return res.status(400).json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
     });
 }
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-   }
 
   next();
 };
@@ -127,6 +126,31 @@ router.post('/',
     data.push(newTalker);
     fs.writeFile('./talker.json', JSON.stringify(data));
     return res.status(201).json({ ...newTalker });
+  })
+.catch((err) => res.status(400).json(err));
+});
+
+router.put('/:id',
+verifyToken,
+verifyName,
+verifyAge,
+verifyTalk,
+verifyRate,
+verifyWathedAt,
+(req, res) => {
+  fs.readFile(arquivo, 'utf8')
+  .then((info) => JSON.parse(info))
+  .then((info) => {
+    const { id } = req.params;
+    const dataFiltered = info.filter((talker) => talker.id !== Number(id)); // retira o id que foi editado
+    const editedTalker = {
+      ...req.body,
+      id: Number(id),
+    };
+    dataFiltered.push(editedTalker); // coloca o talker editado dentro
+    const data = dataFiltered; // apenas para denotar que um novo data completo foi criado
+    fs.writeFile('./talker.json', JSON.stringify(data));
+    return res.status(200).json(editedTalker);
   })
 .catch((err) => res.status(400).json(err));
 });
