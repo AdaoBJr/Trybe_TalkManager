@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const router = express.Router();
 
 const HTTP_OK_STATUS = 200;
-const HTTP_BAD_REQUEST = 200;
+const HTTP_BAD_REQUEST = 400;
 
 function emailValidation(email) {
   const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
