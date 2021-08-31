@@ -47,6 +47,10 @@ app.post('/login', isValidEmail, isValidPassword, (req, res) => {
   }
 });
 
+app.post('/talker', (req, res) => {
+
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
