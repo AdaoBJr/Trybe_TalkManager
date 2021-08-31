@@ -5,6 +5,7 @@ const { validateRate } = require('./validateRateAndWitch');
 
 const post = async (req, res) => {
   const { headers: { token }, body: { name, age, talk: { watchedAt, rate } } } = req;
+  console.log(watchedAt);
   validate(token, res);
   validateName(name, age, res);
   validateRate(rate, watchedAt, res);
