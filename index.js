@@ -19,10 +19,10 @@ app.listen(PORT, () => {
 
 async function req(_req, res) {
   const response = await fs.readFile('./talker.json', 'utf8');
-  if (!response) {
+  const data = JSON.parse(response);
+  if (data.length === 0) {
     return res.status(HTTP_OK_STATUS).json([]);
   }
-  const data = JSON.parse(response);
   return res.status(HTTP_OK_STATUS).json({ data });
 }
 
