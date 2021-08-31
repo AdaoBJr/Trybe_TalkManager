@@ -56,13 +56,13 @@ const verifyTalk = (req, res, next) => {
     || talk.rate === undefined) {
       return res.status(HTTP_BAD_REQUEST_STATUS).json({ message: invalidTalk });
     }
-  next();
-};
-
-const verifyWatchedAt = (req, res, next) => {
-  const talk = req.body.talk.watchedAt;
-  const dateRegex = /[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9][0-9][0-9]/gm;
-  if (!talk
+    next();
+  };
+  
+  const verifyWatchedAt = (req, res, next) => {
+    const talk = req.body.talk.watchedAt;
+    const dateRegex = /[0-9][0-9]\/[0-9][0-9]\/[0-9][0-9][0-9][0-9]/gm;
+    if (!talk
   || !(dateRegex.test(talk))) {
     return res
     .status(HTTP_BAD_REQUEST_STATUS)
@@ -82,12 +82,24 @@ const verifyRate = (req, res, next) => {
       .json({ message: invalidRate });
     }
     next();
-};
-
-route.delete('/:id',
-verifyToken,
-async (req, res) => {
-  const { id } = req.params;
+  };
+  
+  route.get('/search',
+  verifyToken,
+  async (req, res) => {
+    const { q } = req.query;
+    const fileObject = await readFileFs(talkerJsonPath);
+    if (!q
+    || q === '') return req.status(HTTP_OK_STATUS).json(fileObject);
+    const filteredTalkers = fileObject.filter(({ name }) => name.includes(q));
+    console.log(filteredTalkers);
+    res.status(HTTP_OK_STATUS).json(filteredTalkers);
+  });
+  
+  route.delete('/:id',
+  verifyToken,
+  async (req, res) => {
+    const { id } = req.params;
   const excludedPerson = 'Pessoa palestrante deletada com sucesso';
   const fileObject = await readFileFs(talkerJsonPath);
   const newObj = fileObject.filter(({ id: talkerId }) => Number(id) !== Number(talkerId));
