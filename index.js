@@ -1,10 +1,21 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { readContentFile } = require('./helpers/readWriteFile');
+const {
+  readContentFile,
+  writeContentFile,
+} = require('./helpers/readWriteFile');
+
 const generateToken = require('./helpers/generateToken');
 
 const { isValidEmail, isValidPassword } = require('./middlewares/validations');
+const {
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidTalkWatchedAtRate,
+  isValidTalk,
+} = require('./middlewares/validationsTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -41,6 +52,23 @@ app.post('/login', isValidEmail, isValidPassword, (req, res) => {
   const token = generateToken();
   return res.status(200).json({ token });
 });
+
+app.post(
+  '/talker',
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidTalk,
+  isValidTalkWatchedAtRate,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const content = (await readContentFile()) || [];
+    const newTalker = { id: content.length + 1, name, age, talk };
+    const newContent = [...content, newTalker];
+    await writeContentFile(newContent);
+    res.status(201).json(newTalker);
+  },
+);
 
 app.listen(PORT, () => {
   console.log('Online');
