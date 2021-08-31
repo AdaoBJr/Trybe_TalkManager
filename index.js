@@ -14,7 +14,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/taker', talker);
+app.get('/talker', talker);
 
 app.get('/talker/:id', talkerId);
 
