@@ -9,6 +9,10 @@ function readTalkerFile() {
   return JSON.parse(contentFile);
 }
 
+function writeTalkerFile(newData) {
+  fs.writeFileSync(TALKER_JSON_PATH, newData);
+}
+
 function validateEmail(req, res, next) {
   const { email } = req.body;
   const blankSpacesRegex = /^\s+$/;
@@ -128,6 +132,7 @@ function validateTalk(req, res, next) {
 
 module.exports = {
   readTalkerFile,
+  writeTalkerFile,
   validateEmail,
   validatePassword,
   validateToken,
