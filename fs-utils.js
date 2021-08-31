@@ -5,11 +5,15 @@ function readFile() {
   const talkers = fs.readFile('./talker.json', 'utf-8');
   return talkers.then((data) => JSON.parse(data));
 }
-// Lê o arquivo 
+// Lê o arquivo
 
 function generateToken() {
   return crypto.randomBytes(8).toString('hex');
 }
 // Gera token aleatório. :)
 
-module.exports = { readFile, generateToken };
+function writeFileTalker(newTalker) {
+  return fs.writeFile('./talker.json', JSON.stringify(newTalker));
+}
+
+module.exports = { readFile, generateToken, writeFileTalker };

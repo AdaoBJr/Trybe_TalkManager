@@ -8,7 +8,9 @@ const talkerId = rescue(async (req, res) => {
   const talker = talkersList.find(({ id }) => id === Number(req.params.id));
 
   if (!talker) {
-    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    return res
+      .status(404)
+      .json({ message: 'Pessoa palestrante não encontrada' });
   }
 
   return res.status(HTTP_OK_STATUS).json(talker);
