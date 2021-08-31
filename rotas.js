@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs').promises;
 const { token } = require('./funcoes');
 const {
   validatePassWord,
@@ -38,9 +39,16 @@ router.get('/talker', async (req, res) => {
 router.post('/talker', validationToken,
 validateName,
 validateAge,
-validateTalk,
-validateTalk2, (req, res) => {
-  res.status(200).json({'certo'});
+validateTalk2,
+validateTalk, async (req, res) => {
+  const { name, age } = req.body;
+  const { watchedAt, rate } = req.body.talk;
+  const oldTalk = await talker();
+  const newId = oldTalk.length + 1;
+  const newParticipate = { id: newId, name, age, talk: { watchedAt, rate } };
+  fs.writeFile('./talker.json', JSON.stringify([...oldTalk, newParticipate]));
+
+  res.status(201).json(newParticipate);
 });
 
 router.post('/login', validationEmail, validatePassWord, (req, res) =>

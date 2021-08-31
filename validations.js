@@ -29,13 +29,13 @@ const validatePassWord = (req, res, next) => {
 };
 
 const validationToken = (req, res, next) => {
-const { Authorization } = req.headers;
-if (!Authorization) {
+const { authorization } = req.headers;
+if (!authorization) {
   return res.status(401).json({
     message: 'Token não encontrado',
   });
 }
-if (Authorization.length < 16) {
+if (authorization.length !== 16) {
   return res.status(401).json({
     message: 'Token inválido',
   });
@@ -78,7 +78,7 @@ const validateTalk = (req, res, next) => {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
-  if (Number(rate) < 1 || Number(rate) > 5 || !(Number.isInteger(rate))) {
+  if (Number(rate) < 1 || Number(rate) > 5) {
     return res.status(400).json(
       { message: 'O campo "rate" deve ser um inteiro de 1 à 5' },
     );
@@ -87,12 +87,18 @@ const validateTalk = (req, res, next) => {
 };
 
 const validateTalk2 = (req, res, next) => {
-  const { watchedAt, rate } = req.body.talk;
-  if (!watchedAt || !rate) {
+  const { talk } = req.body;
+  if (!talk || !talk.watchedAt) {
     return res.status(400).json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
       });
     }
+    if (!talk.rate) {
+      return res.status(400).json({
+          message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+        });
+      }
+
     next();
 };
 

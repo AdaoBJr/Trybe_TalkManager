@@ -5,4 +5,7 @@ const talker = async () => {
   return JSON.parse(result);
 };
 
+// const writeFile = async (addPalestrate) => {
+//   const result = await writeFile(talker,JSON.parse(addPalestrate))
+// }
 module.exports = talker;
