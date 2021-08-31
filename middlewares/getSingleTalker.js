@@ -1,7 +1,7 @@
 const fs = require('fs');
 
-const getSingleTalker = (req, res) => {
-  const talkers = JSON.parse(fs.readFileSync('talker.json'));
+const getSingleTalker = async (req, res) => {
+  const talkers = await JSON.parse(fs.readFileSync('talker.json'));
   const { id } = req.params;
   const talker = talkers.find((talk) => talk.id === Number(id));
 
