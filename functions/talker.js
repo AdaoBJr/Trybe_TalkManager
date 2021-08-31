@@ -29,7 +29,27 @@ async function setFile(newUser) {
   }
 }
 
+async function editFile(id, user) {
+  try {
+    const file = await readFileTalker();
+    const talker = {
+      id: Number(id),
+      ...user,
+    };
+
+    const indexTalker = file.findIndex((item) => Number(id) === item.id);
+
+    file[indexTalker] = talker;
+    await fs.writeFile('./talker.json', JSON.stringify(file));
+
+    return talker;
+  } catch (err) {
+    console.log('Erro ao editar no arquivo');
+  }
+}
+
 module.exports = {
   readFileTalker,
   setFile,
+  editFile,
 };

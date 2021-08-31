@@ -6,7 +6,7 @@ const {
   validateDateAndRate, 
 } = require('../middlewares/validateTalker');
 const validateToken = require('../middlewares/validateToken');
-const { readFileTalker, setFile } = require('../functions/readFileTalker');
+const { readFileTalker, setFile, editFile } = require('../functions/talker');
 
 router.get('/', async (_req, res) => {
   const file = await readFileTalker();
@@ -14,6 +14,15 @@ router.get('/', async (_req, res) => {
     return res.status(404).json({ message: 'talker not found' });
   }
   return res.status(200).json(file);
+});
+
+router.post('/', validateToken, validateName, 
+  validateAge, validateTalk, validateDateAndRate, async (req, res) => {
+    const dataTalker = req.body;
+
+    const newUser = await setFile(dataTalker);
+    
+    return res.status(201).json(newUser);
 });
 
 router.get('/search', validateToken, async (req, res) => {
@@ -43,13 +52,14 @@ router.get('/:id', async (req, res) => {
   return res.status(200).json(talker);
 });
 
-router.post('/', validateToken, validateName, 
+router.put('/:id', validateToken, validateName, 
   validateAge, validateTalk, validateDateAndRate, async (req, res) => {
+    const { id } = req.params;
     const dataTalker = req.body;
 
-    const newUser = await setFile(dataTalker);
+    const user = await editFile(id, dataTalker);
     
-    return res.status(201).json(newUser);
+    return res.status(200).json(user);
 });
 
 module.exports = router;
