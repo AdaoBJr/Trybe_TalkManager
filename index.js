@@ -11,6 +11,10 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 const talkerFile = async () => JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
 
+// não remova esse endpoint, e para o avaliador funcionar
+app.get('/', (_request, response) => {
+  response.status(HTTP_OK_STATUS).send();
+});
 /* ==================== */
 app.get('/talker', rescue(async (req, res) => {
   const talker = await talkerFile();
@@ -21,11 +25,6 @@ app.get('/talker', rescue(async (req, res) => {
     return res.status(200).json([]);
   }
 }));
-
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
-});
 
 app.listen(PORT, () => {
   console.log('Online');
