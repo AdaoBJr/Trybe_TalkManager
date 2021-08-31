@@ -37,7 +37,7 @@ const isValidAge = (req, res, next) => {
 
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;  
-  if (!talk || !talk.watchedAt || talk.rate === '') {
+  if (!talk) {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   } 
@@ -48,6 +48,11 @@ const isValidWatchedAt = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;  
   const patternData = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/; 
 
+  if (!watchedAt || watchedAt === '') {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+
   if (!patternData.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
@@ -56,12 +61,16 @@ const isValidWatchedAt = (req, res, next) => {
 };
 
 const isValidRate = (req, res, next) => {
-  const { talk: { rate } } = req.body;  
-  const corretRate = /^[1-5]$/; 
+  const { talk: { rate } } = req.body;
 
-  if (!corretRate.test(rate)) {
+  if (rate < 1 || rate > 5) {   
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   } 
+
+  if (!rate || rate === '') {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
 
   next();
 };

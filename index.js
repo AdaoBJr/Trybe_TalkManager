@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { readContentFile, writeContentFile } = require('./helpers/readWriteFiles');
 const generateToken = require('./helpers/generateToken');
+const isValidQuery = require('./middlewares/queryValidation');
 const { 
   isValidEmail,
   isValidPassword,
@@ -32,6 +33,15 @@ app.get('/talker', async (_req, res) => {
   if (talkers) return res.status(HTTP_OK_STATUS).json(talkers);
 
   return res.status(HTTP_OK_STATUS).json([]);
+});
+
+app.get('/talker/search', isValidToken, isValidQuery, async (req, res) => {
+  const { q } = req.query;
+
+  const talkers = await readContentFile();
+  const findTalkers = talkers.filter((talker) => talker.name.includes(q));
+
+  return res.status(HTTP_OK_STATUS).json(findTalkers);
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -88,9 +98,7 @@ app.put('/talker/:id',
     const { name, age, talk } = req.body;    
 
     const talkers = await readContentFile();
-
-    const talkerIndex = talkers.findIndex((talkerId) => talkerId.id === parseInt(id, 10));    
-    console.log(parseInt(id, 10));
+    const talkerIndex = talkers.findIndex((talkerId) => talkerId.id === parseInt(id, 10));
     const newTalker = { id: parseInt(id, 10), name, age, talk };
 
     talkers[talkerIndex] = newTalker;
@@ -98,6 +106,19 @@ app.put('/talker/:id',
     await writeContentFile(talkers);
 
     res.status(200).json(newTalker);
+});
+
+app.delete('/talker/:id', isValidToken, async (req, res) => {
+  const { id } = req.params;
+
+  const talkers = await readContentFile();
+  const talkerIndex = talkers.findIndex((talkerId) => talkerId.id === parseInt(id, 10));
+
+  talkers.splice(talkerIndex, 1);
+
+  await writeContentFile(talkers);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {
