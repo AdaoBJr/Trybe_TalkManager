@@ -15,7 +15,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', (req, res) => {
   res.status(200).json(talkers);
-})
+});
 
 app.listen(PORT, () => {
   console.log('Online');
