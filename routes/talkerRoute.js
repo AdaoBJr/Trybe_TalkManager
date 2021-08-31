@@ -45,8 +45,9 @@ const isValidEmail = (req, res, next) => {
   const fieldEmail = res.status(400).send({ message: 'O campo "email" é obrigatório' });
   const invalidEmail = res.status(400)
     .send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  
   const verifyEmail = validateEmail(email) ? next() : invalidEmail;
-  const result = email ? verifyEmail : fieldEmail;
+  const result = !email ? fieldEmail : verifyEmail;
   return result;
 };
 
