@@ -18,12 +18,13 @@ const loguin = (req, res) => {
   
   validateData(email, password, res);
 
-  const emailIsValid = email.match(/((\w+)@(\w+)\.(\w+))/i);
-  const passwordLength = 6;
-  if (!emailIsValid) {
+  const emailIsValid = /((\w+)@(\w+)\.(\w+))/;
+  if (!email.match(emailIsValid)) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
-  if (password <= passwordLength) {
+  
+  const passwordLength = 6;
+  if (password < passwordLength) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
