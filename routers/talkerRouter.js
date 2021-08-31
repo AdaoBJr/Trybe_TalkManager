@@ -9,8 +9,11 @@ const util = require('util');
 const readFilePromise = util.promisify(fs.readFile);
 const WritePromise = util.promisify(fs.writeFile);
 
+const talkerJson = 'talker.json';
+
 const validateToken = (req, res, next) => {
   const token = req.headers.authorization;
+  // console.log(token);
   if (!token) return res.status(401).json({ message: 'Token não encontrado' }); 
   if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
   next();
@@ -75,7 +78,7 @@ const validateTalker = (req, res, next) => {
 };
 
 router.get('/', async (req, res) => {
-  const talkers = await readFilePromise('talker.json')
+  const talkers = await readFilePromise(talkerJson)
   .then((content) => JSON.parse(content))
   .catch((err) => console.log(`erro: ${err.message}`));
 
@@ -87,7 +90,7 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
-  const talkers = await readFilePromise('talker.json')
+  const talkers = await readFilePromise(talkerJson)
   .then((content) => JSON.parse(content))
   .catch((err) => console.log(`erro: ${err.message}`));
 
@@ -98,19 +101,37 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', validateToken, validateTalker, async (req, res) => {
-  const talkers = await readFilePromise('talker.json')
+  const talkers = await readFilePromise(talkerJson)
   .then((content) => JSON.parse(content))
   .catch((err) => console.log(`erro: ${err.message}`));
   
   const { name, age, talk } = req.body;
   talkers.push({ id: talkers.length + 1, name, age, talk });
   
-  const writedfile = await WritePromise('talker.json', JSON.stringify(talkers))
+  const writedfile = await WritePromise(talkerJson, JSON.stringify(talkers))
   .then(() => true)
   .catch(() => false);
 
   if (!writedfile) return res.status(400).json({ message: 'arquivo não alterado' });
   return res.status(201).json({ id: talkers.length, name, age, talk });
+});
+
+router.put('/:id', validateToken, validateTalker, async (req, res) => {
+  const { id } = req.params;  
+  const talkers = await readFilePromise(talkerJson)
+  .then((content) => JSON.parse(content))
+  .catch((err) => console.log(`erro: ${err.message}`));  
+  const EditedTalkerIndex = talkers.findIndex((talker) => talker.id === +id);
+  if (EditedTalkerIndex === -1) return res.status(404).json({ message: 'talker not found!' });
+  const { name, age, talk } = req.body;
+  talkers[EditedTalkerIndex] = { ...talkers[EditedTalkerIndex], name, age, talk };
+
+  const writedfile = await WritePromise(talkerJson, JSON.stringify(talkers))
+  .then(() => true)
+  .catch(() => false);
+
+  if (!writedfile) return res.status(400).json({ message: 'arquivo não alterado' });
+  return res.status(200).json(talkers[EditedTalkerIndex]);
 });
 
 module.exports = router;

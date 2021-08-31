@@ -5,6 +5,12 @@ const router = express.Router();
 // fonte da função: https://ui.dev/validate-email-address-javascript/
 const emailIsValid = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+const geraToken = () => {
+  const token = Math.floor(Math.random() * 10000000000000000).toString();
+  if (token.length < 16) return `${token}x`;
+  return token;
+};
+
 router.post('/', (req, res) => {
   const { email, password } = req.body;
 
@@ -18,7 +24,7 @@ router.post('/', (req, res) => {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
-  return res.status(200).json({ token: Math.floor(Math.random() * 10000000000000000).toString() });
+  return res.status(200).json({ token: geraToken() });
 });
 
 module.exports = router;
