@@ -18,7 +18,7 @@ describe('2 - Crie o endpoint GET /talker/:id', () => {
     );
   });
 
-  it.skip('Será validado que o endpoint retorna uma pessoa palestrante com base no id da rota', async () => {
+  it('Será validado que o endpoint retorna uma pessoa palestrante com base no id da rota', async () => {
     await frisby
       .get(`${url}/talker/1`)
       .expect('status', 200)
@@ -33,7 +33,7 @@ describe('2 - Crie o endpoint GET /talker/:id', () => {
       });
   });
 
-  it.skip('Será validado que o endpoint retonar um erro caso nenhuma pessoa palestrante seja encontrada', async () => {
+  it('Será validado que o endpoint retonar um erro caso nenhuma pessoa palestrante seja encontrada', async () => {
     await frisby
       .get(`${url}/talker/9`)
       .expect('status', 404)
