@@ -5,7 +5,14 @@ const {
   getSingleTalker,
   checkEmail,
   checkPassword,
-  token } = require('./middlewares');
+  createToken,
+  addNewTalker,
+  checkAge,
+  checkDate,
+  checkName,
+  checkRate,
+  checkTalk,
+  checkToken } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -19,8 +26,20 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', getAllTalkers);
+
 app.get('/talker/:id', getSingleTalker);
-app.post('/login', checkEmail, checkPassword, token);
+
+app.post('/login', checkEmail, checkPassword, createToken);
+
+app.post('/talker', [
+  checkToken,
+  checkName,
+  checkAge,
+  checkTalk,
+  checkDate,
+  checkRate,
+  addNewTalker,
+]);
 
 app.listen(PORT, () => {
   console.log(`Online e ouvindo na ${PORT}`);

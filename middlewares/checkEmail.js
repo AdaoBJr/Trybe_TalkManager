@@ -1,6 +1,7 @@
 const checkEmail = (req, res, next) => {
   const { email } = req.body;
   const testEmail = /\S+@\S+\.\S+/i.test(email);
+  
   if (!email) {
     return res.status(400).json({
       message: 'O campo "email" é obrigatório',

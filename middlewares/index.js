@@ -1,9 +1,16 @@
-const error = require('./error');
 const getAllTalkers = require('./getAllTalkers');
 const getSingleTalker = require('./getSingleTalker');
+const error = require('./error');
 const checkEmail = require('./checkEmail');
 const checkPassword = require('./checkPassword');
-const token = require('./token');
+const createToken = require('./createToken');
+const addNewTalker = require('./addNewTalker');
+const checkAge = require('./checkAge');
+const checkDate = require('./checkDate');
+const checkName = require('./checkName');
+const checkRate = require('./checkRate');
+const checkTalk = require('./checkTalk');
+const checkToken = require('./checkToken');
 
 module.exports = {
   error,
@@ -11,5 +18,13 @@ module.exports = {
   getSingleTalker,
   checkEmail,
   checkPassword,
-  token,
+  createToken,
+  addNewTalker,
+  checkAge,
+  checkDate,
+  checkName,
+  checkRate,
+  checkTalk,
+  checkToken,
+
 };

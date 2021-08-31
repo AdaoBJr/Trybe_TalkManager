@@ -1,6 +1,5 @@
-const PASSWORD_LENGTH = 6;
-
 const checkPassword = (req, res, next) => {
+  const PASSWORD_LENGTH = 6;
   const { password } = req.body;
   if (!password) {
     return res.status(400).json({
