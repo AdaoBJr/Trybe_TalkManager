@@ -1,6 +1,8 @@
-// Iniciando o Project Talker Manager
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs');
+
+const talkers = './talker.json';
 
 const app = express();
 app.use(bodyParser.json());
@@ -11,6 +13,16 @@ const PORT = '3000';
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
+});
+
+app.get('/talker', (_req, res) => {
+  fs.readFile(talkers, 'utf-8', (err, data) => {
+    if (err) {
+      res.status(200).json([]);
+    }
+    const content = JSON.parse(data);
+    res.status(200).json(content);
+  });
 });
 
 app.listen(PORT, () => {
