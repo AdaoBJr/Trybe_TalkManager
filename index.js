@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllTalkersList } = require('./middlewares');
+const { readFileTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -10,7 +10,7 @@ const PORT = '3000';
 
 // 1
 app.get('/talker', async (req, res) => {
-  const getAllTalkers = await getAllTalkersList();
+  const getAllTalkers = await readFileTalker();
   return res.status(200).send(getAllTalkers);
 });
 
