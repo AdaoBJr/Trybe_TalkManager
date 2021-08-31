@@ -6,6 +6,8 @@ const readFileTalker = async () => {
   return JSON.parse(talkesList);
 };
 
+const getAllTalkersList = () => readFileTalker();
+
 module.exports = {
-  readFileTalker,
+  getAllTalkersList,
 };
