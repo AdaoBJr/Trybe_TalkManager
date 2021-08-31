@@ -51,6 +51,24 @@ validateTalk, async (req, res) => {
   res.status(201).json(newParticipate);
 });
 
+router.put('/talker/:id',
+validationToken,
+validateName,
+validateAge,
+validateTalk2,
+validateTalk, async (req, res) => {
+  const { id } = req.params;
+  const arrayTalkers = await talker();
+  const { name, age } = req.body;
+  const { watchedAt, rate } = req.body.talk;
+  const fildPalestrant = arrayTalkers.findIndex(((people) => people.id === Number(id)));
+  const filterid = arrayTalkers.filter((e) => e.id !== Number(id));
+  const newObj = { ...arrayTalkers[fildPalestrant], name, age, talk: { watchedAt, rate } };
+  fs.writeFile('./talker.json', JSON.stringify([...filterid, newObj]));
+  console.log([...filterid, newObj]);
+  res.status(200).json(newObj);
+});
+
 router.post('/login', validationEmail, validatePassWord, (req, res) =>
 res.status(200).json({ token }));
 
