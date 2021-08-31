@@ -12,9 +12,7 @@ const checkDate = (date) => {
   return !!regex.test(date);
 };
 
-const writeFile = (fileName, content) => fs.writeFile(fileName, content);
-  // .then((res) => JSON.parse(res))
-  // .catch((err) => JSON.parse(err));
+const writeFile = (fileName, content) => fs.writeFile(fileName, JSON.stringify(content));
 
 module.exports = {
   readFile,

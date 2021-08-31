@@ -95,16 +95,17 @@ const validateRate = (req, res, next) => {
 const createTalker = async (req, res, _next) => {
   const { name, age, talk } = req.body;
   const talkers = await readFile(TALKER_JSON);
-  const id = talkers[talkers.length - 1].id + 1;
-  const newTalkers = [...talkers, {
+  const id = talkers.length + 1;
+  const newTalker = {
     id,
     name,
     age,
     talk,
-  }];
-  // const content = { id, name, age, talk };
-  await writeFile(TALKER_JSON, newTalkers);
-  res.status(201).json(talkers);
+  };
+  const arr = [...talkers, newTalker];
+  await writeFile(TALKER_JSON, arr);
+  
+  res.status(201).json(newTalker);
 };
 
 module.exports = { 
