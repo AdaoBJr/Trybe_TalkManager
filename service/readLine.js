@@ -8,8 +8,12 @@ const findById = async (idUser) => {
 };
 
 const create = async (content) => {
+  fs.writeFile('./talker.json', JSON.stringify(content)); 
+};
+
+const createTalker = async (content) => {
   const data = await getAll();
-  fs.writeFile('./talker.json', JSON.stringify([...data, content])); 
+  await create([...data, content]);
 };
 
 const update = async (talker) => {
@@ -32,7 +36,7 @@ const findByName = async (param) => {
 module.exports = {
   getAll,
   findById,
-  create,
+  createTalker,
   update,
   excluse,
   findByName,

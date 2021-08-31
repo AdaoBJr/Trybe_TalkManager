@@ -1,7 +1,8 @@
 const express = require('express');
-const { getAll, findById, create } = require('../service/readLine');
+const { getAll, findById, createTalker } = require('../service/readLine');
 const { update, findByName, excluse } = require('../service/readLine');
 const { authLogin, validateTalker } = require('../middlewares');
+const { validateTalker2, validateTalker3 } = require('../middlewares');
 
 const router = express.Router();
 
@@ -29,19 +30,31 @@ router.get('/talker/:id', async (req, res) => {
 
 router.use('/talker', authLogin);
 
-router.post('/talker', validateTalker, async (req, res) => {
-  const data = await getAll();
-  const id = data.length + 1;
-  const { ...newTalker } = { id, ...req.body };
-  await create(newTalker);
-  res.status(201).json(newTalker);
-});
+router.post(
+  '/talker',
+  validateTalker,
+  validateTalker2,
+  validateTalker3,
+  async (req, res) => {
+    const data = await getAll();
+    const id = data.length + 1;
+    const { ...newTalker } = { id, ...req.body };
+    await createTalker(newTalker);
+    res.status(201).json(newTalker);
+  },
+);
 
-router.put('/talker/:id', validateTalker, async (req, res) => {
-  const { ...updateTalker } = { id: +req.params.id, ...req.body };
-  await update(updateTalker);
-  res.status(200).json(updateTalker);
-});
+router.put(
+  '/talker/:id',
+  validateTalker,
+  validateTalker2,
+  validateTalker3,
+  async (req, res) => {
+    const { ...updateTalker } = { id: +req.params.id, ...req.body };
+    await update(updateTalker);
+    res.status(200).json(updateTalker);
+  },
+);
 
 router.delete('/talker/:id', async (req, res) => {
   const { id } = req.params;
