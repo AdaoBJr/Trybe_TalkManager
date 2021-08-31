@@ -121,13 +121,21 @@ const verifyAge = (req, res, next) => {
 };
 
 const authenticateTalk = (req, res, next) => {
-  const { talk: { watchedAt, rate }, talk } = req.body;
-  if (!talk || !watchedAt || !rate) {
+  const { talk } = req.body;
+  if (!talk) {
     return res.status(400)
     .json({
       message: 'O campo "talk" é obrigatório e "watchedAt"'
       + ' e "rate" não podem ser vazios',
-    }); 
+    });
+  }
+  const { watchedAt, rate } = talk;
+  if (!watchedAt || !rate) {
+    return res.status(400)
+    .json({
+      message: 'O campo "talk" é obrigatório e "watchedAt"'
+      + ' e "rate" não podem ser vazios',
+    });
   }
   next();
 };
@@ -161,8 +169,10 @@ const verifyRate = (req, res, next) => {
 app.post('/talker',
 verifyToken, verifyName, verifyAge, authenticateTalk, verifyDate, verifyRate,
  async (req, res) => {
-  // const content = await readFile();
-  // const newContent = [...content, req.body];
-  await writeFile(req.body);
-  return res.status(201).json(req.body);
+  const content = await readFile();
+  const newtalker = req.body;
+  newtalker.id = content[content.length - 1].id + 1;
+  const newContent = [...content, newtalker];
+  await writeFile(newContent);
+  return res.status(201).json(newtalker);
 });
