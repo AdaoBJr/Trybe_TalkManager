@@ -20,14 +20,10 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.use(authUser, (req, res) => {
-  res.status(200).json({ token: getToken() });
-});
-
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   const talker = talkers.find((t) => t.id === Number(id));
-
+  
   if (!talker) res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(HTTP_OK_STATUS).json(talker);
 });
@@ -35,4 +31,8 @@ app.get('/talker/:id', (req, res) => {
 app.get('/talker', async (_req, res) => {
   const talker = await fs.readFile('talker.json', 'utf-8');
   res.status(HTTP_OK_STATUS).send(JSON.parse(talker));
+});
+
+app.post('/login', authUser, (req, res) => {
+  res.status(200).json({ token: getToken() });
 });
