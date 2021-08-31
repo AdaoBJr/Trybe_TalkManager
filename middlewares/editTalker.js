@@ -17,7 +17,7 @@ const editTalker = async (req, res) => {
   );
   newTalkerList.push(talkerChanged);
   await writeFileTalker(newTalkerList);
-  res.status(HTTP_OK_STATUS).json(talkerChanged);
+  return res.status(HTTP_OK_STATUS).json(talkerChanged);
 };
 
 module.exports = editTalker;

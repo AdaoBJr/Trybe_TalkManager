@@ -6,11 +6,10 @@ const {
   talkerId,
   login,
   addTalker,
-  /*getTalker,
-  deleteTalker,
-  editTalker,*/
   validateToken,
   validatesTalker,
+  deleteTalker,
+  editTalker,
 } = require('./middlewares');
 
 const app = express();
@@ -41,7 +40,7 @@ app.post(
   addTalker
 );
 
-/*app.put(
+app.put(
   '/talker/:id',
   validateToken,
   validatesTalker.validateName,
@@ -50,9 +49,9 @@ app.post(
   validatesTalker.validateTalkDate,
   validatesTalker.validateTalkRate,
   editTalker
-); */
+);
 
-// app.delete('/talker/:id', deleteTalker);
+ app.delete('/talker/:id',validateToken, deleteTalker);
 
 // app.get('/talker/search?q=searchTerm', getTalker);
 
