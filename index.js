@@ -28,7 +28,7 @@ app.get('/talker/:id', async (req, res) => {
 // https://stackoverflow.com/questions/17604866/difference-between-readfile-and-readfilesync
 app.get('/talker', (_req, res) => {
   try {
-    const talkers = fs.readFileSync('./talker.json', 'utf8');
+    const talkers = fs.readFileSync('talker.json', 'utf8');
     res.status(HTTP_OK_STATUS).json(JSON.parse(talkers));
   } catch (error) {
     res.status(HTTP_OK_STATUS).json(JSON.parse([]));
