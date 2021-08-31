@@ -1,4 +1,5 @@
 const express = require('express');
+const bodyParser = require('body-parser');
 const { gerarToken, readFile } = require('./helpers');
 
 const { findOne,
@@ -9,7 +10,7 @@ const { findOne,
   validaNome, validaAge, validaDate, validaRate, validaTalk, addTalker } = require('./meddlewares');
 
 const app = express();
-app.use(express.json());
+app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -60,12 +61,12 @@ app.post('/talker',
   addTalker);
 
 app.put('/talker/:id', 
-  // validaToken,
-  // validaNome, 
-  // validaAge, 
-  // validaTalk, 
-  // validaDate, 
-  // validaRate,   
+  validaToken,
+  validaNome, 
+  validaAge, 
+  validaTalk, 
+  validaDate, 
+  validaRate,   
   editTalker);
 
 app.listen(PORT, () => {

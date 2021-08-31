@@ -128,8 +128,9 @@ const editTalker = async (req, res) => {
   const { id } = req.params;  
   talkersList = talkersList.filter((talker) => talker.id !== +id);
   talkersList.push({ id: +id, name, age, talk });
+
   await writeFileTalker(talkersList);  
-  return res.status(201).json(req.body);
+  return res.status(200).json({ id: +id, name, age, talk });
 };
   
 module.exports = {
