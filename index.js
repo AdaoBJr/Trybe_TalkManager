@@ -124,3 +124,5 @@ app.delete('/talker/:id', isValidToken, async (req, res) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+// Feito em pair programming com Wellington Passo
