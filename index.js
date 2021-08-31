@@ -5,7 +5,7 @@ const { promisify } = require('util');
 const { findOne,
   validarSenha,
   validarEmail, 
-  validaToken, 
+  // validaToken, 
   editTalker,
   validaNome, validaAge, validaDate, validaRate, validaTalk, addTalker } = require('./meddlewares');
 
