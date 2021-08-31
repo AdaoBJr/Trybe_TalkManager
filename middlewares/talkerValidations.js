@@ -1,6 +1,5 @@
 const isValidToken = (req, res, next) => {
   const token = req.headers.authorization;
-  console.log(token);
 
   if (!token) return res.status(401).json({ message: 'Token não encontrado' });
 
@@ -38,7 +37,7 @@ const isValidAge = (req, res, next) => {
 
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;  
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === '') {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   } 
