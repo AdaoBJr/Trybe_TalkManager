@@ -5,7 +5,9 @@ const findOne = (id, listTalkers) => {
 
 const fs = require('fs').promises;
 const { promisify } = require('util');
-// const { gerarToken } = require('../helpers');
+const { gerarToken } = require('../helpers');
+
+const token = gerarToken();
 
 const validarEmail = (email) => {
   const obrigatorio = { message: 'O campo "email" é obrigatório' };
@@ -30,7 +32,7 @@ const validaToken = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     res.status(401).json({ message: 'Token não encontrado' });
-  } else if (authorization.length < 16) {
+  } else if (authorization !== token) {
     res.status(401).json({ message: 'Token inválido' });
   } 
   next();
