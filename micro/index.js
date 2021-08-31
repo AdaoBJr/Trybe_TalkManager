@@ -38,4 +38,4 @@ const validateEmail = (email, response) => {
         }
   };
 
-module.exports = { getTalker, getTalkerID, validateEmail, validatePass};
+module.exports = { getTalker, getTalkerID, validateEmail, validatePass };
