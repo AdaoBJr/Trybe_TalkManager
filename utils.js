@@ -91,6 +91,41 @@ function validateAge(req, res, next) {
   next();
 }
 
+function validateDate(date) {
+  const dateFormated = date.replace(/(\d{2})\/(\d{2})\/(\d{4})/, '$2/$1/$3');
+  const validDate = new Date(dateFormated);
+  if (`${validDate}`.includes('Invalid Date')) {
+    return false;
+  }
+  return true;
+}
+
+function validateRate(rate) {
+  if (rate < 1 || rate > 5) {
+    return false;
+  }
+  return true;
+}
+
+function validateTalk(req, res, next) {
+  const { talk } = req.body;
+  if (!talk || Object.keys(talk).length < 2) {
+    return res.status(HTTP_BAD_REQUEST_STATUS).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!validateDate(talk.watchedAt)) {
+    return res.status(HTTP_BAD_REQUEST_STATUS)
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (!validateRate(talk.rate)) {
+    return res.status(HTTP_BAD_REQUEST_STATUS)
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+
+  next();
+}
+
 module.exports = {
   readTalkerFile,
   validateEmail,
@@ -98,4 +133,5 @@ module.exports = {
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
 };
