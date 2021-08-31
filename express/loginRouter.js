@@ -5,10 +5,10 @@ const router = express.Router();
 
 const HTTP_OK_STATUS = 200;
 const HTTP_BAD_REQUEST = 400;
+const REG = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; 
 
 function emailValidation(email) {
-  const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return validation.test(String(email).toLowerCase());
+  return REG.test(String(email).toLowerCase());
 }
 // reference: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/RegExp/test
 
