@@ -1,12 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs').promises;
+
+const talkerRouter = require('./talkerRouter');
+const generateToken = require('./helpers/generateToken');
 
 const app = express();
 app.use(bodyParser.json());
+app.use('/talker', talkerRouter);
 
 const HTTP_OK_STATUS = 200;
-const PORT = 3000;
 
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
@@ -27,32 +29,18 @@ const validatePassword = (req, res, next) => {
   next();
 };
 
-app.post(
-  '/login',
+app.post('/login',
   validateEmail,
   validatePassword,
   (_req, res) => {
-    res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
-});
-
-app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  const fileResponse = await fs.readFile('./talker.json', 'utf-8');
-  const fileObject = JSON.parse(await fileResponse);
-  const choosenTalker = fileObject.find((talker) => Number(id) === talker.id);
-  if (!choosenTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(HTTP_OK_STATUS).json(choosenTalker);
-});
-
-app.get('/talker', async (_request, response) => {
-  const fileResponse = await fs.readFile('./talker.json', 'utf-8');
-  response.status(HTTP_OK_STATUS).json(JSON.parse(fileResponse));
-});
-
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
-});
+    res.status(HTTP_OK_STATUS).json({ token: generateToken() });
+  });
+  
+  // não remova esse endpoint, e para o avaliador funcionar
+  const PORT = 3000;
+  app.get('/', (_request, response) => {
+    response.status(HTTP_OK_STATUS).send();
+  });
 
 app.listen(PORT, () => {
   console.log('Online');
