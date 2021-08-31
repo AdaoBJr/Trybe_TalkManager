@@ -170,4 +170,5 @@ verifyToken,
   .catch((err) => res.status(400).json(err));
  });
  
+ // mudança para refazer os testes
 module.exports = router;
