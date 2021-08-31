@@ -25,11 +25,11 @@ const getRequisition = (req, res) => {
 
 const getRequisitionID = (req, res) => {
   const talker = getTalker();
-  const filterID = talker.filter((talk) => talk.id === Number(req.params.id));
+  const filterID = talker.find((talk) => talk.id === Number(req.params.id));
 
-  const result = !filterID.length
-    ? res.status(404).json({ message: 'Pessoa palestrante não encontrada' })
-    : res.status(200).json(filterID);
+  const result = !filterID
+    ? res.status(404).send({ message: 'Pessoa palestrante não encontrada' })
+    : res.status(200).send(filterID);
 
   return result;
 };
