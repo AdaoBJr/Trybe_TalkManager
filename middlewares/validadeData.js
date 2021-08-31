@@ -1,9 +1,9 @@
 const validateData = (email, password, res) => {
-  if (!email || email === '') {
+  if (!email) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
 
-  if (!password || password === '') {
+  if (!password) {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
 };
