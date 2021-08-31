@@ -13,9 +13,11 @@ const talkerJson = 'talker.json';
 
 const validateToken = (req, res, next) => {
   const token = req.headers.authorization;
-  // console.log(token);
+  console.log(token);
   if (!token) return res.status(401).json({ message: 'Token não encontrado' }); 
+  console.log('Primeiro', token);
   if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  console.log('Segundo', token);
   next();
 };
 
