@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-//commit inicial
+
+const fs = require('fs');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -10,6 +12,31 @@ const PORT = '3000';
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
+});
+
+app.get('/talker', (_req, res) => {
+  fs.readFile('./talker.json', 'utf-8', (err, content) => {
+    if(err){
+      return res.status(200).json([]);
+    }
+    const data = JSON.parse(content);
+    return res.status(200).json(data);
+  });
+});
+
+app.get('/talker/:id', (req, res) => {
+  fs.readFile('./talker.json', 'utf-8', (_err, content) => {
+    const data = JSON.parse(content);
+    const findId = data.find(({id}) => id === Number(req.params.id));
+    if(!findId){
+      return res.status(404).json(
+        {
+          "message": "Pessoa palestrante não encontrada"
+        }
+      );
+    }
+    return res.status(200).json(findId);
+  });
 });
 
 app.listen(PORT, () => {
