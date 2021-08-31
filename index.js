@@ -37,13 +37,15 @@ const talkers = [
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   const talkerFiltered = talkers.filter((manager) => parseInt(id, 10) === manager.id);
-
+  
   if (!talkerFiltered) {
     return res.status(404).json({ message: 'Manager not found!' });
   }
-
+  
   return res.status(HTTP_OK_STATUS).json({ talkerFiltered });
 });
+
+app.get('/talker', (req, res) => res.status(HTTP_OK_STATUS).json({ talkers } || []));
 
 const validateEmail = (email) => {
   const emailTester = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i;
@@ -55,8 +57,10 @@ const validatePassword = (password) => {
   if (password.length >= PASSWORD_LENGTH) return true; 
 };
 
+// app.use(authMiddleware);
+
 app.post('/login', (req, res) => {
-  const { email, password } = req.body;
+  const { email, password } = req.headers;
 
   if (!email) return res.status(400).json({ message: 'O campo email é obrigatório' });
 
@@ -69,15 +73,8 @@ app.post('/login', (req, res) => {
   if (!validatePassword(password)) {
     return res.status(400).json({ message: 'O password deve ter pelo menos 6 caracteres' });
   }
-  
-  return res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
-});
 
-app.get('/talker', (req, res) => {
-  if (!talkers) {
-    return res.status(404).json({ message: [] });
-  }
-  return res.status(HTTP_OK_STATUS).json({ talkers });
+  return res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
