@@ -154,4 +154,20 @@ verifyWathedAt,
   })
 .catch((err) => res.status(400).json(err));
 });
+
+router.delete('/:id',
+verifyToken,
+ (req, res) => {
+  fs.readFile(arquivo, 'utf8')
+  .then((info) => JSON.parse(info))
+  .then((info) => {
+    const { id } = req.params;
+    const dataFiltered = info.filter((talker) => talker.id !== Number(id));
+    const data = dataFiltered;
+    fs.writeFile('./talker.json', JSON.stringify(data));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  })
+  .catch((err) => res.status(400).json(err));
+ });
+ 
 module.exports = router;
