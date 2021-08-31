@@ -1,4 +1,4 @@
-function validateName(res, req, next) {
+function validateName(req, res, next) {
   const { name } = req.body;
 
   if (!name || name.length === 0) {
@@ -10,7 +10,7 @@ function validateName(res, req, next) {
     next();
 }
 
-function validateAge(res, req, next) {
+function validateAge(req, res, next) {
   const { age } = req.body;
   if (!age || age.length === 0) {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
@@ -21,17 +21,21 @@ function validateAge(res, req, next) {
   next();
 }
 
-function validateDate(res, req, next) {
-  const { watchedAt } = req.body.talk;
+function validateDateAndRate(req, res, next) {
+  const { watchedAt, rate } = req.body.talk;
   const dateRegex = /\d\d\/\d\d\/\d\d\d\d/;
   
   if (!watchedAt.match(dateRegex)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
+
+  if (Number(rate) > 5 || Number(rate) < 1) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
   next();
 }
 
-function validateTalk(res, req, next) {
+function validateTalk(req, res, next) {
   const { talk } = req.body;
 
   if (!talk || talk.rate === '' || talk.rate === undefined || talk.watchedAt === undefined) {
@@ -45,6 +49,6 @@ function validateTalk(res, req, next) {
 module.exports = {
   validateName,
   validateAge,
-  validateDate,
+  validateDateAndRate,
   validateTalk,
 };

@@ -1,8 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readFileTalker } = require('./readFileTalker');
+const { readFileTalker, setFile } = require('./readFileTalker');
 const { validateEmail, validatePassword } = require('./validateUser');
-const { validateName, validateAge, validateTalk } = require('./validateTalker');
+const { 
+  validateName, 
+  validateAge, 
+  validateTalk, 
+  validateDateAndRate, 
+} = require('./validateTalker');
+
 const generateToken = require('./generateToken');
 const validateToken = require('./validateToken');
 
@@ -58,12 +64,13 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(200).json(talker);
 });
 
-app.post('/talker', validateToken, validateName, validateAge, validateTalk, async (req, res) => {
-  const { name, age, talk: { watchedAt, rate } } = req.body;
+app.post('/talker', validateToken, validateName, 
+  validateAge, validateTalk, validateDateAndRate, async (req, res) => {
+    const dataTalker = req.body;
 
-  // add a nova pessoa ao arquivo
-  
-  return res.status(201).json({ name, age, talk: { watchedAt, rate } });
+    const newUser = await setFile(dataTalker);
+    
+    return res.status(201).json(newUser);
 });
 
 app.listen(PORT, () => {
