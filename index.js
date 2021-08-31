@@ -25,9 +25,6 @@ app.listen(PORT, () => {
 });
 
 app.get('/talker', getAllTalkers);
-app.get('/talker/:id', getTalkerById);
-app.get('/talker/search', searchTalker);
-app.post('/login', login);
 app.post('/talker',
   createTalker.tokenValidation,
   createTalker.nameValidation,
@@ -36,6 +33,8 @@ app.post('/talker',
   createTalker.watchedAtValidation,
   createTalker.rateValidation,
   createTalker.createTalker);
+app.get('/talker/search', searchTalker);
+app.get('/talker/:id', getTalkerById);
 app.put('/talker/:id',
   editTalker.tokenValidation,
   editTalker.nameValidation,
@@ -44,4 +43,5 @@ app.put('/talker/:id',
   editTalker.watchedAtValidation,
   editTalker.rateValidation,
   editTalker.editTalker);
-app.delete('/talker/:id', deleteTalker);
+  app.delete('/talker/:id', deleteTalker);
+app.post('/login', login);
