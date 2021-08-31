@@ -1,8 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
-
-const file = './talker.json';
+const micro = require('./micro');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,14 +13,17 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-const getTalker = async () => {
-  const data = fs.readFileSync(file, 'utf8');
-  return JSON.parse(data);
-};
-
 app.get('/talker', async (_request, response) => {
-  const data = await getTalker();
+  const data = await micro.getTalker();
   response.status(HTTP_OK_STATUS).send(data);
+});
+
+app.get('/talker/:id', async (request, response) => {
+  const { id } = request.params;
+  const { getTalkerID } = micro;
+  const data = await getTalkerID(id);
+  if (data) response.status(HTTP_OK_STATUS).send(data);
+  response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
 app.listen(PORT, () => {
