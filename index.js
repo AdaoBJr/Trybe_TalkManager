@@ -17,5 +17,7 @@ app.listen(PORT, () => {
 });
 
 const routeTalker = require('./caminhos/routeTalker.js');
+const login = require('./caminhos/login.js');
 
 app.use('/talker', routeTalker);
+app.use('/login', login);
