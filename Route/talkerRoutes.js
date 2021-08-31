@@ -5,7 +5,10 @@ const auth = require('../middlewares/validations');
 const router = express.Router();
 
 router.get('/', controller.getAllTalkers);
+router.get('/search', auth.validateToken, controller.searchTalker);
+
 router.get('/:id', controller.getTalkerById);
+router.delete('/:id', auth.validateToken, controller.deleteTalker);
 
 router.use(
   auth.validateToken,
@@ -15,6 +18,6 @@ router.use(
 );
 
 router.post('/', controller.createTalker);
-// router.put('/:id', controller.editTalker);
+router.put('/:id', controller.editTalker);
 
 module.exports = router;
