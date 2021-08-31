@@ -12,6 +12,16 @@ const readContentFile = async () => {
   }
 };
 
+const writeContentFile = async (content) => {
+  try {
+    await fs.writeFile(path, JSON.stringify(content));
+    return content;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   readContentFile,
+  writeContentFile,
 };
