@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const { validateEmail, validatePassword, createToken } = require('./middleware/validations');
 
 const app = express();
 app.use(bodyParser.json());
@@ -31,6 +32,11 @@ app.get('/talker/:id', (req, res) => {
     if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     return res.status(200).json(talker);
   });
+});
+
+app.post('/login', validateEmail, validatePassword, (req, res) => {
+  const token = req.headers.authorization;
+  if (token === '7mqaVRXJSp886CGr') return res.status(200).json({ token: createToken(16) });
 });
 
 app.listen(PORT, () => {
