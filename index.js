@@ -43,7 +43,6 @@ app.post('/login', validateEmail, validatePassword, (_req, res) =>
 app.post('/talker', validateToken, validateName, validateAge,
 validateWatched, validateRate, validateTalk,
   (req, res) => {
-    // const { id } = req.params;
     const { id, name, age, talk: { watchedAt, rate } } = req.body;
     fs.readFile('./talker.json', 'utf-8', (_err, content) => {
       const data = JSON.parse(content);
@@ -57,6 +56,19 @@ validateWatched, validateRate, validateTalk,
         },
       });
       return res.status(201).json(result);
+    });
+});
+
+app.put('/talker/:id', validateToken, validateName, validateAge,
+ validateWatched, validateRate, 
+  (req, res) => {
+    fs.readFile('./talker.json', 'utf-8', (_err, content) => {
+      const { id } = req.params;
+      const data = JSON.parse(content);
+      const { name, age, talk: { watchedAt, rate } } = req.body;
+      const talkIndex = data.findIndex((r) => r.id === Number(id));
+      data[talkIndex] = { ...data[talkIndex], name, age, watchedAt, rate };
+      return res.status(200).end();
     });
 });
 
