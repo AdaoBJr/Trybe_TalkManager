@@ -4,6 +4,9 @@ const rescue = require('express-rescue');
 const fs = require('fs').promises;
 
 const talkerJson = ('./talker.json');
+const { randomToken,
+  verifyEmail,
+  verifyPassword } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,3 +43,6 @@ app.get('/talker/:id', rescue(async (req, res) => {
   }
     return res.status(200).json(searchId);
 }));
+
+// Requisito 3
+app.post('/login', verifyEmail, verifyPassword, randomToken);
