@@ -1,5 +1,4 @@
-const rescue = require('express-rescue');
-const talkersUtils = require('../fs-utils.js');
+const { readFile } = require('../fs-utils.js');
 
 const HTTP_OK_STATUS = 200;
 

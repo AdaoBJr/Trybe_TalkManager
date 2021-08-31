@@ -6,9 +6,11 @@ const {
   talkerId,
   login,
   addTalker,
-  getTalker,
+  /*getTalker,
   deleteTalker,
-  editTalker,
+  editTalker,*/
+  validateToken,
+  validatesTalker,
 } = require('./middlewares');
 
 const app = express();
@@ -28,9 +30,27 @@ app.get('/talker/:id', talkerId);
 
 app.post('/login', login);
 
-// app.post('/talker', addTalker);
+app.post(
+  '/talker',
+  validateToken,
+  validatesTalker.validateName,
+  validatesTalker.validateAge,
+  validatesTalker.validateTalk,
+  validatesTalker.validateTalkDate,
+  validatesTalker.validateTalkRate,
+  addTalker
+);
 
-// app.put('/talker/:id', editTalker);
+/*app.put(
+  '/talker/:id',
+  validateToken,
+  validatesTalker.validateName,
+  validatesTalker.validateAge,
+  validatesTalker.validateTalk,
+  validatesTalker.validateTalkDate,
+  validatesTalker.validateTalkRate,
+  editTalker
+); */
 
 // app.delete('/talker/:id', deleteTalker);
 
