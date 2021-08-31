@@ -1,6 +1,5 @@
 const express = require('express');
-const fs = require('fs');
-const { promisify } = require('util');
+const { gerarToken, readFile } = require('./helpers');
 
 const { findOne,
   validarSenha,
@@ -20,27 +19,22 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', (req, res) => {  
-  fs.readFile('./talker.json', 'utf-8', promisify((err, content) => {
-    if (err) {
-      res.status(400).send({ message: 'Not Found' });
-      return;
-    }
-    res.status(200).send(content);
-  }));
+app.get('/talker', async (req, res) => {  
+ const talkers = await readFile();
+ if (talkers.length === 0) return res.status(200).json(Array.from([]));
+ return res.status(200).json(talkers);
 });
 
-app.get('/talker/:id', (req, res) => {  
+app.get('/talker/:id', async (req, res) => {  
   const { id } = req.params;
-  fs.readFile('./talker.json', 'utf-8', promisify((err, content) => {
-    const talkerFind = findOne(id, JSON.parse(content));  
+  const talkers = await readFile();
+  const talkerFind = findOne(id, talkers);  
     if (talkerFind) {
      return res.status(200).json(talkerFind);      
     }
     return res.status(404).json({
       message: 'Pessoa palestrante não encontrada',
     });
-  }));
 });
 
 app.post('/login', (req, res) => {  
@@ -52,7 +46,7 @@ app.post('/login', (req, res) => {
   if (checkPassword !== 'ok') res.status(400).json(checkPassword);
 
   res.status(200).json({
-    token: 'b8ae476ee6c5c129',
+    token: gerarToken(),
   });
 });
 
@@ -67,11 +61,11 @@ app.post('/talker',
 
 app.put('/talker/:id', 
   // validaToken,
-  validaNome, 
-  validaAge, 
-  validaTalk, 
-  validaDate, 
-  validaRate,   
+  // validaNome, 
+  // validaAge, 
+  // validaTalk, 
+  // validaDate, 
+  // validaRate,   
   editTalker);
 
 app.listen(PORT, () => {

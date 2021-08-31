@@ -4,10 +4,7 @@ const findOne = (id, listTalkers) => {
 };
 
 const fs = require('fs').promises;
-const { promisify } = require('util');
-const { gerarToken } = require('../helpers');
-
-const token = gerarToken();
+// const { gerarToken } = require('../helpers');
 
 const validarEmail = (email) => {
   const obrigatorio = { message: 'O campo "email" é obrigatório' };
@@ -29,11 +26,12 @@ const validarSenha = (password) => {
 };
 
 const validaToken = (req, res, next) => {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    res.status(401).json({ message: 'Token não encontrado' });
-  } else if (authorization !== token) {
-    res.status(401).json({ message: 'Token inválido' });
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  } 
+  if (token.length && token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
   } 
   next();
 };
@@ -125,15 +123,13 @@ const addTalker = async (req, res) => {
 };
 
 const editTalker = async (req, res) => {
-  fs.readFile('./talker.json', 'utf-8', promisify((err, content) => {
-    const { body } = req;
-    const { id } = req.params;
-    let allTalkers = JSON.parse(content);
-    allTalkers = allTalkers.filter((talker) => talker.id !== id);
-    const novaListaTalker = [...allTalkers, body];
-    fs.writeFileSync('./talker.json', JSON.stringify(novaListaTalker));
-    res.status(201).json(body);
-  }));
+  const { name, age, talk } = req.body;
+  let talkersList = await readFile();
+  const { id } = req.params;  
+  talkersList = talkersList.filter((talker) => talker.id !== +id);
+  talkersList.push({ id: +id, name, age, talk });
+  await writeFileTalker(talkersList);  
+  return res.status(201).json(req.body);
 };
   
 module.exports = {
