@@ -72,6 +72,16 @@ app.put('/talker/:id', validateToken, validateName, validateAge,
     });
 });
 
+app.delete('/talker/:id', validateToken, (req, res) => {
+  fs.readFile('./talker.json', 'utf-8', (_err, content) => {
+    const { id } = req.params;
+    const data = JSON.parse(content);
+    const talkIndex = data.findIndex((r) => r.id === Number(id));
+    data.splice(talkIndex, 1);
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
