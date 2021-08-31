@@ -20,8 +20,17 @@ await speakersUtil.writeSpeakers(newArr);
 return response;
 };
 
+const updateTalkerData = async (name, age, talk, id) => {
+  const speakers = await speakersUtil.readSpeakers();
+  const talker = speakers.find((item) => item.id === +id);
+  const response = { ...talker, age, name, talk };
+  const newArr = [...speakers, response];
+  await speakersUtil.writeSpeakers(newArr);
+  return response;
+};
 module.exports = {
   getAllService,
   getTalkerById,
   createTalkerData,
+  updateTalkerData,
 };

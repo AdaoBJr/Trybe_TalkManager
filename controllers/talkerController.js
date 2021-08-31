@@ -2,6 +2,7 @@ const {
   getAllService,
   getTalkerById,
   createTalkerData,
+  updateTalkerData,
 } = require('../services/talkerServices');
 
 const getAllTalkers = async (req, res) => {
@@ -29,8 +30,15 @@ const createTalker = async (req, res) => {
   return res.status(201).json(speake);
 };
 
+const updateTalker = async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const speakers = await updateTalkerData(name, age, talk, id);
+  return res.status(200).json(speakers);
+};
 module.exports = {
   getAllTalkers,
   getTalker,
   createTalker,
+  updateTalker,
 };
