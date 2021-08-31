@@ -41,23 +41,23 @@ const validateEmail = (email) => {
 };
 
 const isValidEmail = (req, res, next) => {
-  const { email } = req.body;
+  const { email } = req.header;
   const fieldEmail = res.status(400).send({ message: 'O campo "email" é obrigatório' });
   const invalidEmail = res.status(400)
     .send({ message: 'O "email" deve ter o formato "email@email.com"' });
   
   const verifyEmail = validateEmail(email) ? next() : invalidEmail;
-  const result = !email ? fieldEmail : verifyEmail;
+  const result = email ? fieldEmail : verifyEmail;
   return result;
 };
 
 const isValidPassword = (req, res, next) => {
-  const { password } = req.body;
+  const { password } = req.header;
   const fieldPassword = res.status(400).send({ message: 'O campo "password" é obrigatório' });
   const invalidPassword = res.status(400)
-  .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+    .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   const menorQueCinco = password.toString().length < 5 ? invalidPassword : next();
-  const result = !password ? fieldPassword : menorQueCinco;
+  const result = password ? fieldPassword : menorQueCinco;
   return result;
 };
 const talkerRoute = (app) => {
