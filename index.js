@@ -1,7 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const talkers = require('./talker.json');
+const fs = require('fs').promises;
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,17 +17,24 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+const readFile = (filePath) => {
+  const file = fs.readFile(filePath, 'utf8');
+  return file
+    .then((data) => JSON.parse(data));
+};
+
 // Req 1 - get talker
-app.get('/talker', (_req, res) => {
+app.get('/talker', async (_req, res) => {
+  const talkers = await readFile('./talker.json');
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 
 // Req 2 - get talker/:id
-app.get('/talker/:id', (req, res) => {
-  const { id } = req.params;
-  const talker = talkers.find((eachTalker) => eachTalker.id === parseInt(id, 2));
+// app.get('/talker/:id', (req, res) => {
+//   const { id } = req.params;
+//   const talker = talkers.find((eachTalker) => eachTalker.id === parseInt(id, 2));
 
-  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+//   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
-  res.status(HTTP_OK_STATUS).json(talker);
-});
+//   res.status(HTTP_OK_STATUS).json(talker);
+// });
