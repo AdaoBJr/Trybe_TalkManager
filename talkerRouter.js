@@ -4,7 +4,7 @@ const {
   deleteContentFile,
   readContentFile,
   writeContentFile } = require('./readWriteFile');
-const { 
+const {
   validateName,
   validateAge,
   validateTalk,
@@ -18,9 +18,9 @@ router.get('/', async (_req, res) => {
 
 router.post('/', validateToken, validateName,
   validateAge, validateTalk, validateTalkData, async (req, res) => {
-  const data = req.body;
-  const newData = await writeContentFile(data);
-  return res.status(201).json(newData);
+    const data = req.body;
+    const newData = await writeContentFile(data);
+    return res.status(201).json(newData);
 });
 
 router.get('/search', validateToken, async (req, res) => {
@@ -46,11 +46,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.put('/:id', validateToken, validateName,
-validateAge, validateTalk, validateTalkData, async (req, res) => {
-  const { id } = req.params;
-  const data = req.body;
-  const newData = await editContentFile(id, data);
-  return res.status(200).json(newData);
+  validateAge, validateTalk, validateTalkData, async (req, res) => {
+    const { id } = req.params;
+    const data = req.body;
+    const newData = await editContentFile(id, data);
+    return res.status(200).json(newData);
 });
 
 router.delete('/:id', validateToken, async (req, res) => {
