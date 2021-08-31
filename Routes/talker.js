@@ -1,22 +1,25 @@
 const express = require('express');
+const fs = require('fs').promises;
 const { getAll, findById, create, lastId } = require('../service/readLine');
 const { update, excluse, findByName } = require('../service/readLine');
 const { authLogin, validateTalker } = require('../middlewares');
 
 const router = express.Router();
 
-router.get('/talker/search', authLogin, (req, res) => {
+router.get('/talker/search', authLogin, async (req, res) => {
   const { q } = req.query;
-  const talkers = getAll();
-  if (!q) res.status(200).json([]);
-  const talkerResult = findByName(q);
-  if (!talkerResult) res.status(200).json(talkers);
-  res.status(200).json(talkerResult);
+  const resultFs = await fs.readFile('./talker.json', 'utf8');
+  const talkers = JSON.parse(resultFs);
+  if (!q) {
+    const talkerResult = talkers.filter(({ name }) => RegExp(q, 'gi').test(name));
+    res.status(200).json(talkerResult);
+  }
+  res.status(200).json(talkers);
 });
 
-router.get('/talker', (req, res) => {
-  const talkersList = getAll();
-  res.status(200).send(talkersList);
+router.get('/talker', async (req, res) => {
+  const data = await fs.readFile('./talker.json', 'utf8');
+  res.status(200).json(JSON.parse(data));
 });
 
 router.get('/talker/:id', (req, res) => {
