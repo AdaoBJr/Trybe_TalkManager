@@ -1,5 +1,4 @@
 const express = require('express');
-const fs = require('fs').promises;
 const { getAll, findById, create } = require('../service/readLine');
 const { update, findByName, excluse } = require('../service/readLine');
 const { authLogin, validateTalker } = require('../middlewares');
