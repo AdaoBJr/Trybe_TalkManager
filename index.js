@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
+//commit inicial
 const app = express();
 app.use(bodyParser.json());
 
