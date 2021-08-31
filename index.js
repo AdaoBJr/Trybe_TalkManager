@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { validateEmail, validatePassword, createToken } = require('./middleware/validations');
 
 const fs = require('fs');
 
@@ -37,6 +38,14 @@ app.get('/talker/:id', (req, res) => {
     }
     return res.status(200).json(findId);
   });
+});
+
+app.post('/login', validateEmail, validatePassword, (_req, res) => {
+  return res.status(200).json(
+    {
+    token: createToken(),
+    }
+  );
 });
 
 app.listen(PORT, () => {
