@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const validation = require('./middlewares/validation')
+const { isValidEmail, isValidPassword, createToken } = require('./middlewares/validation');
 
 fs.readFileSync('./talker.json');
 
@@ -40,10 +40,11 @@ app.get('/talker/:id', (req, res) => {
   });
 });
 
-app.post('/login', (req, res) => {
-  const token = req.params.authorization;
-  const
-
+app.post('/login', isValidEmail, isValidPassword, (req, res) => {
+  const token = req.headers.authorization;
+  if (token === '7mqaVRXJSp886CGr') {
+     return res.status(200).json({ token: createToken(16) }); 
+  }
 });
 
 app.listen(PORT, () => {
