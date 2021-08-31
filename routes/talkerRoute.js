@@ -2,7 +2,7 @@ const fs = require('fs');
 const { join } = require('path');
 const crypto = require('crypto');
 
-const generateToken = () => crypto.randomBytes(8).toString('hex');
+const generateToken = () => crypto.randomBytes(16).toString('hex');
 
 const filePath = join('talker.json');
 
