@@ -4,7 +4,11 @@ const {
   deleteContentFile,
   readContentFile,
   writeContentFile } = require('./readWriteFile');
-const validateData = require('./validateData');
+const { 
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkData } = require('./validateData');
 const validateToken = require('./validateToken');
 
 router.get('/', async (_req, res) => {
@@ -12,7 +16,8 @@ router.get('/', async (_req, res) => {
   res.status(200).json(talkers);
 });
 
-router.post('/', validateToken, validateData, async (req, res) => {
+router.post('/', validateToken, validateName,
+  validateAge, validateTalk, validateTalkData, async (req, res) => {
   const data = req.body;
   const newData = await writeContentFile(data);
   return res.status(201).json(newData);
@@ -40,7 +45,8 @@ router.get('/:id', async (req, res) => {
   return res.status(200).json(talker);
 });
 
-router.put('/:id', validateToken, validateData, async (req, res) => {
+router.put('/:id', validateToken, validateName,
+validateAge, validateTalk, validateTalkData, async (req, res) => {
   const { id } = req.params;
   const data = req.body;
   const newData = await editContentFile(id, data);

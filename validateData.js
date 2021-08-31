@@ -42,12 +42,17 @@ function validateTalkData(req, res) {
   return null;
 }
 
-function validateData(req, res, next) {
-  validateName(req, res);
-  validateAge(req, res);
-  validateTalk(req, res);
-  validateTalkData(req, res);
-  next();
-}
+// function validateData(req, res, next) {
+//   validateName(req, res);
+//   validateAge(req, res);
+//   validateTalk(req, res);
+//   validateTalkData(req, res);
+//   next();
+// }
 
-module.exports = validateData;
+module.exports = {
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkData,
+};
