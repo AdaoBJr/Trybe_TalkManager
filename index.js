@@ -7,7 +7,9 @@ const { findOne,
   validarEmail, 
   validaToken, 
   editTalker,
-  validaNome, validaAge, validaDate, validaRate, validaTalk, addTalker } = require('./meddlewares');
+  validaNome, 
+  validaAge, 
+  validaDate, validaRate, validaTalk, addTalker, deletaTalker } = require('./meddlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -68,6 +70,10 @@ app.put('/talker/:id',
   validaDate, 
   validaRate,   
   editTalker);
+
+app.delete('/talker/:id', 
+  validaToken,  
+  deletaTalker);
 
 app.listen(PORT, () => {
   console.log('Online');
