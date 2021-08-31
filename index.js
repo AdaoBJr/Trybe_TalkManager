@@ -28,6 +28,9 @@ app.get('/talker/:id', async (_request, response) => {
   const { id } = _request.params;
   const talker = await getTalker();
   const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id));
+  if (!responseForUse) {
+    return responseForUse.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
   response.status(HTTP_OK_STATUS).send(responseForUse);
 });
 
