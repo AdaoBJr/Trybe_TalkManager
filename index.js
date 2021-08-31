@@ -17,9 +17,13 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-function readFile(filePath) {
-  const file = fs.readFile(filePath, 'utf-8');
-  return file.then((data) => JSON.parse(data));
+async function readFile(path) {
+  try {
+    const file = await fs.readFile(path, 'utf-8');
+    return file.then((data) => JSON.parse(data));
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 app.get('/talker', async (_req, res) => {
@@ -36,7 +40,6 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(404).json({
       message: 'Pessoa palestrante não encontrada',
     }); 
-}  
-    
+  }  
   return res.status(HTTP_OK_STATUS).send(talker);
 });
