@@ -8,7 +8,7 @@ const getAll = () => data;
 
 const findById = (idUser) => data[+idUser - 1];
 
-const setUser = (user) => updateDate([...data, user]);
+const create = (user) => updateDate([...data, user]);
 
 const changeUser = (change) => {
   data[change.id - 1] = change;
@@ -27,7 +27,7 @@ const lastId = data.length + 1;
 module.exports = {
   getAll,
   findById,
-  setUser,
+  create,
   lastId,
   changeUser,
   deleteUser,
