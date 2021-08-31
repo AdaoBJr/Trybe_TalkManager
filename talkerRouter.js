@@ -60,8 +60,7 @@ async (req, res) => {
     }
     return talker;
   });
-  overwriteWriteFile('talker.json', newObj);
-  console.log(newTalker);
+  await overwriteWriteFile('talker.json', newObj);
   res.status(HTTP_OK_STATUS).json(newTalker);
 });
 
