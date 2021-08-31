@@ -18,10 +18,12 @@ const validateName = (req, res, next) => {
 const validateAge = (req, res, next) => {
   const { age } = req.body;
   if (!age) {
-    res.status(FAIL_STATUS).json({ message: 'O campo "age" é obrigatório' });
+    return res
+      .status(FAIL_STATUS)
+      .json({ message: 'O campo "age" é obrigatório' });
   }
   if (Number(age) < 18) {
-    res
+    return res
       .status(FAIL_STATUS)
       .json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
@@ -41,6 +43,14 @@ const validateTalkDate = (req, res, next) => {
 
 const validateTalkRate = (req, res, next) => {
   const { rate } = req.body.talk;
+  if (!rate && rate !== 0) {
+    return res
+      .status(FAIL_STATUS)
+      .json({
+        message:
+          'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+      });
+  }
   if (rate < 1 || rate > 5) {
     return res
       .status(FAIL_STATUS)
@@ -51,11 +61,21 @@ const validateTalkRate = (req, res, next) => {
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
-    return res.status(FAIL_STATUS).json({
-      message:
-        'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
+  if (!talk) {
+    return res
+      .status(FAIL_STATUS)
+      .json({
+        message:
+          'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+      });
+  }
+  if (!talk.watchedAt && talk.watchedAt !== 0) {
+    return res
+      .status(FAIL_STATUS)
+      .json({
+        message:
+          'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+      });
   }
   next();
 };
