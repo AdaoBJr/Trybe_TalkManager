@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readFile } = require('./readFile');
+const { readFileTalker } = require('./readFileTalker');
 const { validateEmail, validatePassword } = require('./validateUser');
+const { validateName, validateAge, validateTalk } = require('./validateTalker');
+const generateToken = require('./generateToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,7 +17,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', async (req, res) => {
-  const file = await readFile();
+  const file = await readFileTalker();
   if (!file) {
     return res.status(404).json({ message: 'talker not found' });
   }
@@ -24,7 +26,7 @@ app.get('/talker', async (req, res) => {
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const file = await readFile();
+  const file = await readFileTalker();
 
   const talker = file.find((person) => person.id === Number(id));
 
@@ -35,13 +37,24 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', validateEmail, validatePassword, (req, res) => {
-  const token = req.headers.authorization;
+  const token = generateToken();
 
-  // if (!token || token.length === 16) {
-  //   return res.status(401).json({ message: 'Não autorizado(a)' });
-  // }
   return res.status(200).json({ token });
 });
+
+// app.post('/talker', validateName, validateAge, validateTalk, (req, res) => {
+//   const { talk } = req.body;
+  
+//   const token = req.headers.authorization;
+
+//   if (!token) {
+//     return res.status(401).json({ message: 'Token não encontrado' });
+//   } if (token.length !== 16) {
+//     return res.status(401).json({ message: talk });
+//   }
+
+//   return res.status(201).json({});
+// });
 
 app.listen(PORT, () => {
   console.log('Online');
