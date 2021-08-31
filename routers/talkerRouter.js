@@ -6,7 +6,7 @@ const {
   validateDateAndRate, 
 } = require('../middlewares/validateTalker');
 const validateToken = require('../middlewares/validateToken');
-const { readFileTalker, setFile, editFile } = require('../functions/talker');
+const { readFileTalker, setFile, editFile, deleteFile } = require('../functions/talker');
 
 router.get('/', async (_req, res) => {
   const file = await readFileTalker();
@@ -60,6 +60,13 @@ router.put('/:id', validateToken, validateName,
     const user = await editFile(id, dataTalker);
     
     return res.status(200).json(user);
+});
+
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  await deleteFile(id);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

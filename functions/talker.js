@@ -48,8 +48,24 @@ async function editFile(id, user) {
   }
 }
 
+async function deleteFile(id) {
+  try {
+    const file = await readFileTalker();
+  
+    const talkerIndex = file.findIndex((item) => id === Number(item.id));
+    file.splice(talkerIndex, 1);
+
+    await fs.writeFile('./talker.json', JSON.stringify(file));
+
+    return talkerIndex;
+  } catch (error) {
+    console.log('Erro ao excluir no arquivo');
+  }
+}
+
 module.exports = {
   readFileTalker,
   setFile,
   editFile,
+  deleteFile,
 };
