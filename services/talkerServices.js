@@ -11,7 +11,17 @@ const getTalkerById = async (id) => {
   return talker;
 };
 
+const createTalkerData = async (name, age, talk) => {
+const speakers = await speakersUtil.readSpeakers();
+const len = speakers.length;
+const response = { id: len + 1, age, name, talk };
+const newArr = [...speakers, response];
+await speakersUtil.writeSpeakers(newArr);
+return response;
+};
+
 module.exports = {
   getAllService,
   getTalkerById,
+  createTalkerData,
 };

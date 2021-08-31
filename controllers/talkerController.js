@@ -1,4 +1,8 @@
-const { getAllService, getTalkerById } = require('../services/talkerServices');
+const {
+  getAllService,
+  getTalkerById,
+  createTalkerData,
+} = require('../services/talkerServices');
 
 const getAllTalkers = async (req, res) => {
   const speakers = await getAllService();
@@ -19,7 +23,14 @@ const getTalker = async (req, res) => {
   return res.status(200).json(talker);
 };
 
+const createTalker = async (req, res) => {
+  const { name, age, talk } = req.body;
+  const speake = await createTalkerData(name, age, talk);
+  return res.status(201).json(speake);
+};
+
 module.exports = {
   getAllTalkers,
   getTalker,
+  createTalker,
 };
