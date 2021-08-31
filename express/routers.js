@@ -4,7 +4,8 @@ const { getAllTalker, getTalker } = require('./controllers');
 const router = express.Router();
 
 router.route('/')
-  .get(getAllTalker);
+  .get(getAllTalker)
+  .post();
 
 router.route('/:id')
   .get(getTalker);

@@ -25,7 +25,7 @@ const validateEmail = (req, res, next) => {
   next();
 };
 
-const validatePassword = (req, res) => {
+const validatePassword = (req, res, next) => {
   const { password } = req.body;
   if (!password) {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
@@ -33,8 +33,10 @@ const validatePassword = (req, res) => {
   if (password.length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
-  
-  res.status(200).json({ token: createToken() });
+  const newToken = createToken();
+  req.token = newToken;
+  res.status(200).json({ token: newToken });
+  next();
 };
 
 module.exports = { getAllTalker, getTalker, validateEmail, validatePassword };
