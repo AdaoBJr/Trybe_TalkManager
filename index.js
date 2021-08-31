@@ -5,10 +5,9 @@ const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
-const HTTP_ERROR_STATUS = 404;
 const PORT = '3000';
 
-const managers = [
+const talkers = [
   {
     name: 'Henrique Albuquerque',
     age: 62,
@@ -37,20 +36,48 @@ const managers = [
 
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
-  const managerFiltered = managers.filter((manager) => parseInt(id, 10) === manager.id);
+  const talkerFiltered = talkers.filter((manager) => parseInt(id, 10) === manager.id);
 
-  if (!managerFiltered) {
-    return res.status(HTTP_ERROR_STATUS).json({ message: 'Manager not found!' });
+  if (!talkerFiltered) {
+    return res.status(404).json({ message: 'Manager not found!' });
   }
 
-  return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
+  return res.status(HTTP_OK_STATUS).json({ talkerFiltered });
+});
+
+const validateEmail = (email) => {
+  const emailTester = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i;
+  if (emailTester.test(email)) return true; 
+};
+
+const validatePassword = (password) => {
+  const PASSWORD_LENGTH = 6;
+  if (password.length >= PASSWORD_LENGTH) return true; 
+};
+
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email) return res.status(400).json({ message: 'O campo email é obrigatório' });
+
+  if (!password) return res.status(400).json({ message: 'O campo passoword é obrigatório' });
+
+  if (!validateEmail(email)) {
+    return res.status(400).json({ message: 'O email deve ter o formato email@email.com' });
+  }
+
+  if (!validatePassword(password)) {
+    return res.status(400).json({ message: 'O password deve ter pelo menos 6 caracteres' });
+  }
+  
+  return res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 app.get('/talker', (req, res) => {
-  if (!managers) {
-    return res.status(HTTP_OK_STATUS).send('oi');
+  if (!talkers) {
+    return res.status(404).json({ message: [] });
   }
-  return res.status(HTTP_OK_STATUS).json(managers);
+  return res.status(HTTP_OK_STATUS).json({ talkers });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
