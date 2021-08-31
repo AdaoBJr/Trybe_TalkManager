@@ -3,6 +3,8 @@ const {
   getTalkerById,
   createTalkerData,
   updateTalkerData,
+  deleteTalkerData,
+  searchTalkerData,
 } = require('../services/talkerServices');
 
 const getAllTalkers = async (req, res) => {
@@ -36,9 +38,18 @@ const updateTalker = async (req, res) => {
   const speakers = await updateTalkerData(name, age, talk, id);
   return res.status(200).json(speakers);
 };
+
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  await deleteTalkerData(id);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   getAllTalkers,
   getTalker,
   createTalker,
   updateTalker,
+  deleteTalker,
+
 };

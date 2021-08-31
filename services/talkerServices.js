@@ -12,12 +12,12 @@ const getTalkerById = async (id) => {
 };
 
 const createTalkerData = async (name, age, talk) => {
-const speakers = await speakersUtil.readSpeakers();
-const len = speakers.length;
-const response = { id: len + 1, age, name, talk };
-const newArr = [...speakers, response];
-await speakersUtil.writeSpeakers(newArr);
-return response;
+  const speakers = await speakersUtil.readSpeakers();
+  const len = speakers.length;
+  const response = { id: len + 1, age, name, talk };
+  const newArr = [...speakers, response];
+  await speakersUtil.writeSpeakers(newArr);
+  return response;
 };
 
 const updateTalkerData = async (name, age, talk, id) => {
@@ -28,9 +28,18 @@ const updateTalkerData = async (name, age, talk, id) => {
   await speakersUtil.writeSpeakers(newArr);
   return response;
 };
+
+const deleteTalkerData = async (id) => {
+  const speakers = await speakersUtil.readSpeakers();
+  const talker = speakers.find((item) => item.id === +id);
+  await speakersUtil.writeSpeakers(talker);
+};
+
 module.exports = {
   getAllService,
   getTalkerById,
   createTalkerData,
   updateTalkerData,
+  deleteTalkerData,
+
 };

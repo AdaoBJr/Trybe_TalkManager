@@ -13,6 +13,7 @@ const {
   getTalker,
   createTalker,
   updateTalker,
+  deleteTalker,
 } = require('../controllers/talkerController');
 
 router
@@ -27,12 +28,14 @@ router
     createTalker,
   );
 
-router.route('/:id').get(getTalker).put(
-  verifyToken,
+router.route('/:id')
+.get(getTalker)
+.put(verifyToken,
   verifyName,
   verifyAge,
   verifyTalk,
-  verifyDateAndRate, updateTalker,
-);
+  verifyDateAndRate,
+  updateTalker)
+.delete(verifyToken, deleteTalker);
 
 module.exports = router;
