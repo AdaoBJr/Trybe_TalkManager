@@ -6,7 +6,7 @@ const updateDate = (newData) => fs.writeFileSync('./talker.json', JSON.stringify
 
 const getAll = () => data;
 
-const getOne = (idUser) => data[+idUser - 1];
+const findById = (idUser) => data[+idUser - 1];
 
 const setUser = (user) => updateDate([...data, user]);
 
@@ -26,7 +26,7 @@ const lastId = data.length + 1;
 
 module.exports = {
   getAll,
-  getOne,
+  findById,
   setUser,
   lastId,
   changeUser,
