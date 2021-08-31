@@ -30,11 +30,12 @@ app.get('/talker', async (_req, res) => {
 });
 
 // Req 2 - get talker/:id
-// app.get('/talker/:id', (req, res) => {
-//   const { id } = req.params;
-//   const talker = talkers.find((eachTalker) => eachTalker.id === parseInt(id, 2));
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readFile('./talker.json');
+  const talker = talkers.find((eachTalker) => eachTalker.id === parseInt(id, 2));
 
-//   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
-//   res.status(HTTP_OK_STATUS).json(talker);
-// });
+  res.status(HTTP_OK_STATUS).json(talker);
+});
