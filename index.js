@@ -33,6 +33,16 @@ app.get('/talker', async (_req, res) => {
   return res.status(200).send(content);
 });
 
+app.get('/talker/search', isValidToken, async (req, res) => {
+  const { q } = req.query;
+  const content = (await readContentFile()) || [];
+  if (!q) return res.status(200).json({ content });
+  const talkersFind = content.filter((talker) => talker.name.includes(q));
+  if (!talkersFind) return res.status(200).json([]);
+
+  return res.status(200).json(talkersFind);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const content = (await readContentFile()) || [];
