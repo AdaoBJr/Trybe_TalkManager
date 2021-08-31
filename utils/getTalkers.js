@@ -10,4 +10,11 @@ const getTalkers = async () => {
   return JSON.parse(talkers);
 };
 
-module.exports = getTalkers;
+const setTalkers = async (content) => {
+  await fs.writeFile('./talker.json', JSON.stringify(content));
+};
+
+module.exports = {
+  getTalkers,
+  setTalkers,
+};

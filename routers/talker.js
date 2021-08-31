@@ -1,11 +1,19 @@
 const express = require('express');
 const rescue = require('express-rescue');
-const getTalkers = require('../utils/getTalkers');
-// const findTalkers = require('../utils/findTalkers');
+const { getTalkers, setTalkers } = require('../utils/getTalkers');
 
 const { STATUS_OK_HTTP } = require('../stats/constants');
 
 const router = express.Router();
+
+const {
+    tokenAuth,
+    nameAuth,
+    ageAuth,
+    dateAuth,
+    rateAuth,
+    talkAuth,
+} = require('../middlewares/middles');
 
 router.get('/', async (_req, res) => {
   const talkers = await getTalkers();
@@ -25,5 +33,22 @@ router.get(
     res.status(STATUS_OK_HTTP).json(talker);
   }),
 );
+
+router.post('/',
+    tokenAuth,
+    nameAuth,
+    ageAuth,
+    talkAuth,
+    dateAuth,
+    rateAuth,
+    rescue(async (req, res) => {
+      const talkerList = await getTalkers();
+      const newTalker = { ...req.body, id: talkerList.length + 1 };
+      const updateTalkers = [...talkerList, newTalker];
+
+      await setTalkers(updateTalkers);
+
+      res.status(201).json(newTalker);
+    }));
 
 module.exports = router;
