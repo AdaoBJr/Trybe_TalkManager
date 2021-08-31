@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs').promises;
+const fs = require('fs');
+const fsp = require('fs').promises;
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,7 +17,7 @@ app.get('/', (_request, response) => {
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const talkers = await fs.readFile('./talker.json', 'utf8');
+  const talkers = await fsp.readFile('./talker.json', 'utf8');
   const talkersJSON = JSON.parse(talkers);
   const talker = talkersJSON.find((talk) => talk.id === Number(id));
   if (!talker) {
