@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const getAllTalkers = require('./utils/getAllTalkers');
 const getTalkerById = require('./utils/getTalkerById');
 const login = require('./utils/login');
+const createTalker = require('./utils/createTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -23,3 +24,4 @@ app.listen(PORT, () => {
 app.get('/talker', getAllTalkers);
 app.get('/talker/:id', getTalkerById);
 app.post('/login', login);
+app.post('/talker', createTalker);
