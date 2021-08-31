@@ -29,6 +29,7 @@ const tokenAuth = (req, res, next) => {
   if (authorization.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
+  console.log('Token auth', authorization);
   next();
 };
 

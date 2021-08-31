@@ -7,18 +7,29 @@ const { STATUS_OK_HTTP } = require('../stats/constants');
 const router = express.Router();
 
 const {
-    tokenAuth,
-    nameAuth,
-    ageAuth,
-    dateAuth,
-    rateAuth,
-    talkAuth,
+  nameAuth,
+  ageAuth,
+  dateAuth,
+  rateAuth,
+  talkAuth,
+  tokenAuth,
 } = require('../middlewares/middles');
 
 router.get('/', async (_req, res) => {
   const talkers = await getTalkers();
   res.status(STATUS_OK_HTTP).json(talkers);
 });
+
+router.get('/search',
+    tokenAuth,
+    rescue(async (req, res) => {
+      const { q: query } = req.query;
+      const talkersList = await getTalkers();
+      const searchTerm = talkersList.filter(
+        (f) => f.name.toLowerCase().includes(query.toLowerCase()),
+      );
+      return res.status(STATUS_OK_HTTP).json(searchTerm);
+    }));
 
 router.get(
   '/:id',
@@ -70,7 +81,7 @@ router.put('/:id',
   
       await setTalkers(updatedTalkersList);
   
-      res.status(200).json(updatedTalker);
+      res.status(STATUS_OK_HTTP).json(updatedTalker);
     }));
 
 router.delete('/:id',
@@ -82,7 +93,7 @@ router.delete('/:id',
 
       setTalkers(deleteTalker);
   
-      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+      res.status(STATUS_OK_HTTP).json({ message: 'Pessoa palestrante deletada com sucesso' });
     }));
 
 module.exports = router;
