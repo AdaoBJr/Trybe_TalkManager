@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+const rescue = require('express-rescue');
 // const util = require('util');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -24,16 +25,37 @@ app.get('/talker', async (_request, response) => {
   response.status(HTTP_OK_STATUS).send(talker);
 });
 
-app.get('/talker/:id', async (_request, response) => {
+app.get('/talker/:id', rescue(async (_request, response) => {
   const { id } = _request.params;
   const talker = await getTalker();
   const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id));
   if (!responseForUse) {
-    return responseForUse.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+    return response.status(404).send({
+      message: 'Pessoa palestrante não encontrada',
+    });
   }
-  response.status(HTTP_OK_STATUS).send(responseForUse);
-});
+    return response.status(HTTP_OK_STATUS).send(responseForUse);
+}));
 
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+/* ... */
+
+// app.get(
+//   '/simpsons/:id',
+//   rescue(async (req, res) => {
+//     const simpsons = await simpsonsUtils.getSimpsons();
+
+//     const simpson = simpsons.find(({ id }) => id === req.params.id);
+
+//     if (!simpson) {
+//       return res.status(404).json({ message: 'simpson not found' });
+//     }
+
+//     return res.status(202).json(simpson);
+//   })
+// );
+
+/* ... */
