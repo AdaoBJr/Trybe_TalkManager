@@ -1,6 +1,14 @@
 const express = require('express');
 const { token } = require('./funcoes');
-const { validatePassWord, validationEmail } = require('./validations');
+const {
+  validatePassWord,
+  validationEmail,
+  validationToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalk2,
+} = require('./validations');
 
 const router = express.Router();
 const talker = require('./talker');
@@ -25,6 +33,14 @@ router.get('/talker', async (req, res) => {
     return res.status(200).json([]);
   }
   res.status(200).json(result);
+});
+
+router.post('/talker', validationToken,
+validateName,
+validateAge,
+validateTalk,
+validateTalk2, (req, res) => {
+  res.status(200).json({'certo'});
 });
 
 router.post('/login', validationEmail, validatePassWord, (req, res) =>
