@@ -1,7 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { validateEmail, validatePassword, createToken } = require('./middleware/validations');
+const { validateEmail, validatePassword,
+  createToken, validateToken, validateName, validateAge, 
+  validateWatched, validateRate, validateTalk } = require('./middleware/validations');
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,6 +39,26 @@ app.get('/talker/:id', (req, res) => {
 app.post('/login', validateEmail, validatePassword, (req, res) => {
   const token = req.headers.authorization;
   if (token === '7mqaVRXJSp886CGr') return res.status(200).json({ token: createToken(16) });
+});
+
+app.post('/talker', validateToken, validateName, validateAge,
+validateWatched, validateRate, validateTalk,
+  (req, res) => {
+    // const { id } = req.params;
+    const { id, name, age, talk: { watchedAt, rate } } = req.body;
+    fs.readFile('./talker.json', 'utf-8', (_err, content) => {
+      const data = JSON.parse(content);
+      const result = data.push({
+        id, 
+        name,
+        age,
+        talk: {
+          watchedAt,
+          rate,
+        },
+      });
+      return res.status(201).json(result);
+    });
 });
 
 app.listen(PORT, () => {
