@@ -161,7 +161,7 @@ const verifyRate = (req, res, next) => {
 app.post('/talker',
 verifyToken, verifyName, verifyAge, authenticateTalk, verifyDate, verifyRate,
  async (req, res) => {
-  const content = await readFile();
+  // const content = await readFile();
   // const newContent = [...content, req.body];
   await writeFile(req.body);
   return res.status(201).json(req.body);
