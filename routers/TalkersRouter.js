@@ -35,7 +35,7 @@ const testUserAge = (req, res, next) => {
 
 const testUserTalk = (req, res, next) => {
     const { talk } = req.body;
-    if (!talk || talk.watchedAt.length === 0 || talk.rate.length === 0) {
+    if (!talk || talk.watchedAt === undefined || talk.rate === undefined) {
         res.status(400).send(
             {
                 message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
@@ -67,6 +67,13 @@ const getTalkers = async () => {
     return JSON.parse(talkers);
 };
 
+const setTalker = async (talker) => {
+    const talkers = await fs.readFile('./talker.json', 'utf8');
+   const newTalkers = talkers.push(talker);
+   console.log(newTalkers);
+   fs.writeFile('./talker.json', newTalkers, { flag: 'wx' });
+};
+
 router.get('/', async (req, res) => {
     const talkers = await getTalkers();
     res.status(HTTP_OK_STATUS).json(talkers);
@@ -88,8 +95,11 @@ router.post('/',
     testUserTalk,
     testUserTalkData,
     testUserTalkRate,
-    (req, res) => {
-        const { name, age, talk } = req.body;
+    async (req, res) => {
+       const { name, age, talk } = req.body;
+       await setTalker({ name, age, talk });
+       const talkers = await getTalkers();
+       console.log(talkers);
         res.status(201).send({ name, age, talk });
     });
 
