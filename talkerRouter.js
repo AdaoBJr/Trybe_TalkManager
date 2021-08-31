@@ -26,11 +26,10 @@ route.get('/search',
     if (!q
     || q === '') return req.status(HTTP_OK_STATUS).json(fileObject);
     const filteredTalkers = fileObject.filter(({ name }) => name.includes(q));
-    console.log(filteredTalkers);
     res.status(HTTP_OK_STATUS).json(filteredTalkers);
   });
   
-  route.delete('/:id',
+route.delete('/:id',
   verifyToken,
   async (req, res) => {
   const { id } = req.params;
@@ -56,13 +55,13 @@ async (req, res) => {
   const newObj = fileObject.map((talker) => {
     if (talker.id === Number(id)) {
       const newId = Number(talker.id);
-      console.log('type of newid', typeof newId);
       newTalker = { age, id: newId, name, talk };
       return newTalker;
     }
     return talker;
   });
   overwriteWriteFile('talker.json', newObj);
+  console.log(newTalker);
   res.status(HTTP_OK_STATUS).json(newTalker);
 });
 
