@@ -1,12 +1,22 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { readFileTalker, getTalkerById } = require('./middlewares');
+const { 
+  readFileTalker, 
+  getTalkerById,
+  checkIfEmailIsValid,
+  checkIfPasswordIsValid,
+  generateRandomToken } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+
+// 3
+app.post('/login', checkIfEmailIsValid, checkIfPasswordIsValid, (_req, res) => {
+  res.status(200).json({ token: generateRandomToken() });
+});
 
 // 2
 app.get('/talker/:id', async (req, res) => {
