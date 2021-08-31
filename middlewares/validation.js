@@ -35,7 +35,7 @@ const isValidToken = (req, res, next) => {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
 
-  if (token.length < 16 && token.length > 16) {
+  if (token.length < 16 || token.length > 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
   next();
@@ -76,7 +76,13 @@ const isValidDate = (req, res, next) => {
   
   const regexDateValid = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/g;
 
-  if (watchedAt === regexDateValid) {
+  if (!watchedAt) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+
+  if (!watchedAt.match(regexDateValid)) {
     return res.status(400).json({ 
       message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"', 
     });
@@ -86,11 +92,27 @@ const isValidDate = (req, res, next) => {
 
 const isValidRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
+
+  if (!Number(rate)) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
   
   if (!(Number(rate) >= 1 && Number(rate) <= 5)) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
+  }
+  next();
+};
+
+const isValidTalk = (req, res, next) => {
+  const { talk } = req.body;
+  
+  if (!talk) {
+    res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   next();
 };
@@ -116,5 +138,6 @@ module.exports = {
   isValidAge,
   isValidDate,
   isValidRate,
+  isValidTalk,
   createToken,
 };
