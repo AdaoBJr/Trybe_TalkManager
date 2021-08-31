@@ -108,7 +108,6 @@ function writeFileTalker(newTalker) {
 }
 
 const addTalker = async (req, res) => {
-  // console.log('gerarToken', gerarToken());
   const { name, age, talk } = req.body;
   const talkersList = await readFile();
   const countTalker = talkersList.length;
