@@ -1,7 +1,7 @@
 const fs = require('fs');
 const { join } = require('path');
 
-const filePath = join(__dirname, 'talker.json');
+const filePath = join('talker.json');
 
 const getTalker = () => {
   const data = fs.existsSync(filePath)
