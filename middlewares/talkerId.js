@@ -1,5 +1,5 @@
 const rescue = require('express-rescue');
-const talkersUtils = require('../utils.js');
+const talkersUtils = require('../fs-utils.js');
 
 const HTTP_OK_STATUS = 200;
 
