@@ -5,13 +5,30 @@ const {
   getTalkerById,
   checkIfEmailIsValid,
   checkIfPasswordIsValid,
-  generateRandomToken } = require('./middlewares');
+  generateRandomToken,
+  validateAge,
+  validateDate,
+  validateName,
+  validateRate,
+  validateTalker,
+  validateToken,
+  addTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+
+// 4
+app.post('/talker', 
+  validateToken,
+  validateName, 
+  validateAge, 
+  validateTalker, 
+  validateDate, 
+  validateRate,   
+  addTalker);
 
 // 3
 app.post('/login', checkIfEmailIsValid, checkIfPasswordIsValid, (_req, res) => {
