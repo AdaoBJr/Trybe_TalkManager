@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin } = require('./middlewares/index');
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,7 +24,7 @@ app.get('/talker', palestrantes);
 app.get('/talker/:id', talkerId);
 
 // // desafio3
-// app.post('/loguin', loguinToken);
+app.post('/loguin', loguin);
 
 // // desafio4
 // app.post('/talker', post);

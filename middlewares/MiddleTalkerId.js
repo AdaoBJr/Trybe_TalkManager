@@ -6,7 +6,7 @@ const talkerId = async (req, res) => {
   const convert = JSON.parse(response);
   const data = convert.find((cur) => cur.id === Number(id));
   if (!data) {
-    return res.status(200).json({ message: 'Pessoa palestrante não encontrada' });
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   
   return res.status(200).json(data);
