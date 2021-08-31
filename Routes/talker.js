@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAll, findById, create, lastId } = require('../service/readLine');
+const { getAll, findById, create, lastId, update } = require('../service/readLine');
 const { authLogin, validateTalker } = require('../middlewares');
 
 const router = express.Router();
@@ -24,6 +24,12 @@ router.post('/talker', validateTalker, (req, res) => {
   const { ...newTalker } = { id: lastId, ...req.body };
   create(newTalker);
   res.status(201).json(newTalker);
+});
+
+router.put('/talker/:id', validateTalker, (req, res) => {
+  const { ...updateTalker } = { id: +req.params.id, ...req.body };
+  update(updateTalker);
+  res.status(200).json(updateTalker);
 });
 
 module.exports = router;

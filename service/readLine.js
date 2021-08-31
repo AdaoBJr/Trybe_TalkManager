@@ -10,7 +10,7 @@ const findById = (idUser) => data[+idUser - 1];
 
 const create = (user) => updateDate([...data, user]);
 
-const changeUser = (change) => {
+const update = (change) => {
   data[change.id - 1] = change;
   updateDate(data);
 };
@@ -29,7 +29,7 @@ module.exports = {
   findById,
   create,
   lastId,
-  changeUser,
+  update,
   deleteUser,
   searchUser,
 };
