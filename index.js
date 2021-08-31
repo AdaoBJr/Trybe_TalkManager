@@ -10,9 +10,9 @@ const PORT = '3000';
 
 app.get('/talker', async (_req, res) => {
   const talkers = await getAllTalkers();
-  if (!talkers) {
+/*   if (!talkers) {
     return res.status(200).json({});
-  }
+  } */
   return res.status(200).json(talkers);
 });
 
