@@ -12,14 +12,18 @@ const getTalkers = async () => {
 };
 
 router.get('/', async (req, res) => {
-   const talkers = await getTalkers();
+    const talkers = await getTalkers();
     res.status(HTTP_OK_STATUS).json(talkers);
-  });
+});
 
-  router.get('/:id', (res, req) => {
+router.get('/:id', async (req, res) => {
     const { id } = req.params;
-    console.log(id);
-    res.status(200).json({ message: `get por id: ${id}` });
+    const talkers = await getTalkers();
+    const talker = talkers.find((talk) => talk.id === Number(id));
+    if (!talker || talker === undefined) {
+    res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+    }
+    res.status(200).json(talker);
 });
 
 module.exports = router;
