@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const validation = require('./middlewares/validation')
 
 fs.readFileSync('./talker.json');
 
@@ -40,6 +41,8 @@ app.get('/talker/:id', (req, res) => {
 });
 
 app.post('/login', (req, res) => {
+  const token = req.params.authorization;
+  const
 
 });
 
