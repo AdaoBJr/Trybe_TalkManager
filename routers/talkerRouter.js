@@ -122,9 +122,11 @@ router.put('/:id', validateToken, validateTalker, async (req, res) => {
   const { id } = req.params;  
   const talkers = await readFilePromise(talkerJson)
   .then((content) => JSON.parse(content))
-  .catch((err) => console.log(`erro: ${err.message}`));  
+  .catch((err) => console.log(`erro: ${err.message}`));
+
   const EditedTalkerIndex = talkers.findIndex((talker) => talker.id === +id);
   if (EditedTalkerIndex === -1) return res.status(404).json({ message: 'talker not found!' });
+
   const { name, age, talk } = req.body;
   talkers[EditedTalkerIndex] = { ...talkers[EditedTalkerIndex], name, age, talk };
 
@@ -134,6 +136,24 @@ router.put('/:id', validateToken, validateTalker, async (req, res) => {
 
   if (!writedfile) return res.status(400).json({ message: 'arquivo não alterado' });
   return res.status(200).json(talkers[EditedTalkerIndex]);
+});
+
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;  
+  const talkers = await readFilePromise(talkerJson)
+  .then((content) => JSON.parse(content))
+  .catch((err) => console.log(`erro: ${err.message}`));
+
+  const toDellIndex = talkers.findIndex((talker) => talker.id === +id);
+  if (toDellIndex === -1) return res.status(404).json({ message: 'talker not found!' });
+
+  talkers.splice(toDellIndex, 1);
+  const writedfile = await WritePromise(talkerJson, JSON.stringify(talkers))
+  .then(() => true)
+  .catch(() => false);
+
+  if (!writedfile) return res.status(400).json({ message: 'arquivo não alterado' });
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });  
 });
 
 module.exports = router;
