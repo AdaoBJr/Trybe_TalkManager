@@ -37,7 +37,7 @@ app.post(
   validatesTalker.validateTalk,
   validatesTalker.validateTalkDate,
   validatesTalker.validateTalkRate,
-  addTalker
+  addTalker,
 );
 
 app.put(
@@ -48,7 +48,7 @@ app.put(
   validatesTalker.validateTalk,
   validatesTalker.validateTalkDate,
   validatesTalker.validateTalkRate,
-  editTalker
+  editTalker,
 );
 
 app.delete('/talker/:id', validateToken, deleteTalker);
