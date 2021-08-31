@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { readContentFile } = require('./helpers/readWriteFile');
+const generateToken = require('./helpers/generateToken');
+
+const { isValidEmail, isValidPassword } = require('./middlewares/validations');
 
 const app = express();
 app.use(bodyParser.json());
@@ -32,6 +35,11 @@ app.get('/talker/:id', async (req, res) => {
   }
 
   return res.status(200).json(talker);
+});
+
+app.post('/login', isValidEmail, isValidPassword, (req, res) => {
+  const token = generateToken();
+  return res.status(200).json({ token });
 });
 
 app.listen(PORT, () => {
