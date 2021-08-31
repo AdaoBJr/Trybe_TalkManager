@@ -104,7 +104,7 @@ const validarFormTalk = (req, res, next) => {
   const {
     talk,
   } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -162,7 +162,7 @@ app.get('/talker', async (req, res) => {
 });
 
 app.post('/talker', validarToken, validarFormName, validarFormAge,
-  validarFormTalk, validarFormWatAndRate, async (req, res) => {
+  validarFormWatAndRate, validarFormTalk, async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
   const oldTalker = await readFile(talker);
   const id = oldTalker.length + 1;
@@ -172,6 +172,26 @@ app.post('/talker', validarToken, validarFormName, validarFormAge,
   res.status(201).json(
     newTalker,
   );
+});
+
+app.put('/talker/:id', validarToken, validarFormName, validarFormAge,
+validarFormTalk, validarFormWatAndRate, async (req, res) => {
+  const {
+    id,
+  } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const oldTalker = await readFile(talker);
+  const index = oldTalker.findIndex((a) => a.id.toString() === id);
+  const teste = oldTalker.filter((a) => a.id.toString() !== id);
+  console.log(teste);
+  if (index === -1) {
+    return res.status(404).json({
+      message: 'Pessoa palestrante não encontrada',
+    });
+  }
+  const editTalker = { ...oldTalker[index], name, age, talk: { watchedAt, rate } };
+  await writeFile(talker, JSON.stringify([...teste, editTalker]));
+  return res.status(200).json(editTalker);
 });
 
 app.listen(PORT, () => {
