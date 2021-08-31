@@ -45,11 +45,19 @@ const deleteTalker = async (req, res) => {
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchTalker = async (req, res) => {
+  const { q } = req.query;
+
+  const response = await searchTalkerData(q);
+
+  return res.status(200).json(response);
+};
+
 module.exports = {
   getAllTalkers,
   getTalker,
   createTalker,
   updateTalker,
   deleteTalker,
-
+  searchTalker,
 };

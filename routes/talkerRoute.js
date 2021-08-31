@@ -14,7 +14,10 @@ const {
   createTalker,
   updateTalker,
   deleteTalker,
+  searchTalker,
 } = require('../controllers/talkerController');
+
+router.route('/search').get(verifyToken, searchTalker);
 
 router
   .route('/')

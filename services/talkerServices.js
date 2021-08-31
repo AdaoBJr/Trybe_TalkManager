@@ -35,11 +35,18 @@ const deleteTalkerData = async (id) => {
   await speakersUtil.writeSpeakers(talker);
 };
 
+const searchTalkerData = async (query) => {
+  const speakers = await speakersUtil.readSpeakers();
+  if (!query) return speakers;
+  const newArr = speakers.filter((item) => item.name.includes(query)) || [];
+  return newArr;
+};
+
 module.exports = {
   getAllService,
   getTalkerById,
   createTalkerData,
   updateTalkerData,
   deleteTalkerData,
-
+  searchTalkerData,
 };
