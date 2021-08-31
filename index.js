@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 
+const { readContentFile } = require('./helpers/readWriteFile');
+
 const talkers = 'talker.json';
 
 const app = express();
@@ -15,14 +17,13 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', async (req, res) => {
-  const content = await fs
-    .readFile(talkers, 'utf-8')
-    .then((resp) => JSON.parse(resp));
-
-  if (!content.length) return res.status(200).json([]);
-
+app.get('/talker', async (_req, res) => {
+  const content = (await readContentFile()) || [];
   return res.status(200).send(content);
+});
+
+app.get('/talker/id', (req, res) => {
+  const id = req.params;
 });
 
 app.listen(PORT, () => {
