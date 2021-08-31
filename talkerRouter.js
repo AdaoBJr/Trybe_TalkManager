@@ -20,9 +20,7 @@ router.post('/', validateToken, validateData, async (req, res) => {
 
 router.get('/search', validateToken, async (req, res) => {
   const { q } = req.query;
-  console.log(q);
   const talkers = await readContentFile();
-  console.log(talkers);
   if (!q || q === '') {
     return res.status(200).json(talkers);
   }
