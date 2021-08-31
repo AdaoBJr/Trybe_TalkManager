@@ -1,4 +1,5 @@
 const fs = require('fs');
+
 const talker = './talker.json';
 
 const readFileTalker = async () => {
