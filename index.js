@@ -2,8 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {
   readContentFile,
-writeContentFile,
+// writeContentFile,
 } = require('./helpers');
+const { validName, validPassword } = require('./validations');
 
 const PATH_FILE = './talker.json';
 
@@ -36,6 +37,11 @@ app.get('/talker/:id', async (req, res) => {
   } else {
     res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
+});
+
+// REQUISITO 3
+app.post('/login', validName, validPassword, async (req, res) => {
+  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
 });
 
 app.listen(PORT, () => {
