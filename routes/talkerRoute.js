@@ -1,8 +1,6 @@
 const fs = require('fs');
 const { join } = require('path');
-const crypto = require('crypto');
-
-const generateToken = () => crypto.randomBytes(16).toString('hex');
+const generatorToken = require('../generatorToken');
 
 const filePath = join('talker.json');
 
@@ -33,37 +31,37 @@ const getRequisitionID = (req, res) => {
   return result;
 };
 
-const postRequisition = (req, res) => res.status(200).send({ token: generateToken() });
-
-const validateEmail = (email) => {
-  const expressionRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-  return !expressionRegex.test(email);
-};
+const postRequisition = (req, res) => res.status(200).send({ token: generatorToken() });
 
 const isValidEmail = (req, res, next) => {
-  const { email } = req.header;
+  const { email } = req.body;
+  const emailRegex = /^[\w.]+@[a-z]+\.\w{2,3}$/g.test(email);
   const fieldEmail = res.status(400).send({ message: 'O campo "email" é obrigatório' });
   const invalidEmail = res.status(400)
     .send({ message: 'O "email" deve ter o formato "email@email.com"' });
   
-  const verifyEmail = validateEmail(email) ? next() : invalidEmail;
-  const result = email ? fieldEmail : verifyEmail;
-  return result;
+  if (!email) return fieldEmail;
+  if (!emailRegex) return invalidEmail;
+  
+  next();
 };
 
 const isValidPassword = (req, res, next) => {
-  const { password } = req.header;
+  const { password } = req.body;
+  const passowrdRegex = /[\w\D]{6}/.test(password);
   const fieldPassword = res.status(400).send({ message: 'O campo "password" é obrigatório' });
   const invalidPassword = res.status(400)
     .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  const menorQueCinco = password.toString().length < 5 ? invalidPassword : next();
-  const result = password ? fieldPassword : menorQueCinco;
-  return result;
+  
+  if (!password) return fieldPassword;
+  if (!passowrdRegex) return invalidPassword;
+  
+  next();
 };
 const talkerRoute = (app) => {
   app.route('/talker').get(getRequisition); // Pegando usuários
   app.route('/talker/:id?').get(getRequisitionID); // Filtrando por Id de usuário
-  app.route('/login').post(isValidEmail, isValidPassword, postRequisition); // Filtrando por Id de usuário
+  app.route('/login').post(isValidEmail, isValidPassword, postRequisition); // Validando e-mail e password
 };
 
 module.exports = talkerRoute;
