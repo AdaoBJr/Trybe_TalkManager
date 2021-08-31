@@ -1,5 +1,5 @@
 const express = require('express');
-const { getAll, findById, create, lastId, update } = require('../service/readLine');
+const { getAll, findById, create, lastId, update, excluse } = require('../service/readLine');
 const { authLogin, validateTalker } = require('../middlewares');
 
 const router = express.Router();
@@ -30,6 +30,12 @@ router.put('/talker/:id', validateTalker, (req, res) => {
   const { ...updateTalker } = { id: +req.params.id, ...req.body };
   update(updateTalker);
   res.status(200).json(updateTalker);
+});
+
+router.delete('/talker/:id', (req, res) => {
+  const { id } = req.params;
+  excluse(id);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

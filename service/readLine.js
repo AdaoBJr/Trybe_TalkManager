@@ -15,7 +15,7 @@ const update = (change) => {
   updateDate(data);
 };
 
-const deleteUser = (idUser) => {
+const excluse = (idUser) => {
   data.splice(+idUser - 1, 1);
   updateDate(data);
 };
@@ -30,6 +30,6 @@ module.exports = {
   create,
   lastId,
   update,
-  deleteUser,
+  excluse,
   searchUser,
 };
