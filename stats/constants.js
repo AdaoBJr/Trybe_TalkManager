@@ -1,5 +1,5 @@
-const STATUS_OK = 200;
+const STATUS_OK_HTTP = 200;
 
 module.exports = {
-  STATUS_OK,
+  STATUS_OK_HTTP,
 };
