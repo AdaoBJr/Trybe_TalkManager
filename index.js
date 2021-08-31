@@ -9,13 +9,17 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const talker = './talker.json';
+const talker = 'talker.json';
 
 // funções
 const readFile = async (arquivo) => {
   const resposta = await fs.readFile(arquivo, 'utf8');
   const parseResposta = JSON.parse(resposta);
   return parseResposta;
+};
+
+const writeFile = async (arquivo, escrever) => {
+  await fs.writeFile(arquivo, escrever);
 };
 
 const gerarToken = () => {
@@ -57,6 +61,74 @@ const validarPassword = (req, res, next) => {
   next();
 };
 
+const validarToken = (req, res, next) => {
+  const {
+    authorization,
+  } = req.headers;
+  if (!authorization) {
+    return res.status(401).json({
+      message: 'Token não encontrado',
+    });
+  }
+  if (authorization.length !== 16) {
+    return res.status(401).json({
+      message: 'Token inválido',
+    });
+  }
+  next();
+};
+
+const validarFormName = (req, res, next) => {
+  const {
+    name,
+  } = req.body;
+  if (!name) return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  if (name.length < 4) {
+    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  next();
+};
+
+const validarFormAge = (req, res, next) => {
+  const {
+    age,
+  } = req.body;
+  if (!age) return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  next();
+};
+
+const validarFormTalk = (req, res, next) => {
+  const {
+    talk,
+  } = req.body;
+  if (!talk || !talk.watchedAt || !talk.rate) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+  next();
+};
+
+const validarFormWatAndRate = (req, res, next) => {
+  const {
+    talk: { watchedAt, rate },
+  } = req.body;
+  // agradecimentos: https://www.guj.com.br/t/resolvido-como-validar-data-com-java-script/276656
+  const regex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+  if (!regex.test(watchedAt)) {
+    return res.status(400)
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' }); 
+  }
+  if (!(rate >= 1 && rate <= 5)) {
+    return res.status(400)
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
+  }
+  next();
+};
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
@@ -87,6 +159,19 @@ app.get('/talker/:id', async (req, res) => {
 app.get('/talker', async (req, res) => {
   const resposta = await readFile(talker);
   return res.status(200).json(resposta);
+});
+
+app.post('/talker', validarToken, validarFormName, validarFormAge,
+  validarFormTalk, validarFormWatAndRate, async (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const oldTalker = await readFile(talker);
+  const id = oldTalker.length + 1;
+  const newTalker = { id, name, age, talk: { watchedAt, rate } };
+  oldTalker.push(newTalker);
+  await writeFile(talker, JSON.stringify(oldTalker));
+  res.status(201).json(
+    newTalker,
+  );
 });
 
 app.listen(PORT, () => {
