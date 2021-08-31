@@ -1,8 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const generation = require('./construction/generation');
+const autenticaLogin = require('./construction/autenticarLogin');
 
-const msgErro = { message: 'Pessoa palestrante não encontrada' }; 
+const msgErro = { message: 'Pessoa palestrante não encontrada' };
 
 const app = express();
 app.use(bodyParser.json());
@@ -45,3 +47,12 @@ async function idPalestrante(req, res) {
 }
 
 app.get('/talker/:id', idPalestrante);
+
+function login(req, res) {
+  const aux = generation(16);
+  autenticaLogin(req, res);
+
+  return res.status(HTTP_OK_STATUS).json({ token: aux });
+}
+
+app.post('/login', login);
