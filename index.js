@@ -23,7 +23,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.post('/login', validateEmail, validatePassword, (req, res) => {
+app.post('/login', validateEmail, validatePassword, (_req, res) => {
   const token = generateToken();
 
   return res.status(200).json({ token });
