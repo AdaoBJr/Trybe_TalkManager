@@ -93,6 +93,15 @@ app.put(
   },
 );
 
+app.delete('/talker/:id', isValidToken, async (req, res) => {
+  const { id } = req.params;
+  const content = (await readContentFile()) || [];
+  const talkerIndex = content.findIndex((talker) => talker.id === Number(id));
+  content.splice(talkerIndex, 1);
+  await writeContentFile(content);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
