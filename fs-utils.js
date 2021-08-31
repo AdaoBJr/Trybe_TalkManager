@@ -10,6 +10,6 @@ function readFile() {
 function generateToken() {
   return crypto.randomBytes(8).toString('hex');
 }
-//Gera token aleatório. :)
+// Gera token aleatório. :)
 
 module.exports = { readFile, generateToken };
