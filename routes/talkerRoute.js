@@ -31,7 +31,10 @@ const getRequisitionID = (req, res) => {
   return result;
 };
 
-const postRequisition = (req, res) => res.status(200).send({ token: generatorToken() });
+const postRequisition = (req, res) => {
+  const token = generatorToken();
+  res.status(200).json({ token });
+};
 
 const isValidEmail = (req, res, next) => {
   const { email } = req.body;
@@ -61,7 +64,7 @@ const isValidPassword = (req, res, next) => {
 const talkerRoute = (app) => {
   app.route('/talker').get(getRequisition); // Pegando usuários
   app.route('/talker/:id?').get(getRequisitionID); // Filtrando por Id de usuário
-  app.route('/login').post(isValidEmail, isValidPassword, postRequisition); // Validando e-mail e password
+  app.route('/login').post(isValidEmail, isValidPassword, postRequisition); // Validando e-mail e password e gerando token
 };
 
 module.exports = talkerRoute;
