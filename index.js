@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const talkers = require('./talker.json');
+const { authUser } = require('./middlewares');
+const { getToken } = require('./getToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,6 +18,10 @@ app.get('/', (_request, response) => {
 
 app.listen(PORT, () => {
   console.log('Online');
+});
+
+app.use(authUser, (req, res) => {
+  res.status(200).json({ token: getToken() });
 });
 
 app.get('/talker/:id', (req, res) => {
