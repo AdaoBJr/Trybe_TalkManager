@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const rescue = require('express-rescue');
 const fs = require('fs').promises;
 
 const talkerJson = ('./talker.json');
@@ -23,8 +24,19 @@ app.listen(PORT, () => {
 app.get('/talker', async (req, res) => {
   const talkers = await fs.readFile(talkerJson); 
   const result = JSON.parse(talkers);
-  if (!result) {
-    return res.status(200).json(Array([]));
-  }
+  if (!result) res.status(200).json(Array([]));
+
 return res.status(200).json(result);
 });
+
+// Requisito 2
+app.get('/talker/:id', rescue(async (req, res) => {
+  const { id } = req.params;
+  const talkers = await fs.readFile(talkerJson); 
+  const result = JSON.parse(talkers);
+  const searchId = result.find((palestrante) => palestrante.id === Number(id));
+  if (!searchId) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+    return res.status(200).json(searchId);
+}));
