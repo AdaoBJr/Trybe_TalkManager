@@ -4,19 +4,20 @@ const HTTP_OK_STATUS = 200;
 
 const editTalker = async (req, res) => {
   const { name, age, talk } = req.body;
-  const { id } = req.params;
+  const { id: idEdit } = req.params;
   const talkerChanged = {
-    id,
+    idEdit,
     name,
     age,
     talk,
   };
   const talkersList = await readFile();
-  const newTalkerList = talkersList.filter(
-    (element) => element.id !== Number(id)
-  );
-  newTalkerList.push(talkerChanged);
+  const newTalkerList = talkersList
+    .filter(({ id }) => Number(idEdit) !== id)
+    .push(talkerChanged);
+
   await writeFileTalker(newTalkerList);
+
   return res.status(HTTP_OK_STATUS).json(talkerChanged);
 };
 
