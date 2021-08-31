@@ -9,9 +9,10 @@ const HTTP_BAD_REQUEST = 400;
 // RegEx to validate e-mail
 const emailValidation = (email) => {
   const validation = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return validation.test(String(email).toLowerCase());
+  return !!validation.test(String(email).toLowerCase());
 };
 
+// check email validations
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
   
@@ -28,6 +29,7 @@ const validateEmail = (req, res, next) => {
   next();
 };
 
+// check password validations
 const validatePassword = (req, res, next) => {
   const { password } = req.body;
 
@@ -44,6 +46,7 @@ const validatePassword = (req, res, next) => {
   next();
 };
 
+// POST
 router.post('/',
   validateEmail,
   validatePassword,
