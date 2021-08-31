@@ -11,7 +11,7 @@ function generateToken(length) {
   return b.join('');
 } 
 
-const loguinToken = (req, res) => {
+const loguin = (req, res) => {
   const { email, password } = req.body;
   
   const token = generateToken(16);
@@ -31,5 +31,5 @@ const loguinToken = (req, res) => {
 };
 
 module.exports = {
-  loguinToken,
+  loguin,
 };

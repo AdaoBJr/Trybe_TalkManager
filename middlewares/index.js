@@ -1,11 +1,16 @@
-const { talkerSearch,
-  palestrantes, talkerId, loguinToken, post, putFunction, exclude } = require('./MiddleSearch');
+const { talkerSearch } = require('./MiddleSearch');
+const { palestrantes } = require('./MiddleTalkerGet');
+const { talkerId } = require('./MiddleTalkerId');
+const { loguin } = require('./MiddleLoguin');
+const { post } = require('./MiddlePostTalker');
+const { putFunction } = require('./MiddlePutTalker');
+const { exclude } = require('./MiddleExclude');
 
 module.exports = {
   talkerSearch,
   palestrantes,
   talkerId,
-  loguinToken,
+  loguin,
   post,
   putFunction,
   exclude,
