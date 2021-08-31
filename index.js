@@ -20,7 +20,11 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-router.get('/talker.json', async (req, res) => {
+router.get('/', async (req, res) => {
+  try {
   const talk = await fs.readFile('./talker.json', 'utf8');
   return res.status(200).json(talk);
+  } catch (error) {
+    return res.status(200).json([]);
+  }
 });
