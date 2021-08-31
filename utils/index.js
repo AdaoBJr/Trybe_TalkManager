@@ -12,7 +12,12 @@ async function readFile(filename) {
   return [];
 }
 
+async function writeFile(filename, content) {
+  await fs.writeFile(filename, content);
+}
+
 module.exports = {
   readFile,
+  writeFile,
   generateToken,
 };
