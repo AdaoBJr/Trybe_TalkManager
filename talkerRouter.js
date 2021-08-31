@@ -5,6 +5,8 @@ const overwriteWriteFile = require('./helpers/writeFile');
 
 const route = express.Router();
 
+const talkerJsonPath = './talker.json';
+
 const HTTP_BAD_REQUEST_STATUS = 400;
 const HTTP_NOT_FOUND_STATUS = 401;
 const HTTP_OK_STATUS = 200;
@@ -82,6 +84,17 @@ const verifyRate = (req, res, next) => {
     next();
 };
 
+route.delete('/:id',
+verifyToken,
+async (req, res) => {
+  const { id } = req.params;
+  const excludedPerson = 'Pessoa palestrante deletada com sucesso';
+  const fileObject = await readFileFs(talkerJsonPath);
+  const newObj = fileObject.filter(({ id: talkerId }) => Number(id) !== Number(talkerId));
+  overwriteWriteFile('talker.json', newObj);
+  res.status(HTTP_OK_STATUS).json({ message: excludedPerson });
+});
+
 route.put('/:id',
 verifyToken,
 verifyName,
@@ -92,7 +105,7 @@ verifyWatchedAt,
 async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-  const fileObject = await readFileFs('./talker.json');
+  const fileObject = await readFileFs(talkerJsonPath);
   let newTalker = {};
   const newObj = fileObject.map((talker) => {
     if (talker.id === Number(id)) {
@@ -109,7 +122,7 @@ async (req, res) => {
 
 route.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const fileObject = await readFileFs('./talker.json');
+  const fileObject = await readFileFs(talkerJsonPath);
   const choosenTalker = fileObject.find((talker) => Number(id) === talker.id);
   if (!choosenTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(choosenTalker);
@@ -124,7 +137,7 @@ verifyRate,
 verifyWatchedAt,
 async (req, res) => {
   const { name, age, talk } = req.body;
-  const objArchive = await readFileFs('./talker.json');
+  const objArchive = await readFileFs(talkerJsonPath);
   const nextId = objArchive.reduce((acc, { id }) => {
     let newId = acc;
     if (id > acc) {
@@ -139,7 +152,7 @@ async (req, res) => {
 });
 
 route.get('/', async (_request, response) => {
-  const fileResponse = await fs.readFile('./talker.json', 'utf-8');
+  const fileResponse = await fs.readFile(talkerJsonPath, 'utf-8');
   response.status(200).json(JSON.parse(fileResponse));
 });
 
