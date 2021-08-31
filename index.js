@@ -15,13 +15,14 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+const getTalker = async () => {
+  const data = fs.readFileSync(file, 'utf8');
+  return JSON.parse(data);
+};
+
 app.get('/talker', async (_request, response) => {
-  try {
-    const data = fs.readFileSync(file, 'utf8');
-    response.status(HTTP_OK_STATUS).send(data);
-  } catch (err) {
-    response.status(200).send([]);
-  }
+  const data = await getTalker();
+  response.status(HTTP_OK_STATUS).send(data);
 });
 
 app.listen(PORT, () => {
