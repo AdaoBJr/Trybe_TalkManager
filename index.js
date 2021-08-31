@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs'); // importei
+const fs = require('fs').promises; // importei
 // const { promisify } = require('util'); // 
 const rescue = require('express-rescue'); //
 
