@@ -25,6 +25,7 @@ app.listen(PORT, () => {
 
 app.get('/talker', getAllTalkers);
 app.get('/talker/:id', getTalkerById);
+// app.get('/talker/search', searchTalker);
 app.post('/login', login);
 app.post('/talker',
   createTalker.tokenValidation,
