@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { getTalker } = require('./helpers/getTalker');
+const { getTalker } = require('./getArquivo/getTalker');
 
 const app = express();
 app.use(bodyParser.json());
