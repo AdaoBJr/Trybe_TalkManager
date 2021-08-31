@@ -55,7 +55,7 @@ const isValidPassword = (req, res, next) => {
   const fieldPassword = res.status(400).send({ message: 'O campo "password" é obrigatório' });
   const invalidPassword = res.status(400)
   .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  const menorQueCinco = password.toString().length < 5 ? invalidPassword : next();
+  const menorQueCinco = password.toString().length < 6 ? invalidPassword : next();
   const result = !password ? fieldPassword : menorQueCinco;
   return result;
 };
