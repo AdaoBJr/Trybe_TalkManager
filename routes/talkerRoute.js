@@ -50,7 +50,7 @@ const talkerRoute = (app) => {
     .get(getRequisitionID);
   app.route('/login')
     // Filtrando por Id de usuário
-    .post();
+    .post(postRequisition);
 };
 
 module.exports = talkerRoute;
