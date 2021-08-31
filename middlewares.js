@@ -14,7 +14,13 @@ const getTalkerById = async (id) => {
   return talkerList.find((obj) => obj.id === +id);
 };
 
+const checkEmail = (email) => {
+  const emailRegex = /^\w+[\W_]?\w*@[a-z]+\.[a-z]{2,3}(?:.br)?$/;
+  return emailRegex.test(email);
+};
+
 module.exports = {
   getAllTalkers,
   getTalkerById,
+  checkEmail,
 };
