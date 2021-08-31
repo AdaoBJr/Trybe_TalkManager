@@ -58,7 +58,7 @@ const checkExistsTalkWatchRate = ({ talk }, result) => {
       notOk, message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     };
   }
-  if (!talk.rate) {
+  if (talk.rate === undefined) {
     return { 
       notOk, message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     };
