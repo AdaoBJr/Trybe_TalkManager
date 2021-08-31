@@ -1,8 +1,18 @@
 const express = require('express');
-const { getAll, findById, create, lastId, update, excluse } = require('../service/readLine');
+const { getAll, findById, create, lastId } = require('../service/readLine');
+const { update, excluse, findByName } = require('../service/readLine');
 const { authLogin, validateTalker } = require('../middlewares');
 
 const router = express.Router();
+
+router.get('/talker/search', authLogin, (req, res) => {
+  const { q } = req.query;
+  const talkers = getAll();
+  if (!q) res.status(200).json([]);
+  const talkerResult = findByName(q);
+  if (!talkerResult) res.status(200).json(talkers);
+  res.status(200).json(talkerResult);
+});
 
 router.get('/talker', (req, res) => {
   const talkersList = getAll();

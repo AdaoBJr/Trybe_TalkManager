@@ -20,7 +20,7 @@ const excluse = (idUser) => {
   updateDate(data);
 };
 
-const searchUser = (text) => data.filter(({ name }) => RegExp(text, 'gi').test(name));
+const findByName = (text) => data.filter(({ name }) => RegExp(text, 'gi').test(name));
 
 const lastId = data.length + 1;
 
@@ -31,5 +31,5 @@ module.exports = {
   lastId,
   update,
   excluse,
-  searchUser,
+  findByName,
 };
