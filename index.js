@@ -26,6 +26,13 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const resposta = await readFile(talker);
+  const findId = resposta.find((a) => a.id.toString === id);
+  return res.status(200).json(findId);
+});
+
 app.get('/talker', async (req, res) => {
   const resposta = await readFile(talker);
   return res.status(200).json(resposta);
