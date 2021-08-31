@@ -1,3 +1,4 @@
+// const { json } = require('body-parser');
 const express = require('express');
 
 const router = express.Router();
@@ -13,11 +14,8 @@ const talkerJson = 'talker.json';
 
 const validateToken = (req, res, next) => {
   const token = req.headers.authorization;
-  console.log(token);
   if (!token) return res.status(401).json({ message: 'Token não encontrado' }); 
-  console.log('Primeiro', token);
   if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
-  console.log('Segundo', token);
   next();
 };
 
@@ -87,6 +85,20 @@ router.get('/', async (req, res) => {
   if (!talkers) res.status(200).json([]);
 
   return res.status(200).json(talkers);
+});
+
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+
+  const talkers = await readFilePromise(talkerJson)
+  .then((content) => JSON.parse(content))
+  .catch((err) => console.log(`erro: ${err.message}`));
+
+  if (!q || q === '') return res.status(200).json(talkers);
+
+  const talker = talkers.filter(({ name }) => name.includes(q));
+
+  return res.status(200).json(talker);
 });
 
 router.get('/:id', async (req, res) => {
