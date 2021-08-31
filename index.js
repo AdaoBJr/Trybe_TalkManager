@@ -70,6 +70,29 @@ app.post(
   },
 );
 
+app.put(
+  '/talker/:id',
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidTalk,
+  isValidTalkWatchedAtRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+
+    const content = (await readContentFile()) || [];
+    const findTalker = content.find((talker) => talker.id === Number(id));
+    const contentWithinId = content.filter(
+      (talker) => talker.id !== Number(id),
+    );
+    const talkerUpdate = { ...findTalker, name, age, talk };
+    const newContent = [...contentWithinId, talkerUpdate];
+    await writeContentFile(newContent);
+    res.status(200).json(talkerUpdate);
+  },
+);
+
 app.listen(PORT, () => {
   console.log('Online');
 });
