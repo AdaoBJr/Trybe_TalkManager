@@ -14,7 +14,7 @@ app.get('/', (_request, response) => {
 });
 
 // 1
-app.get('/talker', (req, res) => {
+app.get('/talker', async (req, res) => {
   const getAllTalkers = await readFileTalker();
   return res.status(200).send(getAllTalkers);
 });
