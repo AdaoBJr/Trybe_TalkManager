@@ -3,7 +3,6 @@ const fs = require('fs').promises;
 const express = require('express');
 const bodyParser = require('body-parser');
 // const { json } = require('body-parser');
-
 const app = express();
 app.use(bodyParser.json());
 
@@ -23,6 +22,13 @@ app.get('/', (_request, response) => {
 app.get('/talker', async (_request, response) => {
   const talker = await getTalker();
   response.status(HTTP_OK_STATUS).send(talker);
+});
+
+app.get('/talker/:id', async (_request, response) => {
+  const { id } = _request.params;
+  const talker = await getTalker();
+  const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id));
+  response.status(HTTP_OK_STATUS).send(responseForUse);
 });
 
 app.listen(PORT, () => {
