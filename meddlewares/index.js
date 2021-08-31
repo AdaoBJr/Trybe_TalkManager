@@ -133,6 +133,19 @@ const editTalker = async (req, res) => {
   return res.status(200).json({ id: +id, name, age, talk });
 };
 
+const seachTalker = async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readFile();
+  if (!q || q === '') {
+    return res.status(200).json(talkers);    
+  }   
+  const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
+  if (filteredTalkers.length > 0) {
+    return res.status(200).json(filteredTalkers); 
+  } 
+  return res.status(200).json(Array.from([])); 
+};
+
 const deletaTalker = async (req, res) => {  
   let talkersList = await readFile();
   const { id } = req.params;  
@@ -155,4 +168,5 @@ module.exports = {
   addTalker,
   editTalker,
   deletaTalker,
+  seachTalker,
 }; 
