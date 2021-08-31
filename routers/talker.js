@@ -51,4 +51,26 @@ router.post('/',
       res.status(201).json(newTalker);
     }));
 
+router.put('/:id',
+    tokenAuth,
+    nameAuth,
+    ageAuth,
+    talkAuth,
+    dateAuth,
+    rateAuth,
+    rescue(async (req, res) => {
+      const { id: paramId } = req.params;
+      const talkersList = await getTalkers();
+      const filteredTalkersList = talkersList.filter(
+        ({ id }) => id !== parseInt(paramId, 10),
+      );
+      const updatedTalker = { ...req.body, id: parseInt(paramId, 10) };
+  
+      const updatedTalkersList = [...filteredTalkersList, updatedTalker];
+  
+      await setTalkers(updatedTalkersList);
+  
+      res.status(200).json(updatedTalker);
+    }));
+
 module.exports = router;
