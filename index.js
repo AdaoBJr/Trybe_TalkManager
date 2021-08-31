@@ -11,6 +11,9 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+const talker = require('./routers/talker');
+
+app.use('/talker', talker);
 
 app.listen(PORT, () => {
   console.log('Online');
