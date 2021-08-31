@@ -17,10 +17,6 @@ const getTalkers = () => {
   }
 };
 
-const saveTalkers = (talkers) => {
-  fs.writeFileSync(filePath, JSON.stringify(talkers, null, '\t'));
-};
-
 const getRequisition = (req, res) => {
   const talkers = getTalkers();
   return res.status(200).send(talkers);
@@ -58,8 +54,9 @@ const isValidPassword = (req, res, next) => {
   const { password } = req.body;
   const fieldPassword = res.status(400).send({ message: 'O campo "password" é obrigatório' });
   const invalidPassword = res.status(400)
-    .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  const result = password.toString().length < 5 ? invalidPassword : !password ? fieldPassword : next();
+  .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  const menorQueCinco = password.toString().length < 5 ? invalidPassword : next();
+  const result = !password ? fieldPassword : menorQueCinco;
   return result;
 };
 const talkerRoute = (app) => {
