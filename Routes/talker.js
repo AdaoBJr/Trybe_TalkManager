@@ -1,7 +1,7 @@
 const express = require('express');
 const fs = require('fs').promises;
-const { getAll, findById, create, lastId } = require('../service/readLine');
-const { update, excluse, findByName } = require('../service/readLine');
+const { findById, create, lastId } = require('../service/readLine');
+const { update, excluse } = require('../service/readLine');
 const { authLogin, validateTalker } = require('../middlewares');
 
 const router = express.Router();
