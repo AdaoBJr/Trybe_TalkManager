@@ -5,8 +5,8 @@ const getAllTalkers = require('./utils/getAllTalkers');
 const getTalkerById = require('./utils/getTalkerById');
 const login = require('./utils/login');
 const createTalker = require('./utils/createTalker');
-// const editTalker = require('./utils/editTalker');
-// const deleteTalker = require('./utils/deleteTalker');
+const editTalker = require('./utils/editTalker');
+const deleteTalker = require('./utils/deleteTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -26,6 +26,20 @@ app.listen(PORT, () => {
 app.get('/talker', getAllTalkers);
 app.get('/talker/:id', getTalkerById);
 app.post('/login', login);
-app.post('/talker', createTalker);
-// app.put('/talker/:id', editTalker);
-// app.delete('/talker/:id', deleteTalker);
+app.post('/talker',
+  createTalker.tokenValidation,
+  createTalker.nameValidation,
+  createTalker.ageValidation,
+  createTalker.talkValidation,
+  createTalker.watchedAtValidation,
+  createTalker.rateValidation,
+  createTalker.createTalker);
+app.put('/talker/:id',
+  editTalker.tokenValidation,
+  editTalker.nameValidation,
+  editTalker.ageValidation,
+  editTalker.talkValidation,
+  editTalker.watchedAtValidation,
+  editTalker.rateValidation,
+  editTalker.editTalker);
+app.delete('/talker/:id', deleteTalker);
