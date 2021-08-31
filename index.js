@@ -24,7 +24,7 @@ app.get('/talker', palestrantes);
 app.get('/talker/:id', talkerId);
 
 // // desafio3
-app.post('/loguin', loguin);
+app.post('/login', loguin);
 
 // // desafio4
 // app.post('/talker', post);
