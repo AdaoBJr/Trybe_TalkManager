@@ -5,7 +5,7 @@ const { promisify } = require('util');
 const { findOne,
   validarSenha,
   validarEmail, 
-  // validaToken, 
+  validaToken, 
   editTalker,
   validaNome, validaAge, validaDate, validaRate, validaTalk, addTalker } = require('./meddlewares');
 
@@ -52,12 +52,12 @@ app.post('/login', (req, res) => {
   if (checkPassword !== 'ok') res.status(400).json(checkPassword);
 
   res.status(200).json({
-    token: '99999999',
+    token: 'b8ae476ee6c5c129',
   });
 });
 
 app.post('/talker', 
-  // validaToken,
+  validaToken,
   validaNome, 
   validaAge, 
   validaTalk, 
