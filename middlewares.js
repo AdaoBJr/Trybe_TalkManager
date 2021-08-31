@@ -1,10 +1,20 @@
 const fs = require('fs').promises;
 
-const talker = './talker.json';
+const talkers = './talker.json';
 
-const readTalkerJson = async () => {
-  const result = await fs.readFile(talker, 'utf-8');
-  return JSON.parse(result);
+const readFile = async () => {
+  const talkersList = await fs.readFile(talkers, 'utf-8');
+  return JSON.parse(talkersList);
 };
 
-module.exports = { readTalkerJson };
+const getAllTalkers = () => readFile();
+
+const getTalkerById = async (id) => {
+  const talkerList = await readFile();
+  return talkerList.find((obj) => obj.id === +id);
+};
+
+module.exports = {
+  getAllTalkers,
+  getTalkerById,
+};
