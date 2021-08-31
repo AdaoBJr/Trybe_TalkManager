@@ -47,9 +47,7 @@ const deleteTalker = async (req, res) => {
 
 const searchTalker = async (req, res) => {
   const { q } = req.query;
-
   const response = await searchTalkerData(q);
-
   return res.status(200).json(response);
 };
 

@@ -1,4 +1,5 @@
-const fs = require('fs/promises');
+// const fs = require('fs/promises');
+const fs = require('fs').promises;
 
 exports.readSpeakers = () => fs.readFile('./talker.json', 'utf-8').then((res) => JSON.parse(res));
 
