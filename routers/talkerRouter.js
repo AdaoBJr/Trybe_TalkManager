@@ -6,6 +6,31 @@ const fs = require('fs').promises;
 
 const arquivo = './talker.json';
 
+const verifyToken = (req, res, next) => {
+  const { authorization } = req.headers;
+
+  if (!authorization) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  if (authorization.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  next();
+};
+
+router.get('/search', verifyToken, (req, res) => {
+  fs.readFile(arquivo, 'utf8')
+  .then((info) => JSON.parse(info))
+  .then((info) => {
+    const { q } = req.query;
+    if (!q) return res.status(200).json(info);
+    const searchedTalker = info.filter((talker) => talker.name.includes(q));
+    return res.status(200).json(searchedTalker);
+  })
+  .catch((err) => { res.status(400).json(err); });
+});
+
 router.get('/', (_req, res) => {
   let data = [];
   fs.readFile(arquivo, 'utf8')
@@ -27,19 +52,6 @@ router.get('/:id', (req, res) => {
     return res.status(200).json(filtered);
   });
 });
-
-const verifyToken = (req, res, next) => {
-  const { authorization } = req.headers;
-
-  if (!authorization) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-
-  if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
-  next();
-};
 
 const verifyName = (req, res, next) => {
   const { name } = req.body;
@@ -170,5 +182,4 @@ verifyToken,
   .catch((err) => res.status(400).json(err));
  });
  
- // mudança para refazer os testes
 module.exports = router;
