@@ -14,7 +14,7 @@ const getTalkerById = async (req, res) => {
 };
 
 const createTalker = async (req, res) => {
-  const { name, age, talk: watchedAt, rate } = req.body;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
   const talkers = await utils.readFile('./talker.json');
   const newTalker = {
     id: talkers.length + 1,
@@ -28,6 +28,12 @@ const createTalker = async (req, res) => {
   await utils.writeFile('./talker.json', JSON.stringify(talkers));
   return res.status(201).json(newTalker);
 };
+
+// const editTalker = async (req, res) => {
+//   const { id } = req.params;
+//   const { name, age, talk: watchedAt, rate } = req.body;
+
+// };
 
 module.exports = {
   getAllTalkers,
