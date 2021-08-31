@@ -126,7 +126,7 @@ const authenticateTalk = (req, res, next) => {
     return res.status(400)
     .json({
       message: 'O campo "talk" é obrigatório e "watchedAt"'
-      + 'e "rate" não podem ser vazios',
+      + ' e "rate" não podem ser vazios',
     }); 
   }
   next();
@@ -162,7 +162,7 @@ app.post('/talker',
 verifyToken, verifyName, verifyAge, authenticateTalk, verifyDate, verifyRate,
  async (req, res) => {
   const content = await readFile();
-  const newContent = [...content, req.body];
-  await writeFile(newContent);
+  // const newContent = [...content, req.body];
+  await writeFile(req.body);
   return res.status(201).json(req.body);
 });
