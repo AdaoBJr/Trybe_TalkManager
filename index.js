@@ -20,7 +20,22 @@ app.get('/talker', (_req, res) => {
     if (err) {
       return res.status(200).json([]);
     }
-    res.status(200).json(JSON.parse(content.toString('utf8')));
+    return res.status(200).json(JSON.parse(content.toString('utf8')));
+  });
+});
+
+app.get('/talker/:id', (req, res) => {
+  const { id } = req.params;
+  
+  fs.readFile('./talker.json', 'utf8', (_err, content) => {    
+    const data = JSON.parse(content);
+    const findTalker = data.find((talker) => talker.id === Number(id));
+
+    if (!findTalker) {
+  return res.status(404).json({
+       message: 'Pessoa palestrante não encontrada' }); 
+}
+  return res.status(200).json(findTalker);
   });
 });
 
