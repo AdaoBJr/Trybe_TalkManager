@@ -5,8 +5,9 @@ const overwriteWriteFile = require('./helpers/writeFile');
 
 const route = express.Router();
 
-const HTTP_NOT_FOUND_STATUS = 401;
 const HTTP_BAD_REQUEST_STATUS = 400;
+const HTTP_NOT_FOUND_STATUS = 401;
+const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
 
 const tokenNotFound = 'Token não encontrado';
@@ -80,6 +81,31 @@ const verifyRate = (req, res, next) => {
     }
     next();
 };
+
+route.put('/:id',
+verifyToken,
+verifyName,
+verifyAge,
+verifyTalk,
+verifyRate,
+verifyWatchedAt,
+async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const fileObject = await readFileFs('./talker.json');
+  let newTalker = {};
+  const newObj = fileObject.map((talker) => {
+    if (talker.id === Number(id)) {
+      const newId = Number(talker.id);
+      console.log('type of newid', typeof newId);
+      newTalker = { age, id: newId, name, talk };
+      return newTalker;
+    }
+    return talker;
+  });
+  overwriteWriteFile('talker.json', newObj);
+  res.status(HTTP_OK_STATUS).json(newTalker);
+});
 
 route.get('/:id', async (req, res) => {
   const { id } = req.params;
