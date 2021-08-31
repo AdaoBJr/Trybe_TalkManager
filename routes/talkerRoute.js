@@ -1,9 +1,12 @@
 const fs = require('fs');
 const { join } = require('path');
+const crypto = require('crypto');
+
+const generateToken = () => crypto.randomBytes(8).toString('hex');
 
 const filePath = join('talker.json');
 
-const getTalker = () => {
+const getTalkers = () => {
   const data = fs.existsSync(filePath)
     ? fs.readFileSync(filePath)
     : [];
@@ -14,18 +17,18 @@ const getTalker = () => {
   }
 };
 
-const saveTalker = (talker) => {
-  fs.writeFileSync(filePath, JSON.stringify(talker, null, '\t'));
+const saveTalkers = (talkers) => {
+  fs.writeFileSync(filePath, JSON.stringify(talkers, null, '\t'));
 };
 
 const getRequisition = (req, res) => {
-  const talker = getTalker();
-  return res.status(200).send(talker);
+  const talkers = getTalkers();
+  return res.status(200).send(talkers);
 };
 
 const getRequisitionID = (req, res) => {
-  const talker = getTalker();
-  const filterID = talker.find((talk) => talk.id === Number(req.params.id));
+  const talkers = getTalkers();
+  const filterID = talkers.find((talk) => talk.id === Number(req.params.id));
 
   const result = !filterID
     ? res.status(404).send({ message: 'Pessoa palestrante não encontrada' })
@@ -34,23 +37,35 @@ const getRequisitionID = (req, res) => {
   return result;
 };
 
-const postRequisition = (req, res) => {
-  const talker = getTalker();
-  talker.push(req.body);
-  saveTalker(talker);
-  return res.status(201).send('OK! Usuário Criado');
+const postRequisition = (req, res) => res.status(200).send({ token: generateToken() });
+
+const validateEmail = (email) => {
+  const expressionRegex = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
+  return !expressionRegex.test(email);
 };
 
+const isValidEmail = (req, res, next) => {
+  const { email } = req.body;
+  const fieldEmail = res.status(400).send({ message: 'O campo "email" é obrigatório' });
+  const invalidEmail = res.status(400)
+    .send({ message: 'O "email" deve ter o formato "email@email.com"' });
+  const verifyEmail = validateEmail(email) ? next() : invalidEmail;
+  const result = email ? verifyEmail : fieldEmail;
+  return result;
+};
+
+const isValidPassword = (req, res, next) => {
+  const { password } = req.body;
+  const fieldPassword = res.status(400).send({ message: 'O campo "password" é obrigatório' });
+  const invalidPassword = res.status(400)
+    .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  const result = password.toString().length < 5 ? invalidPassword : !password ? fieldPassword : next();
+  return result;
+};
 const talkerRoute = (app) => {
-  app.route('/talker')
-    // Pegando usuários
-    .get(getRequisition);
-  app.route('/talker/:id?')
-    // Filtrando por Id de usuário
-    .get(getRequisitionID);
-  app.route('/login')
-    // Filtrando por Id de usuário
-    .post(postRequisition);
+  app.route('/talker').get(getRequisition); // Pegando usuários
+  app.route('/talker/:id?').get(getRequisitionID); // Filtrando por Id de usuário
+  app.route('/login').post(isValidEmail, isValidPassword, postRequisition); // Filtrando por Id de usuário
 };
 
 module.exports = talkerRoute;
