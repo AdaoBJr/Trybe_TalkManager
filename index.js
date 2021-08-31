@@ -1,7 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { isValidEmail, isValidPassword, createToken } = require('./middlewares/validation');
+
+const { 
+  isValidEmail,
+  isValidPassword,
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidDate,
+  isValidRate,
+  createToken, 
+} = require('./middlewares/validation');
 
 fs.readFileSync('./talker.json');
 
@@ -40,15 +50,22 @@ app.get('/talker/:id', (req, res) => {
   });
 });
 
-app.post('/login', isValidEmail, isValidPassword, (req, res) => {
-  const token = req.headers.authorization;
-  if (token === '7mqaVRXJSp886CGr') {
-     return res.status(200).json({ token: createToken(16) }); 
-  }
+app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
+  const tokenCreated = createToken(16);
+  res.status(200).json({ token: tokenCreated });
 });
 
-app.post('/talker', (req, res) => {
+app.post('/talker', isValidToken, isValidName, isValidAge, isValidDate, 
+isValidRate, (req, res) => {
+  const { id, name, age, talk: { watchedAt, rate } } = req.body;
+  // const { token } = req.headers;
 
+  fs.readFile('./talker.json', 'utf8', (_err, content) => {    
+    const data = JSON.parse(content);
+    
+    const addData = data.push({ id, name, age, talk: { watchedAt, rate } });
+    return res.status(201).json(addData);     
+  });
 });
 
 app.listen(PORT, () => {
