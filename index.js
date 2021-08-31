@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { validateEmail, validatePassword,
-  createToken, validateToken, validateName, validateAge, 
+// const crypto = require('crypto-js');
+const { validateEmail, validatePassword, createToken,
+  validateToken, validateName, validateAge, 
   validateWatched, validateRate, validateTalk } = require('./middleware/validations');
 
 const app = express();
@@ -36,10 +37,8 @@ app.get('/talker/:id', (req, res) => {
   });
 });
 
-app.post('/login', validateEmail, validatePassword, (req, res) => {
-  const token = req.headers.authorization;
-  if (token === '7mqaVRXJSp886CGr') return res.status(200).json({ token: createToken(16) });
-});
+app.post('/login', validateEmail, validatePassword, (_req, res) => 
+  res.status(200).json({ token: createToken(16) }));
 
 app.post('/talker', validateToken, validateName, validateAge,
 validateWatched, validateRate, validateTalk,
