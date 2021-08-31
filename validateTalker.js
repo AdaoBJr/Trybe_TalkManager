@@ -21,7 +21,7 @@ function validateAge(res, req, next) {
 }
 
 function validateTalkDate(res, req) {
-  const { talk: { watchedAt } } = req.body;
+  const { watchedAt } = req.body.talk;
   const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[1-9]|2[1-9])$/;
   
   if (!watchedAt.test(dateRegex)) {
@@ -29,8 +29,8 @@ function validateTalkDate(res, req) {
   }
 }
 
-function validateTalkeRate(res, req) {
-  const { talk: { rate } } = req.body;
+function validateTalkRate(res, req) {
+  const { rate } = req.body.talk;
   if (Number(rate) >= 1 && Number(rate) <= 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -41,7 +41,7 @@ function validateTalk(res, req, next) {
   const { watchedAt, rate } = req.body.talk;
 
   validateTalkDate();
-  validateTalkeRate();
+  validateTalkRate();
 
   if (!talk || !watchedAt || !rate) {
     return res.status(400)

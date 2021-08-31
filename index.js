@@ -42,19 +42,21 @@ app.post('/login', validateEmail, validatePassword, (req, res) => {
   return res.status(200).json({ token });
 });
 
-// app.post('/talker', validateName, validateAge, validateTalk, (req, res) => {
-//   const { talk } = req.body;
-  
-//   const token = req.headers.authorization;
+app.post('/talker', validateName, validateAge, validateTalk, (req, res) => {
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const token = req.headers.authorization;
 
-//   if (!token) {
-//     return res.status(401).json({ message: 'Token não encontrado' });
-//   } if (token.length !== 16) {
-//     return res.status(401).json({ message: talk });
-//   }
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  } if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
 
-//   return res.status(201).json({});
-// });
+  const file = readFileTalker();
+  file.push({ name, age, talk: { watchedAt, rate } });
+
+  return res.status(201).json({ name, age, talk: { watchedAt, rate } });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
