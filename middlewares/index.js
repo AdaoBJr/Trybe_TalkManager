@@ -91,7 +91,7 @@ const validateDate = (req, res, next) => {
 };
 
 function Files() {
-  const talkers = fs.Files('./talker.json', 'utf-8');
+  const talkers = fs.readFile('./talker.json', 'utf-8');
   return talkers.then((data) => JSON.parse(data));
 }
 
