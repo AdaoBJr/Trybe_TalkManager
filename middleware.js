@@ -137,7 +137,7 @@ const createNewPalestrant = async (req, res) => {
 
 // procura na query a pessoa 7
 const searchTalker = async (req, res) => {
-  const { q } = res.query;
+  const { q } = req.query;
   const result = await readFile();
   if (!q) {
     return res.status(200).json(result);

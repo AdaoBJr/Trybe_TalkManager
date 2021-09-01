@@ -10,13 +10,13 @@ const { readFile,
       validaTalker,
        validaTalkerFormato,
         createNewPalestrant,
-         // searchTalker,
+          searchTalker,
           deletetTalker, editTalker } = require('../middleware');
 
 const router = express.Router();
 
 // 7
-// router.get('/search', validaToken, searchTalker);
+router.get('/search', validaToken, searchTalker);
 
 // 2
 router.get('/:id', async (req, res) => {
