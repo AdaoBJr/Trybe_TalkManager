@@ -100,6 +100,17 @@ isValidToken, isValidName, isValidAge, isValidTalk, isValidDate, isValidRate, (r
   });
 });
 
+app.delete('/talker/:id', isValidToken, (req, res) => {
+  const { id } = req.params;
+  fs.readFile(talkerJson, 'utf8', (_err, content) => {
+    const data = JSON.parse(content);
+    const index = data.findIndex((talker) => talker.id === Number(id));
+    data.splice(index, 1);
+    fs.writeFile(talkerJson, JSON.stringify(data), 'utf8', () =>
+      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }));
+  });
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
