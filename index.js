@@ -43,7 +43,7 @@ app.get('/talker/:id', async (req, res) => {
 app.post('/login', authLoginAndPassword,
   (_req, res) => {
     const tolken = crypto.randomBytes(8).toString('hex');
-    res.status(200).json({ token: tolken });
+    return res.status(200).json({ token: tolken });
   });
 
 app.listen(PORT, () => {
