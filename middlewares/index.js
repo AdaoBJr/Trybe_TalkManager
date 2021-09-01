@@ -1,9 +1,9 @@
-const fs = require('fs').promises;
-
 const findId = (id, listTalkers) => {
   const talkerFind = listTalkers.find((talker) => talker.id === +id);
   return talkerFind;
 };
+
+const fs = require('fs').promises;
 
 const validateEmail = (email) => {
   if (!email) return { message: 'O campo "email" é obrigatório' }; 
