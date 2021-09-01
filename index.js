@@ -21,12 +21,6 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-// 6
-app.delete('/talker/:id', [
-  validateToken,
-  deleteTalker,
-]);
-
 // 4
 app.post('/talker', 
   validateToken,
@@ -59,6 +53,12 @@ app.get('/talker', async (req, res) => {
   const getAllTalkerList = await readFileTalker();
   return res.status(200).send(getAllTalkerList);
 });
+
+// 6
+app.delete('/talker/:id', [
+  validateToken,
+  deleteTalker,
+]);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
