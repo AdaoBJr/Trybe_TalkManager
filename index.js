@@ -8,7 +8,8 @@ const {
   validateToken,
   validateName,
   validateAge,
-  validateTalk,
+  validateTalkCreate,
+  validateTalkEdit,
   validateWatchedAndRate,
 } = require('./validations');
 
@@ -60,7 +61,7 @@ app.post('/talker',
   validateToken,
   validateName,
   validateAge,
-  validateTalk,
+  validateTalkCreate,
   validateWatchedAndRate,
   async (req, res) => {
     const { name, age, talk } = req.body;
@@ -74,7 +75,7 @@ app.put('/talker/:id',
   validateToken,
   validateName,
   validateAge,
-  validateTalk,
+  validateTalkEdit,
   validateWatchedAndRate,
   async (req, res) => {
     const { id } = req.params;
@@ -93,7 +94,6 @@ app.delete('/talker/:id',
     const talkerList = await getTalkers();
 
     const talkIndex = talkerList.findIndex((talker) => talker.id === Number(id));
-    console.log(talkIndex);
 
     talkerList.splice(talkIndex, 1);
     fs.writeFile('./talker.json', JSON.stringify(talkerList));
