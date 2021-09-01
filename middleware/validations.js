@@ -82,7 +82,7 @@ const validateWatched = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
   const rating = Number(rate);
-  if (!rating) {
+  if (!rating && rating === 0) {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -102,10 +102,6 @@ const validateTalk = (req, res, next) => {
   }
   next();
 };
-
-/* const validateKeys = () => {
-
-} */
 
 module.exports = {
   validateEmail,

@@ -55,16 +55,18 @@ app.post('/talker', validateToken, validateName, validateAge,
     });
 });
 
-app.put('/talker/:id', validateToken, validateName, validateAge,
+app.put('/talker/:id', validateToken, validateName, validateAge, validateTalk,
  validateWatched, validateRate, 
   (req, res) => {
-    fs.readFile('./talker.json', 'utf-8', (_err, content) => {
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    fs.readFile(talkerJson, 'utf-8', (_err, content) => {
       const { id } = req.params;
       const data = JSON.parse(content);
-      const { name, age, talk: { watchedAt, rate } } = req.body;
       const talkIndex = data.findIndex((r) => r.id === Number(id));
-      data[talkIndex] = { ...data[talkIndex], name, age, watchedAt, rate };
-      return res.status(200).end();
+      data[talkIndex] = { name, age, id, talk: { watchedAt, rate } };
+      fs.writeFile(talkerJson, JSON.stringify(data), (_error) => {
+        res.status(200).json({ id, name, age, talk: { watchedAt, rate } });
+      });
     });
 });
 
@@ -74,7 +76,9 @@ app.delete('/talker/:id', validateToken, (req, res) => {
     const data = JSON.parse(content);
     const talkIndex = data.findIndex((r) => r.id === Number(id));
     data.splice(talkIndex, 1);
-    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    fs.writeFile(talkerJson, JSON.stringify(data), (_error) => {
+      res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    });
   });
 });
 
