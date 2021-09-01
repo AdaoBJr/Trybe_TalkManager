@@ -12,6 +12,7 @@ const readFileTalker = async () => {
   }
 };
 
+// thanks for the tip, Raphael Gumieri ;)
 const idGenerator = async () => {
   const file = await readFileTalker();
   return file.length + 1;

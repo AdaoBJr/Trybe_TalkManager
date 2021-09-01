@@ -10,6 +10,18 @@ const HTTP_BAD_REQUEST = 400;
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_NOT_FOUND = 404;
 
+const talkerNotFound = 'Pessoa palestrante não encontrada';
+const tokenNotFound = 'Token não encontrado';
+const invalidToken = 'Token inválido';
+const nameRequired = 'O campo "name" é obrigatório';
+const invalidName = 'O "name" deve ter pelo menos 3 caracteres';
+const ageRequired = 'O campo "age" é obrigatório'; 
+const invalidAge = 'A pessoa palestrante deve ser maior de idade';
+const invalidRage = 'O campo "rate" deve ser um inteiro de 1 à 5';
+const invalidDateFormat = 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"';
+const talkRequired = 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
+const successfullyDeleted = 'Pessoa palestrante deletada com sucesso';
+
 async function getAllTalkers(req, res) {
   const talkers = await readFileTalker();
   if (!talkers) {
@@ -25,7 +37,7 @@ async function getTalkerById(req, res) {
 
   if (!talker) {
     return res.status(HTTP_NOT_FOUND).json({
-      message: 'Pessoa palestrante não encontrada',
+      message: talkerNotFound,
     }); 
   }  
   return res.status(HTTP_OK_STATUS).send(talker);
@@ -36,12 +48,12 @@ function tokenValidation(req, res, next) {
 
   if (!authorization) {
     return res.status(HTTP_UNAUTHORIZED)
-    .json({ message: 'Token não encontrado' });
+    .json({ message: tokenNotFound });
   }
 
   if ((String(authorization)).length !== 16) {
     return res.status(HTTP_UNAUTHORIZED)
-    .json({ message: 'Token inválido' });
+    .json({ message: invalidToken });
   }
   next();
 }
@@ -51,11 +63,11 @@ function nameValidation(req, res, next) {
 
   if (!name || name === '') {
     return res.status(HTTP_BAD_REQUEST)
-      .json({ message: 'O campo "name" é obrigatório' });
+      .json({ message: nameRequired });
   }
   if (name.length < 3) {
     return res.status(HTTP_BAD_REQUEST)
-      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+      .json({ message: invalidName });
   }
   next();
 }
@@ -65,11 +77,11 @@ function ageValidation(req, res, next) {
 
   if (!age || age === '') {
     return res.status(HTTP_BAD_REQUEST)
-      .json({ message: 'O campo "age" é obrigatório' });
+      .json({ message: ageRequired });
   }
   if (age < 18) {
     return res.status(HTTP_BAD_REQUEST)
-      .json({ message: 'A pessoa palestrante deve ser maior de idade' });
+      .json({ message: invalidAge });
   }
   next();
 }
@@ -83,7 +95,7 @@ function rateValidation(req, res, next) {
     || +rate > 5
     ) {
     return res.status(HTTP_BAD_REQUEST)
-    .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    .json({ message: invalidRage });
   }
   next();
 }
@@ -93,7 +105,7 @@ function watchedAtValidation(req, res, next) {
 
   if (watchedAt && !dateFormatValidation(watchedAt)) {
     return res.status(HTTP_BAD_REQUEST)
-    .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+    .json({ message: invalidDateFormat });
   }
   next();
  }
@@ -107,7 +119,7 @@ function watchedAtValidation(req, res, next) {
     || talk.rate === undefined
     ) {
     return res.status(HTTP_BAD_REQUEST)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+    .json({ message: talkRequired });
   }
   next();
  }
@@ -150,7 +162,7 @@ async function deleteTalker(req, res) {
   const updatedTalkers = curr.filter((el) => el.id !== +id);
   writeFile('./talker.json', updatedTalkers);
 
-  res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
+  res.status(HTTP_OK_STATUS).send({ message: successfullyDeleted });
 }
 
 async function searchTalker(req, res) {
