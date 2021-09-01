@@ -1,5 +1,7 @@
 const fs = require('fs').promises;
-const { validateName, validate, validateRate } = require('./Validade');
+const { validate } = require('./Validade');
+const { validateName } = require('./validadeName');
+const { validateRate } = require('./validateRateAndWitch');
 
 const putFunction = async (req, res) => {
   const { params: { id }, headers: { token },
