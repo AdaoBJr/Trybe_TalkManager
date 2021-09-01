@@ -12,13 +12,20 @@ const {
   validateRate,
   validateTalker,
   validateToken,
-  addTalker } = require('./middlewares');
+  addTalker,
+  deleteTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+
+// 6
+app.delete('/talker/:id', [
+  validateToken,
+  deleteTalker,
+]);
 
 // 4
 app.post('/talker', 
