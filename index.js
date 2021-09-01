@@ -76,11 +76,24 @@ async (req, res) => {
     }
     return { ...newTalker, id: Number(id) };
   });
-  console.log(editTalkers);
   await writeContentFile(PATH_FILE, editTalkers);
 
   res.status(200).json({ ...newTalker, id: Number(id) });
 });
+
+// REQUISITO 6
+app.delete('/talker/:id', 
+validToken,
+async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readContentFile(PATH_FILE);
+  const deleteTalkers = talkers.filter((i) => i.id !== Number(id));
+  await writeContentFile(PATH_FILE, deleteTalkers);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+// REQUISITO 7
 
 app.listen(PORT, () => {
   console.log('Online');
