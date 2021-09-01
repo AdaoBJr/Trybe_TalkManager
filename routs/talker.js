@@ -9,9 +9,11 @@ const isValidTalk = require('../middlewares/isValidTalk');
 
 const router = express.Router();
 
+const fileData = './talker.json';
+
 router.get('/', (_req, res) => {
   try {
-    const data = fs.readFileSync('./talker.json', 'utf8');
+    const data = fs.readFileSync(fileData, 'utf8');
     const talkers = JSON.parse(data);
     
     res.status(200).json(talkers);
@@ -22,7 +24,7 @@ router.get('/', (_req, res) => {
 
 router.get('/:id', (req, res) => {
   const idParam = req.params.id;
-  const data = fs.readFileSync('./talker.json', 'utf8');
+  const data = fs.readFileSync(fileData, 'utf8');
   const talkers = JSON.parse(data);
 
   const talkerFound = talkers.find(({ id }) => Number(id) === Number(idParam));
@@ -35,7 +37,7 @@ router.get('/:id', (req, res) => {
 
 router.post('/', isValidToken, isValidTalk, isValidName, isValidAge, isValidDate, isValidRate,
 (req, res) => {
-  const data = fs.readFileSync('./talker.json', 'utf8');
+  const data = fs.readFileSync(fileData, 'utf8');
   const talkers = JSON.parse(data);
   const { name, age, talk: { watchedAt, rate } } = req.body;
   
@@ -44,10 +46,32 @@ router.post('/', isValidToken, isValidTalk, isValidName, isValidAge, isValidDate
 
   try {
     const talkerString = JSON.stringify(talkers);
-    fs.writeFileSync('./talker.json', talkerString);
+    fs.writeFileSync(fileData, talkerString);
     res.status(201).json({ id: qtdTalks + 1, name, age, talk: { watchedAt, rate } });
   } catch (err) {
-    res.status(501).json({ Err: err.message });
+    res.status(501).json({ Erro: err.message });
+  }
+});
+
+router.put('/:id', isValidToken, isValidTalk, isValidName, isValidAge, isValidDate, isValidRate,
+(req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  try {
+    const data = fs.readFileSync(fileData, 'utf8');
+    const talkers = JSON.parse(data);
+    const indexTalker = talkers.findIndex((t) => Number(t.id) === Number(id));
+  
+    talkers[indexTalker] = {
+      ...talkers[indexTalker], name, age, talk: { watchedAt, rate },
+    };
+  
+    const talkerString = JSON.stringify(talkers);
+    fs.writeFileSync(fileData, talkerString);
+  
+    res.status(200).json(talkers[indexTalker]);
+  } catch (err) {
+    res.status(501).json({ Erro: err.message });
   }
 });
 
