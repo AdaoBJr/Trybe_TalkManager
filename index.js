@@ -2,7 +2,7 @@ const express = require('express');
 const rescue = require('express-rescue');
 const bodyParser = require('body-parser');
 
-const { getTalker } = require('./getArquivo/getTalker');
+const { getTalker } = require('./arquivo/getTalker');
 const { generateToken } = require('./token/token');
 const { validateEmail } = require('./token/email');
 
@@ -54,7 +54,6 @@ app.post('/login', (req, res) => {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (password.length < 6) {
-    console.log('entrou no lengu');
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   return res.status(200).json(token);
