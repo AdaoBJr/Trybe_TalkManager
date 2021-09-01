@@ -27,6 +27,21 @@ router.post(
     res.status(200).json({ token: tok });
     },
 );
+
+router.get('talker', async (req, res) => {
+    const data = await talkerCaller();
+    res.status(HTTP_OK_STATUS).send(data);
+  });
+  
+router.get('talker/:id', async (req, res) => {
+    const data = await talkerCaller();
+    const { id } = req.params;
+    const result = data.find((c) => c.id === Number(id));
+    if (!result) {
+    return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+    }
+    res.status(HTTP_OK_STATUS).send(result);
+});
 router.put('talker/:id', async (req, res) => {
     const { id } = req.params;
     // const { name, age, talk: { watchedAt }, talk: { rate } } = req.body;
@@ -35,20 +50,5 @@ router.put('talker/:id', async (req, res) => {
     const result = data.find((dat) => dat.id === Number(id));
     console.log(result);
     res.status(200).json({ result });
-});
-
-router.get('/talker', async (req, res) => {
-    const data = await talkerCaller();
-    res.status(HTTP_OK_STATUS).send(data);
-  });
-  
-router.get('/talker/:id', async (req, res) => {
-    const data = await talkerCaller();
-    const { id } = req.params;
-    const result = data.find((c) => c.id === Number(id));
-    if (!result) {
-    return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
-    }
-    res.status(HTTP_OK_STATUS).send(result);
 });
   module.exports = router;
