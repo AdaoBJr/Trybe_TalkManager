@@ -42,17 +42,25 @@ app.get('/talker/:id', async (request, response) => {
 //   response.status(200).send('OK');
 // });
 
-// app.post('/login', async (request, response, next) => {
-//   const { email } = request.body;
-//     const { validateEmail } = micro;
-//     validateEmail(email, response);
-//     next();
-//   }, async (request, response, next) => {
-//     const { password } = request.body;
-//     const { validatePass } = micro;
-//     validatePass(password, response);
-//     next();
-//   }, (_request, response) => response.status(200).json({ token: '7mqaVRXJSp886CGr' }));
+app.post('/login', async (request, response, next) => {
+  const { email } = request.body;
+    const { containEmail } = micro;
+    containEmail(email, response, next);
+  }, async (request, response, next) => {
+    const { email } = request.body;
+      const { formatEmail } = micro;
+      formatEmail(email, response, next);
+    }, 
+    async (request, response, next) => {
+      const { password } = request.body;
+        const { containPass } = micro;
+        containPass(password, response, next);
+      }, 
+  async (request, response, next) => {
+    const { password } = request.body;
+    const { formatPass } = micro;
+    formatPass(password, response, next);
+  }, (_request, response) => response.status(200).json({ token: '7mqaVRXJSp886CGr' }));
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -13,29 +13,38 @@ const getTalkerID = async (id) => {
   return out;
 };
 
-const validateEmail = (email, response) => {
-    const parseEmail = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\b/i;
-    if (email === '' || !email) {
-      return response
-      .status(400).json({ message: 'O campo "email" é obrigatório' });
+const containEmail = (email, response, next) => {
+  if (email === '' || !email) {
+    return response
+    .status(400).json({ message: 'O campo "email" é obrigatório' });
   }
-  
-    if (!parseEmail.test(email)) {
-      return response
-          .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  next();
+};
+
+const formatEmail = (email, response, next) => {
+  const parseEmail = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\b/i;
+  if (!parseEmail.test(email)) {
+    return response
+        .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+  next();
+};
+
+const containPass = (password, response, next) => {
+  if (password === '' || !password) {
+    return response.status(400)
+      .json({ message: 'O campo "password" é obrigatório' });
     }
-  };
+    next();
+};
   
-  const validatePass = (password, response) => {
-    if (password === '' || !password) {
-      return response.status(400)
-        .json({ message: 'O campo "password" é obrigatório' });
-  }
+  const formatPass = (password, response, next) => {
     if (password.length < 6) {
         return response.status(400).json({
             message: 'O "password" deve ter pelo menos 6 caracteres',
           });
         }
+      next();
   };
 
-module.exports = { getTalker, getTalkerID, validateEmail, validatePass };
+module.exports = { getTalker, getTalkerID, containEmail, formatEmail, containPass, formatPass };
