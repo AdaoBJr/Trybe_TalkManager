@@ -45,6 +45,30 @@ const ageValidator = (req, res, next) => {
   next();
 };
 
+const talkValidator = (req, res, next) => {
+  const { talk } = req.body;
+  if (!talk || !talk.watchedAt || !talk.rate) {
+    return res.status(HTTP_BADREQUEST_STATUS)
+      .send(
+        { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+      );
+  }
+  next();
+};
+
+const talkKeysValidator = (req, res, next) => {
+  const { talk: { watchedAt, rate } } = req.body;
+  const regexDate = new RegExp(/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i);
+  if (!regexDate.test(watchedAt)) {
+    return res.status(HTTP_BADREQUEST_STATUS)
+      .send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  } if (rate < 1 || rate > 5) {
+    return res.status(HTTP_BADREQUEST_STATUS)
+      .send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  next();
+};
+
 const addNewTalker = async (newTalker) => {
   try {
     await fs.writeFile('./talker.json', JSON.stringify(newTalker));
@@ -74,6 +98,8 @@ router.post('/',
   tokenValidator,
   nameValidator,
   ageValidator,
+  talkValidator,
+  talkKeysValidator,
   async (req, res) => {
     const { name, age, talk } = req.body;
     const talkersList = await getTalkerList();
