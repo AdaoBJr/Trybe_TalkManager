@@ -12,8 +12,8 @@ const validEmail = (req, res, next) => {
   if (!email) {
     return res.status(HTTP_400_STATUS).json({ message: 'O campo "email" é obrigatório' });
   }
-  validateEmail();
-  if (!validateEmail) {
+  const validate = validateEmail(email);
+  if (!validate) {
     return res.status(HTTP_400_STATUS)
       .json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
@@ -25,7 +25,7 @@ const validPassword = (req, res, next) => {
   if (!password) {
     return res.status(HTTP_400_STATUS).json({ message: 'O campo "password" é obrigatório' });
   }
-  if (password.length < minLength) {
+  if (password.length < minLength || typeof password !== 'string') {
     return res.status(HTTP_400_STATUS)
       .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
