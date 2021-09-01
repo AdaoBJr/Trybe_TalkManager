@@ -130,11 +130,11 @@ validateTalkExists, validateTalkerTalk, async (req, res) => {
   const talker = await readTalkersList();
   // console.log(talker);
   const ids = talker.map(({ id }) => id);
-  const newId = ((ids.length - 1) + 1) + 1; 
+  const id = ((ids.length - 1) + 1) + 1; 
   const newTalker = {
     name,
     age,
-    newId,
+    id,
     talk: {
       watchedAt,
       rate,
@@ -151,3 +151,17 @@ validateTalkExists, validateTalkerTalk, async (req, res) => {
 // });
 
 app.post('/login', validateUser, (req, res) => res.status(200).json({ token }));
+
+// const fs = require('fs').promises;
+// const readTalkersList = () => fs.readFile('./talker.json', 'utf-8')
+//   .then((fileContent) => JSON.parse(fileContent));
+
+// const teste = async() => {
+//     const talker = await readTalkersList();
+//     // console.log(talker);
+  
+//     const ids = talker.map(({ id }) => id);
+//     const newId = ((ids.length - 1) + 2); 
+//     console.log(newId)
+// } 
+// teste()
