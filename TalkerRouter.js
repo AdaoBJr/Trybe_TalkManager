@@ -76,6 +76,18 @@ const validateTalk = (req, res, next) => {
   next();
 };
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkers();
+  if (!q) {
+    return res.status(HTTP_OK_STATUS).json(talkers);
+  }
+
+  const talkerFiltered = talkers.filter((talker) => talker.name.toLowerCase().includes(q));
+
+  return res.status(HTTP_OK_STATUS).json(talkerFiltered);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
 
@@ -107,10 +119,9 @@ async (req, res) => {
 router.put('/:id', validateToken, validateName, validateAge, validateTalk, validateTalkDateRate,
  async (req, res) => {
   const { id } = req.params;
-   const { name, age, talk } = req.body;
+  const { name, age, talk } = req.body;
   const talkers = await getTalkers();
   const indexTalker = talkers.findIndex((t) => t.id === Number(id));
-  
   const editedTalker = { id: Number(id), name, age, talk };
 
   talkers[indexTalker] = editedTalker;
@@ -124,7 +135,9 @@ router.delete('/:id', validateToken, async (req, res) => {
   const { id } = req.params;
   const talkers = await getTalkers();
   const indexTalker = talkers.findIndex((t) => t.id === Number(id));
+
   talkers.splice(indexTalker, 1);
+
   await setTalkers(talkers);
 
   return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
