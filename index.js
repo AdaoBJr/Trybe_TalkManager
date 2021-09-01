@@ -42,28 +42,28 @@ app.get('/talker', async (_request, response) => {
 
 // REQUISITO 2
 
-// app.get('/talker/:id', rescue(async (_request, response) => {
-//   const { id } = _request.params;
-//   const talker = await getTalker();
-//   const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id));
-//   if (!responseForUse) {
-//     return response.status(404).send({
-//       message: 'Pessoa palestrante não encontrada',
-//     });
-//   }
-//     return response.status(HTTP_OK_STATUS).send(responseForUse);
-// }));
+app.get('/talker/:id', rescue(async (_request, response) => {
+  const { id } = _request.params;
+  const talker = await getTalker();
+  const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id));
+  if (!responseForUse) {
+    return response.status(404).send({
+      message: 'Pessoa palestrante não encontrada',
+    });
+  }
+    return response.status(HTTP_OK_STATUS).send(responseForUse);
+}));
 
 // REQUISITO 3
 
-// app.post('/login', (_request, response) => {
-//   const token = crypto.randomBytes(8).toString('hex');
-//   // const token = '7mqaVRXJSp886CGr'; 
+app.post('/login', (_request, response) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  // const token = '7mqaVRXJSp886CGr'; 
 
-//   return response.status(HTTP_OK_STATUS).json({
-//     token,
-//   });
-// });
+  return response.status(HTTP_OK_STATUS).json({
+    token,
+  });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
