@@ -10,6 +10,27 @@ const HTTP_BAD_REQUEST = 400;
 const HTTP_UNAUTHORIZED = 401;
 const HTTP_NOT_FOUND = 404;
 
+async function getAllTalkers(req, res) {
+  const talkers = await readFileTalker();
+  if (!talkers) {
+    return res.status(HTTP_OK_STATUS).send([]);
+  }
+  return res.status(HTTP_OK_STATUS).json(talkers);
+}
+
+async function getTalkerById(req, res) {
+  const { id } = req.params;
+  const talkers = await readFileTalker();
+  const talker = talkers.find((el) => el.id === +id);
+
+  if (!talker) {
+    return res.status(HTTP_NOT_FOUND).json({
+      message: 'Pessoa palestrante não encontrada',
+    }); 
+  }  
+  return res.status(HTTP_OK_STATUS).send(talker);
+}
+
 function tokenValidation(req, res, next) {
   const { authorization } = req.headers;
 
@@ -53,16 +74,26 @@ function ageValidation(req, res, next) {
   next();
 }
 
-function watchedAtRateValidation(req, res, next) {
-  const { talk: { watchedAt, rate } } = req.body;
+function rateValidation(req, res, next) {
+  const { talk: { rate } } = req.body;
+
+  if (
+    typeof rate !== 'number'
+    || +rate < 1
+    || +rate > 5
+    ) {
+    return res.status(HTTP_BAD_REQUEST)
+    .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  next();
+}
+
+function watchedAtValidation(req, res, next) {
+  const { talk: { watchedAt } } = req.body;
 
   if (watchedAt && !dateFormatValidation(watchedAt)) {
     return res.status(HTTP_BAD_REQUEST)
     .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
-  if (rate < 1 || rate > 5) {
-    return res.status(HTTP_BAD_REQUEST)
-    .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
  }
@@ -70,7 +101,11 @@ function watchedAtRateValidation(req, res, next) {
  function talkValidation(req, res, next) {
   const { talk } = req.body;
   
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (
+    !talk
+    || talk.watchedAt === undefined
+    || talk.rate === undefined
+    ) {
     return res.status(HTTP_BAD_REQUEST)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -82,7 +117,6 @@ function watchedAtRateValidation(req, res, next) {
   const { watchedAt, rate } = talk;
 
   const talkerList = await readFileTalker();
-
   const newTalker = {
     id: (await idGenerator()),
     name,
@@ -92,38 +126,17 @@ function watchedAtRateValidation(req, res, next) {
       rate,
     },
   };
-
   writeFile('./talker.json', [...talkerList, newTalker]);
 
   return res.status(HTTP_CREATED).json(newTalker);
  }
 
-async function getTalkerById(req, res) {
-  const { id } = req.params;
-  const talkers = await readFileTalker();
-  const talker = talkers.find((el) => el.id === +id);
-
-  if (!talker) {
-    return res.status(HTTP_NOT_FOUND).json({
-      message: 'Pessoa palestrante não encontrada',
-    }); 
-  }  
-  return res.status(HTTP_OK_STATUS).send(talker);
-}
-
-async function getAllTalkers(req, res) {
-  const talkers = await readFileTalker();
-  if (!talkers) {
-    return res.status(HTTP_OK_STATUS).send([]);
-  }
-  return res.status(HTTP_OK_STATUS).json(talkers);
-}
-
  module.exports = {
    tokenValidation,
    nameValidation,
    ageValidation,
-   watchedAtRateValidation,
+   rateValidation,
+   watchedAtValidation,
    talkValidation,
    addTalker,
    getTalkerById,
