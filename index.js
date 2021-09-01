@@ -4,7 +4,7 @@ const talkers = require('./rotas/TalkerRouter');
 const login = require('./rotas/TalkerLogin');
 
 const app = express();
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

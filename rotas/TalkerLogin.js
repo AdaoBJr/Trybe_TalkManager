@@ -3,6 +3,7 @@ const crypto = require('crypto');
 
 const router = express.Router();
 
+// Validação do email
 const emailValidation = (req, res, next) => {
     const { email } = req.body;
     // https://pt.stackoverflow.com/questions/1386/express%C3%A3o-regular-para-valida%C3%A7%C3%A3o-de-e-mail
@@ -18,19 +19,22 @@ const emailValidation = (req, res, next) => {
     return next();
 };
 
+// Validação da senha
 const passwordValidation = (req, res, next) => {
     const { password } = req.body;
     if (!password) {
-        return res.status(404).json({ message: 'O campo "password" é obrigatório' });
+        return res.status(400).json({ message: 'O campo "password" é obrigatório' });
     }
     if (password.length < 6) {
-        return res.status(404).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+        return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
     }
     return next();
 };
 
+// endpoint tipo POST que usa as funções de validação email/senha e gera um token
 router.post('/login', emailValidation, passwordValidation, (req, res) => {
     const Token = crypto.randomBytes(8).toString('hex');
+    console.log(Token);
     res.status(200).json({ token: Token });
 });
 
