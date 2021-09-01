@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { isValidToken,
+const { 
+  isValidToken,
   isValidEmail,
   isValidPassword,
   isValidName,
@@ -17,10 +18,11 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const talkerJson = './talker.json';
 
 // 2
 app.get('/talker/:id', async (req, res, _next) => {
-  const dataSpeaker = await fs.readFile('./talker.json', 'utf8');
+  const dataSpeaker = await fs.readFile(talkerJson, 'utf8');
   const speakerAll = await JSON.parse(dataSpeaker);
   const speaker = speakerAll.find((element) => element.id === Number(req.params.id));
   if (!speaker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' }); 
@@ -29,7 +31,7 @@ app.get('/talker/:id', async (req, res, _next) => {
 
 // 1
 app.get('/talker', async (_req, res, _next) => {
-  const DataSpeakers = await fs.readFile('./talker.json', 'utf8');
+  const DataSpeakers = await fs.readFile(talkerJson, 'utf8');
   const speakers = await JSON.parse(DataSpeakers);
   if (!speakers) return res.status(200).json([]);
   return res.status(200).json(speakers);
@@ -40,19 +42,21 @@ isValidToken,
 isValidName,
 isValidAge,
 isValidTalk,
-isValidRate,
 isValidWatchedAt,
+isValidRate,
 (req, res) => {
-  const speaker = req.body;
+  const { name, age, talk: { rate, watchedAt } } = req.body;
+  console.log('CHEGOU AQUI');
+  fs.readFile(talkerJson, 'utf8', (_err, contents) => {
+    const dataFile = JSON.parse(contents);
+    // fonte para colaboração na realização do post acima <https://stackoverflow.com/questions/3459476/how-to-append-to-a-file-in-node>
+    const lastPosition = dataFile[dataFile.length - 1]; 
+    const id = lastPosition.id + 1;
 
-  try {
-    fs.writeFile('./talker.json', speaker);
-    res.status(201).json(speaker);
-  } catch (error) {
-    res.status(400).json({ massage: 'Não foi possivel cadastrar', err: error });
-  }
-
-  // const a = fs.writeFile('./talker.json', 'utf8');
+    dataFile.push({ age, id, name, talk: { rate, watchedAt } });
+    fs.writeFile(talkerJson, JSON.stringify(dataFile), (_error) => 
+      res.status(201).json({ id, name, age, talk: { watchedAt, rate } }));
+    });
 });
 
 app.post('/login',

@@ -10,13 +10,12 @@ function createToken(length) {
 }
 
 const isValidToken = (req, res, next) => {
-  const tokenClient = req.headers.authorization;
-
-  if (!tokenClient) {
-    res.status(401).json({ massage: 'Token não encontrado' });
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (tokenClient <= 0 && tokenClient > 16) {
-    res.status(401).json({ massage: 'Token invalido' });
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
   }
   next();
 };
@@ -74,7 +73,7 @@ const isValidAge = (req, res, next) => {
 const isValidTalk = (req, res, next) => {
   const { talk } = req.body;
   
-  if (!talk || talk === {} || talk === undefined) {
+  if (!talk) {
     return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
 );
@@ -83,34 +82,33 @@ const isValidTalk = (req, res, next) => {
 };
 
 const isValidRate = (req, res, next) => {
+  // const rateMin = 1;
+  // const rateMax = 5;
   const { talk: { rate } } = req.body;
   const rateNumber = Number(rate);
-  const rateMin = 1;
-  const rateMax = 5;
-  console.log(rateNumber);
 
   if (!rateNumber) {
     return res.status(400).json({
      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' }); 
 }
   
-  if (rateNumber <= rateMin || rateNumber >= rateMax) {
+  if (!(rateNumber >= 1 && rateNumber <= 5)) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next(); 
 };
 
 const isValidWatchedAt = (req, res, next) => {
-  const { talk: { watchedA } } = req.body;
-
+  const { talk: { watchedAt } } = req.body;
+  
   const regexDate = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/g;
   
-  if (!watchedA || watchedA === undefined) {
+  if (!watchedAt) {
     return res.status(400).json({
      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' }); 
 } 
 
-  if (!watchedA.match(regexDate)) { 
+  if (!watchedAt.match(regexDate)) { 
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
    } 
   next();
