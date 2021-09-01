@@ -7,7 +7,10 @@ const express = require('express');
 const { readFile,
    validaToken,
     validaName,
-     validaAge, validaTalker, validaTalkerFormato, createNewPalestrant } = require('../middleware');
+     validaAge,
+      validaTalker,
+       validaTalkerFormato,
+        createNewPalestrant } = require('../middleware');
 
 const router = express.Router();
 
@@ -36,6 +39,6 @@ router.post('/', validaToken,
   validaAge,
    validaTalker,
     validaTalkerFormato,
-    createNewPalestrant);
+     createNewPalestrant);
 
 module.exports = router;

@@ -7,7 +7,7 @@ const BAD_REQUEST_STATUS = 400;
 
 console.log(fs);
 
-// valida email campo e regex //
+// valida email campo e regex
 const validEmail = (req, res, next) => {
   const { email } = req.body;
   if (!email) {
