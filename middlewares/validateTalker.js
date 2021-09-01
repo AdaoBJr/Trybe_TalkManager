@@ -26,10 +26,14 @@ const validateAge = (req, res, next) => {
 
 const validateTalk1 = (req, res, next) => {
   const { talk } = req.body;
-  const { watchedAt, rate } = req.body.talk;
-  if (!talk || !watchedAt || !rate) {
+  if (!talk) {
     return res.status(HTTP_FAIL_STATUS).json({ 
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+  const { watchedAt, rate } = req.body.talk;
+  if (!watchedAt || !rate) {
+    return res.status(HTTP_FAIL_STATUS).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   next();
 };
