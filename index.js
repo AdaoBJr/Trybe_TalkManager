@@ -4,7 +4,16 @@ const crypto = require('crypto');
 const fs = require('fs').promises; // importei
 // const { promisify } = require('util'); // 
 // const rescue = require('express-rescue'); //
-const { findId, validateEmail, validateSenha } = require('./middlewares');
+const { findId, 
+  validateEmail, 
+  validateSenha, 
+  validateToken, 
+  validateName, 
+  validateAge, 
+  validateTalk, 
+  validateDate, 
+  validateRate,
+  addToTalkers } = require('./middlewares');
 
 function generateToken() {
   return crypto.randomBytes(8).toString('hex');
@@ -55,6 +64,15 @@ app.post('/login', (req, res) => {
     token: generateToken(),
   });
 });
+
+app.post('/talker', 
+validateToken, 
+validateName, 
+validateAge, 
+validateTalk, 
+validateDate, 
+validateRate,
+addToTalkers);
 
 app.listen(PORT, () => {
   console.log('Online');
