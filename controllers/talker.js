@@ -1,6 +1,6 @@
 const express = require('express');
-const { getAll, findById, createTalker } = require('../service/readLine');
-const { update, findByName, excluse } = require('../service/readLine');
+const { getAll, findById, create } = require('../services/talker');
+const { update, findByName, excluse } = require('../services/talker');
 const { authLogin, validateTalker } = require('../middlewares');
 const { validateTalker2, validateTalker3 } = require('../middlewares');
 
@@ -30,36 +30,26 @@ router.get('/talker/:id', async (req, res) => {
 
 router.use('/talker', authLogin);
 
-router.post(
-  '/talker',
-  validateTalker,
-  validateTalker2,
-  validateTalker3,
-  async (req, res) => {
-    const data = await getAll();
-    const id = data.length + 1;
-    const { ...newTalker } = { id, ...req.body };
-    await createTalker(newTalker);
-    res.status(201).json(newTalker);
-  },
-);
-
-router.put(
-  '/talker/:id',
-  validateTalker,
-  validateTalker2,
-  validateTalker3,
-  async (req, res) => {
-    const { ...updateTalker } = { id: +req.params.id, ...req.body };
-    await update(updateTalker);
-    res.status(200).json(updateTalker);
-  },
-);
-
 router.delete('/talker/:id', async (req, res) => {
   const { id } = req.params;
   await excluse(id);
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+router.use(validateTalker);
+router.use(validateTalker2);
+router.use(validateTalker3);
+
+router.post('/talker', async (req, res) => {
+  const talker = await create(req.body);
+  console.log(talker);
+  res.status(201).json(talker);
+});
+
+router.put('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talker = await update(id, req.body);
+  res.status(200).json(talker);
 });
 
 module.exports = router;

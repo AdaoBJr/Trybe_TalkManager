@@ -1,5 +1,5 @@
-const talker = require('./talker');
-const login = require('./login');
+const talker = require('../controllers/talker');
+const login = require('../controllers/login');
 
 module.exports = {
   talker,
