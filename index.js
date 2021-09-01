@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+// const fs = require('fs');
 const crypto = require('crypto');
 
 const dayFormat = '(0[1-9]|1[0-9]|2[0-9]|3[0-9])';
@@ -16,7 +16,10 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
-const talker = require('./talker.json'); 
+const fs = require('fs').promises;
+
+const readTalkersList = () => fs.readFile('./talker.json', 'utf-8')
+  .then((fileContent) => JSON.parse(fileContent));
 
 const validateUser = (req, res, next) => {
   const { email, password } = req.body;
@@ -106,21 +109,26 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.get('/talker/:id', (req, res) => {
+app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
+  const talker = await readTalkersList();
+// console.log(talker);
   const person = talker.find((el) => el.id === Number(id));
   if (!person) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   return res.status(200).json(person);
 });
 
-app.get('/talker', (req, res) => {
-  console.log(talker.length);
+app.get('/talker', async (req, res) => {
+  const talker = await readTalkersList();
+  // console.log(talker);
   if (talker === []) return res.status(200).json([]);
   return res.status(200).json(talker);
 });
 app.post('/talker', validateToken, validateTalker, 
-validateTalkExists, validateTalkerTalk, (req, res) => {
+validateTalkExists, validateTalkerTalk, async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
+  const talker = await readTalkersList();
+  // console.log(talker);
   const newTalker = {
     name,
     age,
@@ -134,5 +142,9 @@ validateTalkExists, validateTalkerTalk, (req, res) => {
 
   return res.status(201).json(talker);    
 });
+// app.put('/talker', validateToken, validateTalker, validateTalkExists, 
+// validateTalkerTalk, (req, res) => {
+
+// });
 
 app.post('/login', validateUser, (req, res) => res.status(200).json({ token }));
