@@ -20,7 +20,7 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   
-  return res.status(HTTP_OK_STATUS).json(talkerFiltered);
+  return res.status(HTTP_OK_STATUS).json(...talkerFiltered);
 });
 
 app.get('/talker', async (req, res) => {
