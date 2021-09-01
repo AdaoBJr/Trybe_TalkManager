@@ -38,12 +38,33 @@ const generateRandom = () => {
   return token.join('').concat(alphabet[letterPosition]);
 };
 
+const verifyToken = (req, res, next) => {
+  const { authorization: token } = req.headers;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  next();
+};
+
 app.get('/talker', async (_req, res) => {
  const content = await readFile();
  if (content.length > 0) {
   return res.status(200).json(content);
  }
  return res.status(200).send([]);
+});
+
+app.get('/talker/search', verifyToken, async (req, res) => {
+  const { q } = req.query;
+  const content = await readFile();
+  if (!q || q === '') {
+    return res.status(200).json(content);
+  }
+  const matchedContent = content.filter(({ name }) => name.includes(q));
+  return res.status(200).json(matchedContent);
 });
 
 app.get('/talker/:id', async (req, res) => {
@@ -74,17 +95,6 @@ const verifyPassword = (req, res, next) => {
   }
   if (password.length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  }
-  next();
-};
-
-const verifyToken = (req, res, next) => {
-  const { authorization: token } = req.headers;
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
   }
   next();
 };
