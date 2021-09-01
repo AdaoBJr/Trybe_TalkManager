@@ -18,9 +18,7 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  return response.status(HTTP_OK_STATUS).send();
-});
+app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
 
 app.listen(PORT, () => {
   console.log('Online');
@@ -46,9 +44,9 @@ app.post('/talker',
   validateDateAndRateTalker,
   addTalker);
 
-app.post('/login', authUser, (req, res) => {
-  return res.status(HTTP_OK_STATUS).json({ token: getToken() });
-}); 
+app.post('/login',
+  authUser,
+  (req, res) => res.status(HTTP_OK_STATUS).json({ token: getToken() })); 
 
 app.put('/talker/:id',
   validateToken,
