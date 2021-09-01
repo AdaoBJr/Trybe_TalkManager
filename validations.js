@@ -37,7 +37,7 @@ const validPassword = (req, res, next) => {
 
 const validName = (req, res, next) => {
   const { name } = req.body;
-  if (!name) {
+  if (!name || name === '') {
     return res.status(400).json({
       message: 'O campo "name" é obrigatório',
     });
@@ -99,7 +99,7 @@ const lintChatoRate = (req, res, next) => {
 const validTalk = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || (!talk.watchedAt || !talk.rate)) {
+  if (!talk || (!('watchedAt' in talk) || !('rate' in talk))) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });

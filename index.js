@@ -50,11 +50,36 @@ app.post('/login', validEmail, validPassword, async (req, res) => {
 app.post('/talker', validToken, validName, validAge, validTalk, lintChatoWatchedAt, lintChatoRate,
  async (req, res) => {
   const newTalker = req.body;
-  const result = { ...newTalker, id: 5 };
-  console.log(result);
-  writeContentFile(PATH_FILE, result);
+  const newTalkerId = { ...newTalker, id: 5 };
+  const talkers = await readContentFile(PATH_FILE);
+  const result = talkers.concat(newTalkerId);
+  await writeContentFile(PATH_FILE, result);
 
-  res.status(201).json(result);
+  res.status(201).json(newTalkerId);
+});
+
+// REQUISITO 5
+app.put('/talker/:id', 
+validToken, 
+validName, 
+validAge, 
+validTalk, 
+lintChatoWatchedAt, 
+lintChatoRate, 
+async (req, res) => {
+  const { id } = req.params;
+  const newTalker = req.body;
+  const talkers = await readContentFile(PATH_FILE);
+  const editTalkers = talkers.map((i) => {
+    if (i.id !== Number(id)) {
+      return i;
+    }
+    return { ...newTalker, id: Number(id) };
+  });
+  console.log(editTalkers);
+  await writeContentFile(PATH_FILE, editTalkers);
+
+  res.status(200).json({ ...newTalker, id: Number(id) });
 });
 
 app.listen(PORT, () => {
