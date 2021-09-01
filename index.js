@@ -60,7 +60,8 @@ app.put('/talker/:id', validateToken, validateName, validateAge, validateTalk,
   (req, res) => {
     const { name, age, talk: { watchedAt, rate } } = req.body;
     fs.readFile(talkerJson, 'utf-8', (_err, content) => {
-      const { id } = req.params;
+      const lint = req.params.id;
+      const id = Number(lint);
       const data = JSON.parse(content);
       const talkIndex = data.findIndex((r) => r.id === Number(id));
       data[talkIndex] = { name, age, id, talk: { watchedAt, rate } };
