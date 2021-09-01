@@ -4,9 +4,9 @@ const { validateName } = require('./validadeName');
 const { validateRate } = require('./validateRateAndWitch');
 
 const putFunction = async (req, res) => {
-  const { params: { id }, headers: { token },
+  const { params: { id }, headers: { authorization },
   body: { name, age, talk: { watchedAt, rate } } } = req;
-  validate(token, res);
+  validate(authorization, res);
   validateName(name, age, res);
   validateRate(rate, watchedAt, res);
   const response = await fs.readFile('./talker.json', 'utf-8');

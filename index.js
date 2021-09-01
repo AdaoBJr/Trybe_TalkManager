@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId, loguin } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin, putFunction } = require('./middlewares/index');
 const { validaToken,
   validaTalk,
   validaRate, validaNome, validaDate, validaAge, addTalker } = require('./middlewares/req-4');
@@ -43,7 +43,7 @@ app.post('/talker',
 // app.use('/talker', router);
 
 // // desafio5
-// app.put('/talker/:id', putFunction);
+app.put('/talker/:id', putFunction);
 
 // // desafio6
 // app.delete('/talker/:id', exclude);
