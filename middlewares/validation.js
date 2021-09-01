@@ -73,7 +73,7 @@ const isValidAge = (req, res, next) => {
 
 const isValidDate = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
-  
+    
   const regexDateValid = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/g;
 
   if (!watchedAt) {
@@ -91,19 +91,19 @@ const isValidDate = (req, res, next) => {
 };
 
 const isValidRate = (req, res, next) => {
-  const { talk: { rate } } = req.body;
+  const { talk: { rate } } = req.body;  
 
-  if (!Number(rate)) {
-    return res.status(400).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-  }
-  
-  if (!(Number(rate) >= 1 && Number(rate) <= 5)) {
+  if (Number(rate) < 1 || Number(rate) > 5) {
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
+
+  if (!Number(rate) || Number(rate) === '') { 
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }   
   next();
 };
 

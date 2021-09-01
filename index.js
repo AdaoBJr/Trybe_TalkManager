@@ -87,15 +87,15 @@ isValidTalk, isValidDate, isValidRate, (req, res) => {
 
 app.put('/talker/:id', 
 isValidToken, isValidName, isValidAge, isValidTalk, isValidDate, isValidRate, (req, res) => {
-  fs.readFile(talkerJson, 'utf8', (_err, content) => {    
-    const { id } = req.params;
-    const { name, age, talk: { watchedAt, rate } } = req.body;
-    const contentData = JSON.parse(content);
-    const talkIndex = contentData.findIndex((data) => data.id === Number(id));
-
-    contentData[talkIndex] = { ...contentData[talkIndex], name, age, watchedAt, rate };
-
-    res.status(200).end();
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  fs.readFile(talkerJson, 'utf8', (_err, content) => {
+    const data = JSON.parse(content);
+    const talkerUpdated = { id, name, age, talk: { watchedAt, rate } };
+    const index = data.findIndex((talker) => talker.id === Number(id));
+    data[index] = talkerUpdated;
+    fs.writeFile(talkerJson, JSON.stringify(data), 'utf8', () =>
+      res.status(200).json({ id, name, age, talk: { watchedAt, rate } }));
   });
 });
 
