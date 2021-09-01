@@ -64,4 +64,15 @@ router.put('/:id',
   res.status(200).json(readF[peopleIndex]);
 });
 
+router.delete('/:id', 
+  autoriza,
+  async (req, res) => {
+  const { id } = req.params;
+  const readF = await readFile();
+  const peopleIndex = readF.findIndex((item) => item.id === Number(id));
+  readF.splice(peopleIndex, 1);
+  await fs.writeFile('talker.json', JSON.stringify(readF));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  });
+
 module.exports = router;
