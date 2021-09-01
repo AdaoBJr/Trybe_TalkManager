@@ -130,7 +130,7 @@ const authenticateTalk = (req, res, next) => {
     });
   }
   const { watchedAt, rate } = talk;
-  if (!watchedAt || !rate) {
+  if (!watchedAt || (!rate && rate !== 0)) {
     return res.status(400)
     .json({
       message: 'O campo "talk" é obrigatório e "watchedAt"'
@@ -168,11 +168,32 @@ const verifyRate = (req, res, next) => {
 
 app.post('/talker',
 verifyToken, verifyName, verifyAge, authenticateTalk, verifyDate, verifyRate,
- async (req, res) => {
+async (req, res) => {
   const content = await readFile();
   const newtalker = req.body;
   newtalker.id = content[content.length - 1].id + 1;
   const newContent = [...content, newtalker];
   await writeFile(newContent);
   return res.status(201).json(newtalker);
+});
+
+app.put('/talker/:id', verifyToken, verifyName, verifyAge, authenticateTalk,
+verifyDate, verifyRate, async (req, res) => {
+  const { id } = req.params;
+  const content = await readFile();
+  const selectTalker = content.find((talker) => talker.id === parseInt(id, 10));
+  if (selectTalker) {
+    const editContent = content.map((talker) => {
+      if (talker.id === parseInt(id, 10)) {
+        return {
+          ...talker,
+          ...req.body,
+        };
+      }
+      return talker;
+    });
+    await writeFile(editContent);
+    const editedTalker = editContent.find((talker) => talker.id === parseInt(id, 10));
+    return res.status(200).json(editedTalker);
+  }
 });
