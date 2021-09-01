@@ -1,9 +1,10 @@
 const getAllTalkers = require('./getAllTalkers');
 const getTalkerById = require('./getTalkerById');
-const login = require('./login');
+const { login, validateParams } = require('./login');
 
 module.exports = {
   getAllTalkers,
   getTalkerById,
   login,
+  validateParams,
 };
