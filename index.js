@@ -60,7 +60,7 @@ next();
 const validateTalkerTalk = (req, res, next) => {
   const { talk: { watchedAt, rate } } = req.body;
   const verifyNumber = numberList.find((el) => el === rate);
-  if (!watchedAt && !rate) {
+  if (!watchedAt || !rate) {
  return res.status(400)
   .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' }); 
 } 
@@ -138,7 +138,7 @@ validateTalkExists, validateTalkerTalk, async (req, res) => {
     },
   };
   talker.push(newTalker); 
-     fs.writeFileSync('./talker.json', JSON.stringify(talker));
+     fs.writeFile('./talker.json', JSON.stringify(talker));
 
   return res.status(201).json(talker);    
 });
