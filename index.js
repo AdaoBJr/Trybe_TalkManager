@@ -28,8 +28,8 @@ app.get('/talker/:id', (req, res) => {
 });
 
 app.get('/talker', (req, res) => {
-  // console.log(talker.length);
-  if (talker.length === 0) return res.status(200).json([]);
+  console.log(talker.length);
+  if (talker === []) return res.status(200).json([]);
   return res.status(200).json(talker);
 });
 
