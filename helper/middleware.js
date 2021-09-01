@@ -27,7 +27,8 @@ const validatePassword = (request, response, next) => {
 };
 
 const validateToken = (request, response, next) => {
-
+  // const { token } = request.he
+  console.log('test');
   next();
 };
 
