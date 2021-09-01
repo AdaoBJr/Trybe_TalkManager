@@ -6,7 +6,13 @@ const fs = require('fs').promises;
 const talkerJson = ('./talker.json');
 const { randomToken,
   verifyEmail,
-  verifyPassword } = require('./middlewares');
+  verifyPassword,
+  verifyName,
+  verifyAge,
+  verifyWatchAt,
+  verifyToken,
+  verifyTalk,
+  verifyRate } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -48,4 +54,14 @@ app.get('/talker/:id', rescue(async (req, res) => {
 app.post('/login', verifyEmail, verifyPassword, randomToken);
 
 // Requisito 4
-app.post('/talker');
+app.post('/talker', verifyToken, verifyName, verifyAge, verifyTalk,
+  verifyWatchAt, verifyRate, rescue(async (req, res) => {
+    const { body } = req;
+    const talkers = await fs.readFile(talkerJson); 
+    const old = JSON.parse(talkers);
+    const id = old.length + 1;
+    const y = { ...body, id };
+    const x = [...old, y];
+    fs.writeFile(talkerJson, JSON.stringify(x));
+    res.status(201).json(y);
+  }));
