@@ -105,6 +105,3 @@ module.exports = {
   validateTalk,
   validateTalk2,
 };
-
-const watchedAt = '22/01/0000';
-console.log((/^\d{2}\/\d{2}\/\d{4}$/).test(watchedAt));
