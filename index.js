@@ -21,20 +21,20 @@ const talkerCaller = async () => {
   return JSON.parse(data);
 };
 
-app.get('/talker', async (req, res) => {
-  const data = await talkerCaller();
-  res.status(HTTP_OK_STATUS).send(data);
-});
-
-// app.get('/talker/:id', async (req, res) => {
+// app.get('/talker', async (req, res) => {
 //   const data = await talkerCaller();
-//   const { id } = req.params;
-//   const result = data.find((c) => c.id === Number(id));
-//   if (!result) {
-//   return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
-//   }
-//   res.status(HTTP_OK_STATUS).send(result);
+//   res.status(HTTP_OK_STATUS).send(data);
 // });
+
+app.get('/talker/:id', async (req, res) => {
+  const data = await talkerCaller();
+  const { id } = req.params;
+  const result = data.find((c) => c.id === Number(id));
+  if (!result) {
+  return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+  }
+  res.status(HTTP_OK_STATUS).send(result);
+});
 
 // app.post('/talker', (req, res) => {
 //   const { name, age, talk, watchedAt, rate } = req.body;
