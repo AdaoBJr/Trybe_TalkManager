@@ -46,3 +46,6 @@ app.get('/talker/:id', rescue(async (req, res) => {
 
 // Requisito 3
 app.post('/login', verifyEmail, verifyPassword, randomToken);
+
+// Requisito 4
+app.post('/talker');
