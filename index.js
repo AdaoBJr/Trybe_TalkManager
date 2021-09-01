@@ -55,14 +55,14 @@ app.post(
     const talkers = await fs2.readFile('./talker.json', 'utf-8');
     const parseTalkers = JSON.parse(talkers);
     const id = parseTalkers.length + 1;
-    console.log(id, 'IDDDDDDDDDDDDDDDDDDD')
+    console.log(id, 'IDDDDDDDDDDDDDDDDDDD');
     const newTalker = {
       id,
       name,
       age,
       talk,
     };
-    const addTalker = JSON.stringify([...parseTalkers, newTalker])
+    const addTalker = JSON.stringify([...parseTalkers, newTalker]);
       await fs2.writeFile('./talker.json', addTalker);
       return res.status(201).json(newTalker);
     },

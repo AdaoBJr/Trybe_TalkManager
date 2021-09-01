@@ -78,7 +78,7 @@ const validateName = (req, res, next) => {
 };
 
 const validateAge = (req, res, next) => {
-  const { age = ''} = req.body;
+  const { age = '' } = req.body;
   if (!age) {
     return res.status(400).json(
       {
