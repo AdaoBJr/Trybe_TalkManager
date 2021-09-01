@@ -59,4 +59,18 @@ router.put('/:id',
   res.status(200).json(palestrantes[palestranteIndex]);
 });
 
+router.delete('/:id', isValidToken, async (req, res) => {
+  const { id } = req.params;
+  const palestrantes = await readTalkerJson();
+
+  const palestranteIndex = palestrantes.findIndex((palestrante) => 
+    palestrante.id === parseInt(id, 10));
+
+  if (palestranteIndex === -1) return res.status(404).json({ message: 'Palestrante not found' });
+  palestrantes.splice(palestranteIndex, 1);
+  updatePalestrantesList(palestrantes);
+
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;
