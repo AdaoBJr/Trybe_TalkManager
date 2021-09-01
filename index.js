@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises; // importei
 // const { promisify } = require('util'); // 
-const rescue = require('express-rescue'); //
+// const rescue = require('express-rescue'); //
 const { findId } = require('./middlewares');
 
 const app = express();
@@ -17,7 +17,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 /* ==================== */
-app.get('/talker', rescue(async (req, res) => {
+app.get('/talker', async (req, res) => {
   const talker = await talkerFile();
   if (talker.length > 0) {
     return res.status(200).json(talker);
@@ -25,7 +25,7 @@ app.get('/talker', rescue(async (req, res) => {
   if (talker.length === 0) {
     return res.status(200).json([]);
   }
-}));
+});
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
