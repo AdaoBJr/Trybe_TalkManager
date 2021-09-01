@@ -114,6 +114,30 @@ const addToTalkers = async (req, res) => {
   return res.status(201).json(addTalker);
 };
 
+const putTalker = async (req, res) => {
+  const { name, age, talk } = req.body;
+  let talkersList = await Files();
+  const { id } = req.params;  
+  talkersList = talkersList.filter((talker) => talker.id !== +id);
+  talkersList.push({ id: +id, name, age, talk });
+
+  await writeTalker(talkersList);  
+  return res.status(200).json({ id: +id, name, age, talk });
+};
+
+const search = async (req, res) => {
+  const { ask } = req.query;
+  const talkers = await Files();
+  if (!ask || ask === '') {
+    return res.status(200).json(talkers);    
+  }   
+  const filtered = talkers.filter((talker) => talker.name.includes(ask));
+  if (filtered.length > 0) {
+    return res.status(200).json(filtered); 
+  } 
+  return res.status(200).json(Array.from([])); 
+};
+
 module.exports = {
   findId,
   validateEmail,
@@ -125,4 +149,6 @@ module.exports = {
   validateDate,
   validateRate,
   addToTalkers,
+  search,
+  putTalker,
 };

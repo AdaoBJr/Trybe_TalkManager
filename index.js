@@ -4,15 +4,16 @@ const bodyParser = require('body-parser');
 const { generateToken, talkerFile } = require('./utils');
 // const { promisify } = require('util'); // 
 // const rescue = require('express-rescue'); //
-const { findId, 
-  validateEmail, 
-  validateSenha, 
-  validateToken, 
-  validateName, 
-  validateAge, 
-  validateTalk, 
-  validateDate, 
-  validateRate, addToTalkers } = require('./middlewares');
+const { findId,
+  validateEmail,
+  validateSenha,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  search,
+  validateDate,
+  validateRate, addToTalkers, putTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -25,6 +26,10 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 /* ==================== */
+app.get('/talker/search',
+  validateToken,
+  search);
+
 app.get('/talker', async (req, res) => {
   const talker = await talkerFile();
   if (talker.length > 0) {
@@ -42,9 +47,9 @@ app.get('/talker/:id', async (req, res) => {
   if (talkerFind) {
     return res.status(200).json(talkerFind);
   }
-    return res.status(404).json({
-      message: 'Pessoa palestrante não encontrada',
-    });
+  return res.status(404).json({
+    message: 'Pessoa palestrante não encontrada',
+  });
 });
 
 app.post('/login', (req, res) => {
@@ -59,14 +64,23 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.post('/talker', 
-validateToken, 
-validateName, 
-validateAge, 
-validateTalk, 
-validateDate, 
-validateRate,
-addToTalkers);
+app.post('/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  addToTalkers);
+
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  putTalker);
 
 app.listen(PORT, () => {
   console.log('Online');
