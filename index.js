@@ -12,8 +12,7 @@ const {
   validateRate,
   validateTalker,
   validateToken,
-  addTalker,
-  deleteTalker } = require('./middlewares');
+  addTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -53,12 +52,6 @@ app.get('/talker', async (req, res) => {
   const getAllTalkerList = await readFileTalker();
   return res.status(200).send(getAllTalkerList);
 });
-
-// 6
-app.delete('/talker/:id', [
-  validateToken,
-  deleteTalker,
-]);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
