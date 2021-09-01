@@ -20,11 +20,26 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+app.get('/talker/:id', (req, res) => {
+  const { id } = req.params;
+  fs.readFile('./talker.json', 'utf-8', util.promisify((err, content) => {
+    const data = content.filter((cont) => cont.id === id);
+    if (data.length === 0) {
+      res.status(HTTP_OK_STATUS).json(Array.from([]));
+    }
+    res.status(HTTP_OK_STATUS).send(data);
+  }));
+});
+
 app.get('/talker', (req, res) => {
   fs.readFile('./talker.json', 'utf-8', util.promisify((err, content) => {
     if (content.length === 0) {
       res.status(HTTP_OK_STATUS).send([]);
     }
-    res.status(HTTP_OK_STATUS).send(content);
+    const data = JSON.parse(content);
+    if (data.length === 0) {
+      res.status(HTTP_OK_STATUS).json(Array.from([]));
+    }
+    res.status(HTTP_OK_STATUS).send(data);
   }));
 });
