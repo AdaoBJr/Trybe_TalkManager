@@ -13,7 +13,8 @@ const {
   checkRate,
   checkTalk,
   checkToken, 
-  editTalker } = require('./middlewares');
+  editTalker, 
+  deleteTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -56,6 +57,7 @@ app.put('/talker/:id', [
 
 app.delete('/talker/:id', [
   checkToken,
+  deleteTalker,
 ]);
 
 app.listen(PORT, () => {

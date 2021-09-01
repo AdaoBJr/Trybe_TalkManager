@@ -12,6 +12,7 @@ const checkRate = require('./checkRate');
 const checkTalk = require('./checkTalk');
 const checkToken = require('./checkToken');
 const editTalker = require('./editTalker');
+const deleteTalker = require('./deleteTalker');
 
 module.exports = {
   error,
@@ -28,4 +29,5 @@ module.exports = {
   checkTalk,
   checkToken,
   editTalker,
+  deleteTalker,
 };
