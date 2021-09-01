@@ -1,12 +1,12 @@
 const express = require('express');
-
-const router = express.Router();
 const bodyParser = require('body-parser');
 
-const fs = require('fs').promises;
+const fs = require('fs');
+const util = require('util');
 
 const app = express();
 app.use(bodyParser.json());
+app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -20,11 +20,11 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-router.get('/', async (req, res) => {
-  try {
-  const talk = await fs.readFile('./talker.json', 'utf8');
-  return res.status(200).json(talk);
-  } catch (error) {
-    return res.status(200).json([]);
-  }
+app.get('/talker', (req, res) => {
+  fs.readFile('./talker.json', 'utf-8', util.promisify((err, content) => {
+    if (content.length === 0) {
+      res.status(HTTP_OK_STATUS).send([]);
+    }
+    res.status(HTTP_OK_STATUS).send(content);
+  }));
 });
