@@ -16,6 +16,14 @@ const { readFile,
 
 const router = express.Router();
 
+router.get('/', async (req, res) => {
+  const result = await readFile();
+  if (!result) {
+  return res.status(OK_STATUS).json([]);
+  }
+  return res.status(OK_STATUS).json(result);
+});
+
 // 7
 router.get('/search', validaToken, searchTalker);
 
@@ -29,14 +37,6 @@ router.get('/:id', async (req, res) => {
   });
   }
   res.status(OK_STATUS).json(palestrante);
-});
-
-router.get('/', async (req, res) => {
-  const result = await readFile();
-  if (!result) {
-  return res.status(OK_STATUS).json([]);
-  }
-  return res.status(OK_STATUS).json(result);
 });
 
 // requesito 6
