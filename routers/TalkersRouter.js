@@ -27,7 +27,7 @@ const testUserAge = (req, res, next) => {
     if (!age || age.length === 0) {
         res.status(400).send({ message: 'O campo "age" é obrigatório' });
     }
-    if (Number(age) <= 18) {
+    if (Number(age) < 18) {
         res.status(400).send({ message: 'A pessoa palestrante deve ser maior de idade' });
     }
     next();
@@ -97,8 +97,24 @@ router.post('/',
         const newTalker = { ...req.body, id: talkers.length + 1 };
         const updatedTalkers = [...talkers, newTalker];
         await setTalker(updatedTalkers);
-
         res.status(201).json(newTalker);
+    });
+
+router.put('/:id',
+    testToken,
+    testUserName,
+    testUserAge,
+    testUserTalk,
+    testUserTalkData,
+    testUserTalkRate,
+    async (req, res) => {
+        const { id } = req.params;
+        const talkers = await getTalkers();
+        const talkersEd = talkers.filter((t) => t.id !== Number(id));
+        const newTalker = { ...req.body, id: Number(id) };
+        const updatedTalkers = [...talkersEd, newTalker];
+        await setTalker(updatedTalkers);
+        res.status(200).json(newTalker);
     });
 
 module.exports = router;
