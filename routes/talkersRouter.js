@@ -61,7 +61,7 @@ router.put(
     const talkersList = JSON.parse(fs.readFileSync(TALKER_DATA));
     const talkerSerched = talkersList.find((t) => t.id === Number(id));
     const talkerIndex = talkersList.indexOf(talkerSerched);
-    talkersList[talkerIndex] = { id, name, age, talk };
+    talkersList[talkerIndex] = { id: Number(id), name, age, talk };
 
     const newList = talkersList[talkerIndex];
 
