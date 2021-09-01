@@ -26,6 +26,17 @@ app.get('/talker/:id', async (request, response) => {
   response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
+app.post('/talker', async (request, response) => {
+  const { name, age, talk: { watchedAt, rate } } = request.body;
+  const tolken = request.header('tolken');
+  if (!tolken) response.status(401).json({ message: 'Token não encontrado' });
+  if (tolken !== '7mqaVRXJSp886CGr') response.status(401).json({ message: 'Token inválido' });
+  if (name.length < 3) response.status(400).json({ message: 'O campo "name" é obrigatório' });
+  if (!name) response.status(400).json({ message: 'O campo "name" é obrigatório' });
+
+  response.status(200).send('OK');
+});
+
 app.post('/login', async (request, response) => {
   const { email, password } = request.body;
   const { validateEmail, validatePass } = micro;
