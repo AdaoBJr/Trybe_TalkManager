@@ -5,6 +5,11 @@ const crypto = require('crypto');
 const {
   validateEmail,
   validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAndRate,
 } = require('./validations');
 
 // console.log(crypto.randomBytes(8).toString('hex'))
@@ -51,6 +56,20 @@ app.post('/login',
     const token = crypto.randomBytes(8).toString('hex');
     res.status(200).json({ token });
 });
+
+app.post('/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAndRate,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const talkersList = await getTalkers();
+    talkersList.push({ id: talkersList.length + 1, name, age, talk });
+    fs.writeFile('./talker.json', JSON.stringify(talkersList));    
+    return res.status(201).json(talkersList[talkersList.length - 1]);
+  });
 
 app.listen(PORT, () => {
   console.log('Online');
