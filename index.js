@@ -78,6 +78,15 @@ app.post('/login',
       } 
 
   next(); // 3 Password com string vazia
+},
+(req, res) => {
+  const { email } = req.body;
+  const validEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+  const SIX = 6;
+  const { password } = req.body;
+  if (validEmail.test(email) && password.length > SIX) {
+        res.status(200).json({ message: 'token here' });
+      }
 });
 
 // 
