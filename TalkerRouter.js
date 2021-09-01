@@ -83,7 +83,8 @@ router.get('/search', validateToken, async (req, res) => {
     return res.status(HTTP_OK_STATUS).json(talkers);
   }
 
-  const talkerFiltered = talkers.filter((talker) => talker.name.toLowerCase().includes(q));
+  const talkerFiltered = talkers.filter((talker) =>
+    talker.name.toLowerCase().includes(q.toLowerCase()));
 
   return res.status(HTTP_OK_STATUS).json(talkerFiltered);
 });

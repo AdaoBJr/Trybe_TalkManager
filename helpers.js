@@ -10,11 +10,13 @@ function setTalkers(newTalker) {
   return fs.writeFile('./talker.json', JSON.stringify(newTalker));
 }
 
+// https://regexr.com/
 function regexEmail(email) {
   const valid = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   return valid.test(String(email).toLowerCase());
 }
 
+// https://regexr.com/
 function regexDate(input) {
   const valid = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
   return valid.test(input);
