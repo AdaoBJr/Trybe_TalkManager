@@ -197,3 +197,11 @@ verifyDate, verifyRate, async (req, res) => {
     return res.status(200).json(editedTalker);
   }
 });
+
+app.delete('/talker/:id', verifyToken, async (req, res) => {
+  const { id } = req.params;
+  const content = await readFile();
+    const editContent = content.filter((talker) => talker.id !== parseInt(id, 10));
+    await writeFile(editContent);
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
