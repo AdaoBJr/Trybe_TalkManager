@@ -52,6 +52,19 @@ router.post('/',
     return res.status(HTTP_CREATED).json(newTalker);
 });
 
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+  const talkers = await readFile(TALKER_JSON);
+  const talker = talkers.find((eachTalker) => eachTalker.id === +id);
+
+  if (!talker) {
+    return res.status(HTTP_NOT_FOUND).json({
+      message: 'Pessoa palestrante não encontrada',
+    });
+  }
+  res.status(HTTP_OK_STATUS).json(talker);
+});
+
 router.put('/:id',
   validateToken,
   validateName,
@@ -72,17 +85,16 @@ router.put('/:id',
     return res.status(HTTP_OK_STATUS).json(editedTalker);
 });
 
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const talkers = await readFile(TALKER_JSON);
-  const talker = talkers.find((eachTalker) => eachTalker.id === +id);
+router.delete('/:id',
+  validateToken,
+  async (req, res) => {
+    const { id } = req.params;
+    const talkers = await readFile(TALKER_JSON);
+    const filteredTalkers = talkers.filter((talker) => talker.id !== +id);
 
-  if (!talker) {
-    return res.status(HTTP_NOT_FOUND).json({
-      message: 'Pessoa palestrante não encontrada',
-    });
-  }
-  res.status(HTTP_OK_STATUS).json(talker);
+    fs.writeFile(TALKER_JSON, JSON.stringify(filteredTalkers));
+
+    return res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;
