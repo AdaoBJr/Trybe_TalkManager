@@ -85,6 +85,12 @@ router.get('/:id', async (req, res) => {
     }
     res.status(200).json(talker);
 });
+
+router.get('/search', (req, res) => {
+    const { q } = req.query;
+    res.status(200).json({ message: q });
+});
+
 router.post('/',
     testToken,
     testUserName,
