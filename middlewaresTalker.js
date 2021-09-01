@@ -1,7 +1,9 @@
 const fs = require('fs').promises;
 
+const talkerJSON = './talker.json';
+
 const readFile = async (_req, res) => {
-  const content = await fs.readFile('./talker.json', 'utf-8');
+  const content = await fs.readFile(talkerJSON, 'utf-8');
   if (content.length === 0) {
     return res.status(200).json([]);
   }
@@ -11,7 +13,7 @@ const readFile = async (_req, res) => {
 
 const readFileId = async (req, res) => {
   const { id } = req.params;
-  const content = await fs.readFile('./talker.json', 'utf-8');
+  const content = await fs.readFile(talkerJSON, 'utf-8');
   const contentInJSON = JSON.parse(content);
   const foundTalker = contentInJSON.find((eachTalker) => eachTalker.id === Number(id));
   if (!foundTalker) {
@@ -89,7 +91,7 @@ const validateTalk = (req, res, next) => {
 };
 
 const readAndWrite = async (req, res) => {
-  const content = await fs.readFile('./talker.json', 'utf-8');
+  const content = await fs.readFile(talkerJSON, 'utf-8');
   const contentInJSON = JSON.parse(content);
   const num = contentInJSON[contentInJSON.length - 1].id + 1;
   const { watchedAt, rate } = req.allItems;
@@ -99,8 +101,27 @@ const readAndWrite = async (req, res) => {
     talk: { watchedAt, rate },
   });
   const contentInString = JSON.stringify(contentInJSON);
-  await fs.writeFile('./talker.json', contentInString);
+  await fs.writeFile(talkerJSON, contentInString);
   return res.status(201).json({ id: num,
+    name: req.name,
+    age: req.age,
+    talk: { watchedAt, rate },
+  });
+};
+
+const attTalker = async (req, res) => {
+  const { id } = req.params;
+  const reqBody = req.body;
+  const content = await fs.readFile(talkerJSON, 'utf-8');
+  const contentInJSON = JSON.parse(content);
+  const talkerIndex = contentInJSON.findIndex((r) => r.id === parseInt(id, 10));
+  const reqBodyAtt = { ...reqBody, id: parseInt(id, 10) };
+  const { watchedAt, rate } = req.allItems;
+
+  contentInJSON[talkerIndex] = reqBodyAtt;
+  const contentInString = JSON.stringify(contentInJSON);
+  await fs.writeFile(talkerJSON, contentInString);
+  return res.status(200).json({ id: parseInt(id, 10),
     name: req.name,
     age: req.age,
     talk: { watchedAt, rate },
@@ -116,4 +137,5 @@ module.exports = {
  validateTalk,
  validateGeneralTalk,
  readAndWrite,
+ attTalker,
 };

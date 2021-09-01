@@ -8,6 +8,7 @@ const {
   validateTalk,
   validateGeneralTalk,
   readAndWrite,
+  attTalker,
 } = require('./middlewaresTalker');
 
 const router = express.Router();
@@ -21,6 +22,14 @@ router.post('/',
  readAndWrite);
 
 router.get('/', readFile);
+
+router.put('/:id',
+validateToken,
+validateName,
+validateAge,
+validateGeneralTalk,
+validateTalk,
+attTalker);
 
 router.get('/:id', readFileId);
 
