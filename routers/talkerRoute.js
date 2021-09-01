@@ -4,11 +4,23 @@ const fs = require('fs').promises;
 const router = express.Router();
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
+const HTTP_UNAUTHORIZED_STATUS = 401;
 const HTTP_NOTFOUND_STATUS = 404;
 
 const getTalkerList = async () => {
   const list = await fs.readFile('./talker.json', 'utf-8');
   return JSON.parse(list);
+};
+
+const tokenValidator = (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(HTTP_UNAUTHORIZED_STATUS).send({ message: 'Token não encontrado' }); 
+  }
+  if (authorization.length !== 16) {
+    return res.status(HTTP_UNAUTHORIZED_STATUS).send({ message: 'Token inválido' });
+  }
+  next();
 };
 
 const addNewTalker = async (newTalker) => {
@@ -36,13 +48,15 @@ router.get('/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(talker);
 });
 
-router.post('/', async (req, res) => {
-  const { name, age, talk } = req.body;
-  const talkersList = await getTalkerList();
-  const addThisTalker = { name, age, id: talkersList.length + 1, talk };
-  const listUpdated = [...talkersList, addThisTalker];
-  await addNewTalker(listUpdated);
-  res.status(HTTP_CREATED_STATUS).json(addThisTalker);
-});
+router.post('/',
+  tokenValidator,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const talkersList = await getTalkerList();
+    const addThisTalker = { name, age, id: talkersList.length + 1, talk };
+    const listUpdated = [...talkersList, addThisTalker];
+    await addNewTalker(listUpdated);
+    res.status(HTTP_CREATED_STATUS).json(addThisTalker);
+  });
 
 module.exports = router;
