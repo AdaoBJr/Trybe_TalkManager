@@ -40,16 +40,22 @@ app.get(
   }),
 );
 
-app.get('/login', (req, res) => {
-  const token = generateToken(16);
+app.post('/login', (req, res) => {
+  const token = { token: generateToken(16) };
   const { email, password } = req.body;
-  validateEmail(email, password, res);
-  const emailIsValid = /((\w+)@(\w+)\.(\w+))/;
-  if (!email.match(emailIsValid)) {
+  if (!email) {
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+  const emailResult = validateEmail(email);
+  if (!emailResult) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  } if (password.length < 6) {
+  }
+  if (!password) {
+    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+  if (password.length < 6) {
+    console.log('entrou no lengu');
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
-
-  return res.status(200).json({ token });
+  return res.status(200).json(token);
 });
