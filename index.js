@@ -10,7 +10,7 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 app.get('/talker', (_req, res) => {
-  if (!talkers) {
+  if (talkers.length === 0) {
     return res.status(200).send([]);
   }
   return res.status(200).send(talkers);
