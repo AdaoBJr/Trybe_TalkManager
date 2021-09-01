@@ -17,8 +17,7 @@ const tokenValidator = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
     return res.status(HTTP_UNAUTHORIZED_STATUS).send({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== 16) {
+  } if (authorization.length !== 16) {
     return res.status(HTTP_UNAUTHORIZED_STATUS).send({ message: 'Token inválido' });
   }
   next();
@@ -31,6 +30,17 @@ const nameValidator = (req, res, next) => {
   } if (name.length < 3) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  next();
+};
+
+const ageValidator = (req, res, next) => {
+  const { age } = req.body;
+  if (!age) {
+    return res.status(HTTP_BADREQUEST_STATUS).send({ message: 'O campo "age" é obrigatório' });
+  } if (age < 18) {
+    return res.status(HTTP_BADREQUEST_STATUS)
+      .send({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };
@@ -63,6 +73,7 @@ router.get('/:id', async (req, res) => {
 router.post('/',
   tokenValidator,
   nameValidator,
+  ageValidator,
   async (req, res) => {
     const { name, age, talk } = req.body;
     const talkersList = await getTalkerList();
