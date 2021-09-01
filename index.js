@@ -40,13 +40,17 @@ isValidToken,
 isValidName,
 isValidAge,
 isValidTalk,
-isValidWatchedAt,
 isValidRate,
-(_req, _res) => {
-  // const objTalker = req.body;
-  // const a = fs.writeFile('./talker.json', objTalker);
-  // return console.log(a, 'AQUI');
-  // res.status(201).json({});
+isValidWatchedAt,
+(req, res) => {
+  const speaker = req.body;
+
+  try {
+    fs.writeFile('./talker.json', speaker);
+    res.status(201).json(speaker);
+  } catch (error) {
+    res.status(400).json({ massage: 'Não foi possivel cadastrar', err: error });
+  }
 
   // const a = fs.writeFile('./talker.json', 'utf8');
 });
