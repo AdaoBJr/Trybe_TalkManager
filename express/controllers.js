@@ -126,20 +126,18 @@ const editTalker = async (req, res, _next) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const talkers = await readFile(TALKER_JSON);
-  const item = talkers.find((talker) => talker.id === +id); // acho o id q eu quero
-  const position = talkers.indexOf(item); // pego a posição
-  talkers.splice(position, 1); // removo o item
-  const obj = { ...item, name, age, talk }; // mantenho o id e atualizo as informações
-  const arr = [...talkers, obj]; // crio um novo array colocando talkers e o novo obj
-  await writeFile(TALKER_JSON, arr); // escrevo o arquivo
-  res.status(RES200).json(obj);
+  const talkerIndex = talkers.findIndex((talker) => talker.id === +id);
+  const talkerEdited = { id: +id, name, age, talk };
+ talkers.splice(talkerIndex, 1, talkerEdited);
+  await writeFile(TALKER_JSON, talkers);
+  res.status(RES200).json(talkerEdited);
 };
 
 const deleteTalker = async (req, res, _next) => {
   const { id } = req.params;
   const talkers = await readFile(TALKER_JSON);
   const newTalkers = talkers.filter((talker) => talker.id !== +id);
-  await writeFile(TALKER_JSON, newTalkers); // escrevo o arquivo
+  await writeFile(TALKER_JSON, newTalkers);
   res.status(RES200).json({ message: TALKER_DELETED });
 };
 
