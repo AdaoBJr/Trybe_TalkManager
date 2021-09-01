@@ -24,7 +24,7 @@ const post = async (req, res) => {
     talk: { watchedAt, rate } };
   convert.push(newPalester);
   await fs.writeFile('./talker.json', JSON.stringify(convert));
-  // return res.status(201).json(newPalester);
+  return res.status(201).json(newPalester);
 };
 
 module.exports = {

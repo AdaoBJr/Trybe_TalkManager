@@ -1,10 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId, loguin, post } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin, post, talkerSearch } = require('./middlewares/index');
 
 const app = express();
 app.use(bodyParser.json());
+
+// const router = require('./routers/index');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -15,7 +17,7 @@ app.get('/', (_request, response) => {
 });
 
 // desafio7
-// app.get('/talker/search', talkerSearch);
+app.get('/talker/search', talkerSearch);
 
 // // desafio 1
 app.get('/talker', palestrantes);
@@ -28,6 +30,7 @@ app.post('/login', loguin);
 
 // // desafio4
 app.post('/talker', post);
+// app.use('/talker', router);
 
 // // desafio5
 // app.put('/talker/:id', putFunction);
