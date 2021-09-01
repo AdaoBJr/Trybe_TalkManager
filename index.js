@@ -34,7 +34,7 @@ app.get('/talker/:id', async (req, res) => {
   if (talkerFind) {
     return res.status(200).json(talkerFind);
   }
-    return res.status(400).json({
+    return res.status(404).json({
       message: 'Pessoa palestrante não encontrada',
     });
 });
