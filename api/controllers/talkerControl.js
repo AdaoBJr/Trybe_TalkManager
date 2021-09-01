@@ -153,6 +153,18 @@ async function deleteTalker(req, res) {
   res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
 }
 
+async function searchTalker(req, res) {
+  const { q } = req.query;
+  const talkers = await readFileTalker();
+  
+  if (!q) {
+  return res.status(HTTP_OK_STATUS).json(talkers);
+  }
+  const filteredTalkers = talkers.filter((el) => el.name.includes(q));
+
+  return res.status(HTTP_OK_STATUS).json(filteredTalkers);
+}
+
  module.exports = {
    getAllTalkers,
    getTalkerById,
@@ -165,4 +177,5 @@ async function deleteTalker(req, res) {
    addTalker,
    editTalker,
    deleteTalker,
+   searchTalker,
  };
