@@ -145,10 +145,9 @@ async function editTalker(req, res) {
 
   const currTalkers = await readFileTalker();
   const talkerIndex = currTalkers.findIndex((el) => el.id === +id);
-  delete currTalkers[talkerIndex];
-  
   const editedTalker = { id: +id, name, age, talk };
-  currTalkers[talkerIndex] = editedTalker;
+  
+  currTalkers.splice(talkerIndex, 1, editedTalker);
   writeFile('./talker.json', currTalkers);
 
   res.status(HTTP_OK_STATUS).json(editedTalker); 
