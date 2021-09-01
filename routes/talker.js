@@ -25,6 +25,19 @@ router.get('/', async (_req, res) => {
   }
 });
 
+router.get('/search', validateToken, async (req, res) => {
+  const { q: query } = req.query;
+  try {
+    const file = await fs.readFile(talkerDir, 'utf-8');
+    const parsedFile = await JSON.parse(file);
+    if (!query) return res.status(200).json(parsedFile);
+    const foundUsers = parsedFile.filter((el) => el.name.includes(query));
+    return res.status(200).json(foundUsers);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   try {
@@ -38,7 +51,9 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-router.delete('/:id', validateToken, async (req, res) => {
+router.use(validateToken);
+
+router.delete('/:id', async (req, res) => {
   const { id } = req.params;
   try {
     const file = await fs.readFile(talkerDir, 'utf-8');
@@ -53,7 +68,6 @@ router.delete('/:id', validateToken, async (req, res) => {
   }
 });
 
-router.use(validateToken);
 router.use(validateName);
 router.use(validateAge);
 router.use(validateTalk);
