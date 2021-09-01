@@ -37,7 +37,7 @@ const validPassword = (req, res, next) => {
 
 const validName = (req, res, next) => {
   const { name } = req.body;
-  if (!name || name === '') {
+  if (!name) {
     return res.status(400).json({
       message: 'O campo "name" é obrigatório',
     });
@@ -71,13 +71,15 @@ const validAge = (req, res, next) => {
 
 const lintChatoWatchedAt = (req, res, next) => {
   const { talk } = req.body;
-  const date = moment(talk.watchedAt, 'DD/MM/YYYY', true);
+  if (talk.watchedAt !== undefined || talk.watchedAt !== null) {
+   const date = moment(talk.watchedAt, 'DD/MM/YYYY', true);
 
   if (!date.isValid()) {
     return res.status(400).json({
       message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
+}
 
   next();
 };
@@ -97,7 +99,7 @@ const lintChatoRate = (req, res, next) => {
 const validTalk = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || talk === '' || !talk.watchedAt || !talk.rate) {
+  if (!talk || (!talk.watchedAt || !talk.rate)) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -107,15 +109,15 @@ const validTalk = (req, res, next) => {
 };
 
 const validToken = (req, res, next) => {
-  const { token } = req.headers;
+  const { authorization } = req.headers;
 
-  if (!token) {
+  if (!authorization) {
     return res.status(401).json({
       message: 'Token não encontrado',
     });
   }
 
-  if (token !== '7mqaVRXJSp886CGr') {
+  if (authorization !== '7mqaVRXJSp886CGr') {
     return res.status(401).json({
       message: 'Token inválido',
     });

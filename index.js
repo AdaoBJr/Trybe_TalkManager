@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
 const {
   readContentFile,
   writeContentFile,
@@ -42,7 +43,7 @@ app.get('/talker/:id', async (req, res) => {
 
 // REQUISITO 3
 app.post('/login', validEmail, validPassword, async (req, res) => {
-  res.status(200).json({ token: '7mqaVRXJSp886CGr' });
+  res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
 });
 
 // REQUISITO 4
@@ -51,15 +52,7 @@ app.post('/talker', validToken, validName, validAge, validTalk, lintChatoWatched
   const newTalker = req.body;
   writeContentFile(PATH_FILE, newTalker);
 
-  res.status(200).json({
-    id: 1,
-    name: 'Danielle Santos',
-    age: 56,
-    talk: {
-      watchedAt: '22/10/2019',
-      rate: 5,
-    },
-  });
+  res.status(201).json(newTalker);
 });
 
 app.listen(PORT, () => {
