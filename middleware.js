@@ -5,8 +5,6 @@ const crypto = require('crypto');
 const OK_STATUS = 200;
 const BAD_REQUEST_STATUS = 400;
 
-console.log(fs);
-
 // valida email campo e regex
 const validEmail = (req, res, next) => {
   const { email } = req.body;
@@ -45,15 +43,6 @@ app.get('/recipes/:id', (req, res) => {
   }
   return res.status(200).json(result);
 });
-
-function getler() {
-  return fs.readFile('./simpsons.json', 'utf-8')
-  .then((fileContent) => JSON.parse(fileContent));
-}
-
-function setescri(newSimpsons) {
-  return fs.writeFile('./simpsons.json', JSON.stringify(newSimpsons));
-}
 */
 
 // lendo os arquivos
