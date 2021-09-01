@@ -16,6 +16,16 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/talker/:id', async (req, res) => {
+  const talkers = await getTalkers();
+  const { id } = req.params;
+  const talker = talkers.find((r) => r.id === Number(id));
+
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+
+  res.json(talker);
+});
+
 app.get('/talker', async (req, res) => {
   const talkers = await getTalkers();
   if (!talkers) {
