@@ -1,5 +1,6 @@
 const fs = require('fs').promises;
 const rescue = require('express-rescue');
+const crypto = require('crypto');
 // const util = require('util');
 const express = require('express');
 const bodyParser = require('body-parser');
@@ -10,10 +11,18 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-async function getTalker() {
+// Função para ler o Json!
+ const getTalker = async () => {
   const resConvert = await fs.readFile('./talker.json', 'utf-8');
   return JSON.parse(resConvert);
-}
+};
+
+// Função para criar o Token!
+
+const getToken = () => {
+const aleatoryToken = crypto.randomBytes(8).toString('hex');
+return aleatoryToken;
+};
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -21,14 +30,14 @@ app.get('/', (_request, response) => {
 });
 // está escutando as requisições feitas pelos usuários.
 
-// Requisito 1
+//  REQUISITO 1
 
 app.get('/talker', async (_request, response) => {
   const talker = await getTalker();
   response.status(HTTP_OK_STATUS).send(talker);
 });
 
-// Requisito 2
+// REQUISITO 2
 
 app.get('/talker/:id', rescue(async (_request, response) => {
   const { id } = _request.params;
@@ -42,7 +51,7 @@ app.get('/talker/:id', rescue(async (_request, response) => {
     return response.status(HTTP_OK_STATUS).send(responseForUse);
 }));
 
-// Requisito 3' ==> Agora está com next!!
+// REQUISITO 3
 
 app.post('/login', 
 (req, res, next) => {
@@ -77,7 +86,7 @@ app.post('/login',
     return res.status(401).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
       } 
 
-  next(); // 3 Password com string vazia
+  next(); // 4 Password com número de caracteres insuficientes.
 },
 (req, res) => {
   const { email } = req.body;
@@ -85,7 +94,7 @@ app.post('/login',
   const SIX = 6;
   const { password } = req.body;
   if (validEmail.test(email) && password.length > SIX) {
-        res.status(200).json({ message: 'token here' });
+        res.status(200).json({ token: getToken() });
       }
 });
 
