@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-const userRouter = require('./routes/userRouter');
+const router = require('./routes/userRouter');
 
 // const util = require('util');
 
@@ -17,7 +17,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.use('/', userRouter);
+app.use('/login', router);
 
 const talkerCaller = async () => {
   const data = await fs.readFile('./talker.json', 'utf-8');

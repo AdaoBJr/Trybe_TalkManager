@@ -6,7 +6,7 @@ const {
   } = require('./middleware');
 
   router.post(
-    'login',
+    '',
     isValidToken,
     isValidEmail,
     isValidPassword,
