@@ -4,6 +4,7 @@ const fs = require('fs').promises;
 const router = express.Router();
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
+const HTTP_BADREQUEST_STATUS = 400;
 const HTTP_UNAUTHORIZED_STATUS = 401;
 const HTTP_NOTFOUND_STATUS = 404;
 
@@ -15,10 +16,21 @@ const getTalkerList = async () => {
 const tokenValidator = (req, res, next) => {
   const { authorization } = req.headers;
   if (!authorization) {
-    return res.status(HTTP_UNAUTHORIZED_STATUS).send({ message: 'Token não encontrado' }); 
+    return res.status(HTTP_UNAUTHORIZED_STATUS).send({ message: 'Token não encontrado' });
   }
   if (authorization.length !== 16) {
     return res.status(HTTP_UNAUTHORIZED_STATUS).send({ message: 'Token inválido' });
+  }
+  next();
+};
+
+const nameValidator = (req, res, next) => {
+  const { name } = req.body;
+  if (!name) {
+    return res.status(HTTP_BADREQUEST_STATUS).send({ message: 'O campo "name" é obrigatório' });
+  } if (name.length < 3) {
+    return res.status(HTTP_BADREQUEST_STATUS)
+      .send({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
 };
@@ -50,6 +62,7 @@ router.get('/:id', async (req, res) => {
 
 router.post('/',
   tokenValidator,
+  nameValidator,
   async (req, res) => {
     const { name, age, talk } = req.body;
     const talkersList = await getTalkerList();
