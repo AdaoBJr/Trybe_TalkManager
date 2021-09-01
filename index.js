@@ -43,9 +43,7 @@ app.post('/login', validEmail, validPassword, (_req, res) => {
   return res.status(HTTP_OK_STATUS).json({ token: `${cryptoToken}` });
 });
 
-app.use((err, _req, res, _next) => {
-  return res.status(500).json({ error: `Erro: ${err.message}` });
-});
+app.use((err, _req, res, _next) => res.status(500).json({ error: `Erro: ${err.message}` }));
 
 app.listen(PORT, () => {
   console.log('Online');
