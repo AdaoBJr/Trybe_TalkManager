@@ -87,7 +87,8 @@ isValidTalk, isValidDate, isValidRate, (req, res) => {
 
 app.put('/talker/:id', 
 isValidToken, isValidName, isValidAge, isValidTalk, isValidDate, isValidRate, (req, res) => {
-  const { id } = req.params;
+  const requireId = req.params.id;
+  const id = Number(requireId);
   const { name, age, talk: { watchedAt, rate } } = req.body;
   fs.readFile(talkerJson, 'utf8', (_err, content) => {
     const data = JSON.parse(content);
