@@ -15,16 +15,16 @@ app.get('/', (_request, response) => {
 
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
-    const filterPeople = data.filter((people) => {
-      console.log(people.id);
-      return people.id === id;
-    });
-    if (filterPeople) return res.status(HTTP_OK_STATUS).json(filterPeople);
+  const filterPeople = data.filter((people) => people.id === parseFloat(id));
+    if (filterPeople.length > 0) { 
+      return res.status(HTTP_OK_STATUS).json(...filterPeople); 
+    }
+  res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
 app.get('/talker', (_req, res) => {
-  if (!data) return res.status(HTTP_OK_STATUS).json([]);
-  return res.status(HTTP_OK_STATUS).json(data);
+  if (data.length > 1) { return res.status(HTTP_OK_STATUS).json(data); }
+  return res.status(HTTP_OK_STATUS).json([]);
 });
 
 app.listen(PORT, () => {
