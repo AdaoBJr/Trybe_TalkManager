@@ -58,7 +58,7 @@ const validateRate = (req, res, next) => {
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
  
-  if (!talk || !talk.rate || !talk.watchedAt) {
+  if (!talk || talk.rate === undefined || talk.watchedAt === undefined) {
     return next(error(400,
        'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'));
   }

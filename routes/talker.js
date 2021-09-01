@@ -38,6 +38,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  try {
+    const file = await fs.readFile(talkerDir, 'utf-8');
+    const parsedFile = await JSON.parse(file);
+    const indexUser = parsedFile.findIndex((el) => Number(el.id) === Number(id));
+    parsedFile.splice(indexUser, 1);
+    const stringfiedFile = JSON.stringify(parsedFile);
+    await fs.writeFile(talkerDir, stringfiedFile, 'utf-8');
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
 router.use(validateToken);
 router.use(validateName);
 router.use(validateAge);
@@ -45,9 +60,7 @@ router.use(validateTalk);
 router.use(validateWatchedAt);
 router.use(validateRate);
 
-router.post('/',
-
- async (req, res) => {
+router.post('/', async (req, res) => {
   const document = req.body;
 
   try {
@@ -59,6 +72,23 @@ router.post('/',
     const stringfiedFile = JSON.stringify(parsedFile);
     await fs.writeFile(talkerDir, stringfiedFile, 'utf-8');
     res.status(201).json(document);
+  } catch (error) {
+    console.log(error.message);
+  }
+});
+
+router.put('/:id', async (req, res) => {
+  const { id } = req.params;
+  const document = req.body;
+  try {
+    const file = await fs.readFile(talkerDir, 'utf-8');
+    const parsedFile = await JSON.parse(file);
+    const indexUser = parsedFile.findIndex((el) => Number(el.id) === Number(id));
+    document.id = indexUser + 1;
+    parsedFile[indexUser] = document;
+    const stringfiedFile = JSON.stringify(parsedFile);
+    await fs.writeFile(talkerDir, stringfiedFile, 'utf-8');
+    res.status(200).json(document);
   } catch (error) {
     console.log(error.message);
   }
