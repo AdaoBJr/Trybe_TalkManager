@@ -7,7 +7,7 @@ const router = express.Router();
 const emailValidation = (req, res, next) => {
     const { email } = req.body;
     // https://pt.stackoverflow.com/questions/1386/express%C3%A3o-regular-para-valida%C3%A7%C3%A3o-de-e-mail
-    const validEmail = new RegExp(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i);
+    const validEmail = new RegExp(/[a-z0-9]+@[a-z0-9]+\.[a-z0-9]{2,3}(\.[a-z0-9]+)?$/);
 
     if (!email) {
         return res.status(400).json({ message: 'O campo "email" é obrigatório' });
@@ -32,7 +32,7 @@ const passwordValidation = (req, res, next) => {
 };
 
 // endpoint tipo POST que usa as funções de validação email/senha e gera um token
-router.post('/login', emailValidation, passwordValidation, (req, res) => {
+router.post('/', emailValidation, passwordValidation, (req, res) => {
     const Token = crypto.randomBytes(8).toString('hex');
     console.log(Token);
     res.status(200).json({ token: Token });
