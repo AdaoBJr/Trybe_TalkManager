@@ -146,6 +146,18 @@ const createNewPalestrant = async (req, res) => {
   return res.status(201).json(novoPalestrante);
 };
 
+// procura na query a pessoa 7
+const searchTalker = async (req, res) => {
+  const { q } = res.query;
+  const result = await readFile();
+  if (!q) {
+    return res.status(200).json(result);
+  }
+  const novaPessoa = result.filter(({ name }) =>
+    name.includes(q));
+    return res.status(OK_STATUS).json(novaPessoa);
+};
+
 module.exports = {
   readFile,
   writeFile,
@@ -159,5 +171,6 @@ module.exports = {
   validaAge,
   validaTalker,
   validaTalkerFormato,
+  searchTalker,
 
 };
