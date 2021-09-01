@@ -12,8 +12,6 @@ const {
   validateWatchedAndRate,
 } = require('./validations');
 
-// console.log(crypto.randomBytes(8).toString('hex'))
-
 async function getTalkers() {
   const file = await fs.readFile('./talker.json', 'utf-8');
 
@@ -46,6 +44,7 @@ app.get('/talker/:id', async (req, res) => {
 
 app.get('/talker', async (req, res) => {
   const talkersList = await getTalkers();
+  console.log(talkersList);
   res.status(200).json(talkersList);
 });
 
@@ -68,7 +67,7 @@ app.post('/talker',
     const talkersList = await getTalkers();
     talkersList.push({ id: talkersList.length + 1, name, age, talk });
     fs.writeFile('./talker.json', JSON.stringify(talkersList));    
-    return res.status(201).json(talkersList[talkersList.length - 1]);
+    res.status(201).json(talkersList[talkersList.length - 1]);
 });
 
 app.put('/talker/:id',
@@ -78,14 +77,13 @@ app.put('/talker/:id',
   validateTalk,
   validateWatchedAndRate,
   async (req, res) => {
-    // console.log('caiu aqui?')
     const { id } = req.params;
     const { name, age, talk } = req.body;
     const talkersList = await getTalkers();
     const talkIndex = talkersList.findIndex((talker) => talker.id === Number(id));
     talkersList[talkIndex] = { id: Number(id), name, age, talk };
     fs.writeFile('./talker.json', JSON.stringify(talkersList));    
-    return res.status(200).json(talkersList[talkIndex]);
+    res.status(200).json(talkersList[talkIndex]);
 });
 
 app.delete('/talker/:id',
