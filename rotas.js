@@ -14,12 +14,23 @@ const {
 const router = express.Router();
 const talker = require('./talker');
 
+router.get('/talker/search', validationToken, async (req, res) => {
+  const { q } = req.query;
+  const arrayTalker = await talker();
+  const filterTalker = arrayTalker.filter(({ name }) => name.includes(q));
+  if (filterTalker.length === 0 || !q) {
+    return res.status(200).json(filterTalker);
+  }
+  return res.status(200).json(filterTalker);
+});
+
 router.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const result = await talker();
   console.log(result);
 
   const filterId = result.find((pessoa) => pessoa.id === Number(id));
+
   if (!filterId) {
     return res.status(404).json({
       message: 'Pessoa palestrante não encontrada',
