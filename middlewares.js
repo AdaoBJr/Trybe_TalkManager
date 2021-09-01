@@ -4,7 +4,7 @@ const crypto = require('crypto');
 const readTalkerJson = () => fs.readFile('./talker.json', 'utf-8')
   .then((fileContent) => JSON.parse(fileContent));
 
-const saveNewPalestrante = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
+const updatePalestrantesList = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
 
 const generateToken = () => crypto.randomBytes(8).toString('hex');
 
@@ -86,7 +86,7 @@ const validAge = (req, res, next) => {
 
 const validTalk = (req, res, next) => {
   const { talk } = req.body;
-   if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
     );
@@ -106,9 +106,8 @@ const validaData = (req, res, next) => {
 
 const validRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
-  const rateEntreUmeCinco = /^[1-5]*$/;
 
-  if (!rateEntreUmeCinco.test(rate)) {
+  if (rate < 1 || rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
@@ -125,5 +124,5 @@ module.exports = {
   validTalk,
   validaData,
   validRate,
-  saveNewPalestrante,
+  updatePalestrantesList,
 };
