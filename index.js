@@ -4,8 +4,13 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 const {
-  getAllTalkers, verifyPassword, verifyemail, tokenGenerate,
+  getAllTalkers,
+  verifyPassword,
+  verifyemail,
+  verifyToken,
 } = require('./requirements/functionsAndValidations');
+
+const useRouter = require('./routers/routers');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -28,8 +33,10 @@ app.get('/talker/:id', async (req, res) => {
     return res.status(200).json(getId);
 });
 
+app.use('/talker', useRouter);
+
 app.post('/login', verifyPassword, verifyemail,
-(_req, res) => res.status(200).json({ token: tokenGenerate() }));
+(_req, res) => res.status(200).json({ token: verifyToken() }));
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {

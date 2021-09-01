@@ -1,11 +1,32 @@
-/* const router = require('express').Router();
+const express = require('express');
 
-const { verifyemail, verifyPassword } = require('../requirements/functionsAndValidations');
+const router = express.Router();
 
-  router.post('/login', verifyPassword, verifyemail,
-  (_req, res) => res.status(200).json({ token: '7mqaVRXJSp886CGr' }));
+const {
+  getAllTalkers,
+  criarNovoPalestrante,
+  verifyname,
+  verifyToken,
+  verifyAge,
+  verifyFieldsTalk,
+  verifyDate,
+  verifyRate,
+} = require('../requirements/functionsAndValidations');
 
-module.exports = {
-  verifyemail,
-  verifyPassword,
-}; */
+router.post('/',
+verifyname,
+verifyToken,
+verifyAge,
+verifyFieldsTalk,
+verifyDate,
+verifyRate, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const palestrantes = await getAllTalkers();
+  const id = palestrantes.length + 1;
+  const novoPalestrante = { id, name, age, talk };
+  palestrantes.push(novoPalestrante);
+  criarNovoPalestrante(palestrantes);
+  return res.status(201).json(novoPalestrante);
+});
+
+module.exports = router;
