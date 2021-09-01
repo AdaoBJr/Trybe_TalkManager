@@ -9,9 +9,14 @@ login.post('/', (req, res) => {
   const checkEmail = validarEmail(email);
   const checkPassword = validarSenha(password);
 
-  if (checkEmail !== 'ok') res.status(400).json(checkEmail);
-  if (checkPassword !== 'ok') res.status(400).json(checkPassword);
+  if (checkEmail !== 'ok') {
+    return res.status(400).json(checkEmail);
+  }
 
+  if (checkPassword !== 'ok') {
+    return res.status(400).json(checkPassword);
+  }
+  
   return res.status(200).json({
     token: gerarToken(),
   });
