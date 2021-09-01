@@ -1,10 +1,11 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId, loguin, putFunction } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin } = require('./middlewares/index');
 const { validaToken,
   validaTalk,
-  validaRate, validaNome, validaDate, validaAge, addTalker } = require('./middlewares/req-4');
+  validaRate,
+  validaNome, validaDate, validaAge, addTalker, editTalker } = require('./middlewares/req-4');
 
 const app = express();
 app.use(bodyParser.json());
@@ -43,7 +44,14 @@ app.post('/talker',
 // app.use('/talker', router);
 
 // // desafio5
-app.put('/talker/:id', putFunction);
+app.put('/talker/:id',
+  validaToken,
+  validaNome,
+  validaAge,
+  validaTalk,
+  validaDate,
+  validaRate,
+  editTalker);
 
 // // desafio6
 // app.delete('/talker/:id', exclude);

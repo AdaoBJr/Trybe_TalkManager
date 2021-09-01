@@ -85,8 +85,21 @@ const addTalker = async (req, res) => {
     talk: { watchedAt, rate } };
   convert.push(newPalester);
   await fs.writeFile('./talker.json', JSON.stringify(convert));
-  console.log('cheguei aqui');
   return res.status(201).json(newPalester);
+};
+
+const editTalker = async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;  
+  
+  const response = await fs.readFile('./talker.json', 'utf-8');
+  let convert = JSON.parse(response);
+  convert = convert.filter((talker) => talker.id !== +id);
+
+  convert.push({ id: +id, name, age, talk });
+
+  await fs.writeFile('./talker.json', JSON.stringify(convert));
+  return res.status(200).json({ id: +id, name, age, talk });
 };
 
 module.exports = {
@@ -97,4 +110,5 @@ module.exports = {
   validaRate,
   validaDate,
   addTalker,
+  editTalker,
 };
