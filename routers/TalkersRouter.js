@@ -68,10 +68,7 @@ const getTalkers = async () => {
 };
 
 const setTalker = async (talker) => {
-    const talkers = await fs.readFile('./talker.json', 'utf8');
-   const newTalkers = talkers.push(talker);
-   console.log(newTalkers);
-   fs.writeFile('./talker.json', newTalkers, { flag: 'wx' });
+    await fs.writeFile('./talker.json', JSON.stringify(talker));
 };
 
 router.get('/', async (req, res) => {
@@ -96,11 +93,12 @@ router.post('/',
     testUserTalkData,
     testUserTalkRate,
     async (req, res) => {
-       const { name, age, talk } = req.body;
-       await setTalker({ name, age, talk });
-       const talkers = await getTalkers();
-       console.log(talkers);
-        res.status(201).send({ name, age, talk });
+        const talkers = await getTalkers();
+        const newTalker = { ...req.body, id: talkers.length + 1 };
+        const updatedTalkers = [...talkers, newTalker];
+        await setTalker(updatedTalkers);
+
+        res.status(201).json(newTalker);
     });
 
 module.exports = router;

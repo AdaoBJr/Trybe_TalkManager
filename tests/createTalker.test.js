@@ -25,7 +25,7 @@ describe('4 - Crie o endpoint POST /talker', () => {
     );
   });
 
-  it('Será validado que é possível cadastrar uma pessoa palestrante com sucesso', async () => {
+  it.only('Será validado que é possível cadastrar uma pessoa palestrante com sucesso', async () => {
     await frisby
       .post(`${url}/login`, {
         body: {
