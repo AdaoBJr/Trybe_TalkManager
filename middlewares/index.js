@@ -66,17 +66,6 @@ const validateTalk = (req, res, next) => {
   next();
 };
 
-const validateDate = (req, res, next) => {
-  const { talk } = req.body;
-  const regexDate = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g;
-  if (!regexDate.test(talk.watchedAt)) {
-    return res
-      .status(400)
-      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
-  next();
-};
-
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
   if (!rate && rate !== 0) {
@@ -90,13 +79,24 @@ const validateRate = (req, res, next) => {
   next();
 };
 
+const validateDate = (req, res, next) => {
+  const { talk } = req.body;
+  const regexDate = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g;
+  if (!regexDate.test(talk.watchedAt)) {
+    return res
+      .status(400)
+      .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  next();
+};
+
 function Files() {
   const talkers = fs.Files('./talker.json', 'utf-8');
   return talkers.then((data) => JSON.parse(data));
 }
 
-function writeTalker(newTalker) {
-  return fs.writeFile('./talker.json', JSON.stringify(newTalker));
+function writeTalker(addTalker) {
+  return fs.writeFile('./talker.json', JSON.stringify(addTalker));
 }
 
 const addToTalkers = async (req, res) => {
