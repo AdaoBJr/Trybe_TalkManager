@@ -108,7 +108,9 @@ const validateTalkTalker = (req, res, next) => {
   const deleteTalker = (req, res) => {
     const { id } = req.params;
     const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+
     talkers.splice(talkerIndex, 1);
+    
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   };
 
