@@ -162,6 +162,14 @@ app.delete('/talker/:id', validToken, async (req, res) => {
     await fs.writeFile(talkJson, JSON.stringify(talkers));
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
+// # 7 Crie o endpoint GET /talker/search?q=searchTerm
+app.get('/talker/search', validToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readContentFile();
+  if (!q) return res.status(200).json(talkers);
+  const talkerId = talkers.filter((talker) => talker.name.includes(q));
+  return res.status(200).json(talkerId);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
