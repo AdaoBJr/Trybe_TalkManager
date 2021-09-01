@@ -29,14 +29,22 @@ app.get('/talker/:id', (req, res) => {
 
 app.get('/talker', (req, res) => {
   // console.log(talker.length);
-  if (talker.length === 0) return res.status(200).json(talker);
+  if (talker.length === 0) return res.status(200).json([]);
   return res.status(200).json(talker);
 });
 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
+  const mailFormat = /[a-z]+@[a-z]+.com/g;
+  if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  if (!email.match(mailFormat)) {
+ return res.status(400)
+  .json({ message: 'O "email" deve ter o formato "email@email.com"' }); 
+}
+if (password.length < 6) {
+ return res.status(400)
+.json({ message: 'O "password" deve ter pelo menos 6 caracteres' }); 
+}
 
-  console.log('token');
-  console.log('batata');
   return res.status(200).json({ token });
 });
