@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const talkJson = './talker.json';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -101,7 +102,7 @@ const validRate = (req, res, next) => {
 };
 const readContentFile = async () => {
   try {
-    const content = await fs.readFile('./talker.json', 'utf8');
+    const content = await fs.readFile(talkJson, 'utf8');
     return JSON.parse(content);
   } catch (error) {
     return null;
@@ -113,7 +114,7 @@ const writeContentFile = async (content) => {
     const newId = newTalker.length + 1;
     const newContent = { id: newId, ...content };
     newTalker.push(newContent);
-    await fs.writeFile('./talker.json', JSON.stringify(newTalker));
+    await fs.writeFile(talkJson, JSON.stringify(newTalker));
     return newContent;
   } catch (error) {
     return null;
@@ -134,7 +135,7 @@ const editContentFile = async (id, content) => {
     const newContent = { id: contentId, ...content };
     const indice = contentTalker.findIndex((entry) => entry.id === contentId);
     contentTalker[indice] = newContent;
-    await fs.writeFile('./talker.json', JSON.stringify(contentTalker));
+    await fs.writeFile(talkJson, JSON.stringify(contentTalker));
     return newContent;
   } catch (error) {
     return null;
@@ -146,6 +147,20 @@ validTalker, validTalkWatched, validRate, async (req, res) => {
   const content = req.body;
   const newContent = await editContentFile(id, content);
   return res.status(200).json(newContent);
+});
+// #6 Cria o endpoint DELETE /talker/:id
+app.delete('/talker/:id', validToken, async (req, res) => {
+    const { id } = req.params;
+    const talkers = await readContentFile();
+    let index = 0;
+    talkers.forEach((talker, indice) => {
+      if (talker.id === parseInt(id, 10)) {
+        index = indice;
+      }
+    });
+    talkers.splice(index, 1);
+    await fs.writeFile(talkJson, JSON.stringify(talkers));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {
