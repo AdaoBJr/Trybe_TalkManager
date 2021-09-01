@@ -55,7 +55,7 @@ const validationPassword = (password) => {
 
 // https://www.youtube.com/watch?v=Rcpy2Den2Ik&ab_channel=DevNami
 function generateRandomToken() {
-  return crypto.randomBytes(16).toString('hex');
+  return crypto.randomBytes(8).toString('hex');
 }
 
 module.exports = {
