@@ -1,8 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
+
 const { getTalkers, filterTalker } = require('./handleFile.js');
-const { validateEmail, validatePassword } = require('./middlewares/validations.js');
+const {
+  validateEmail,
+  validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+} = require('./middlewares/validations.js');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,6 +22,7 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+//
 
 app.get('/talker', async (_req, res) => {
   const talkers = await getTalkers();
@@ -24,10 +33,10 @@ app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await filterTalker(id);
   if (!talker) {
-  return res
+    return res
       .status(404)
-      .json({ message: 'Pessoa palestrante não encontrada' }); 
-}
+      .json({ message: 'Pessoa palestrante não encontrada' });
+  }
   res.status(HTTP_OK_STATUS).json(talker);
 });
 
@@ -36,6 +45,17 @@ app.post('/login', validateEmail, validatePassword, async (_req, res) => {
     token: crypto.randomBytes(8).toString('hex'),
   });
 });
+
+app.post(
+  '/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  (req, res) => {
+    res.status(201).json(req.body);
+  },
+);
 
 app.listen(PORT, () => {
   console.log('Online');
