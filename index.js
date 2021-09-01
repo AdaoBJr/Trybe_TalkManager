@@ -1,7 +1,10 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-//
-const { palestrantes, talkerId, loguin, talkerSearch } = require('./middlewares/index');
+
+const { palestrantes, talkerId, loguin } = require('./middlewares/index');
+const { validaToken,
+  validaTalk,
+  validaRate, validaNome, validaDate, validaAge, addTalker } = require('./middlewares/req-4');
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,7 +20,7 @@ app.get('/', (_request, response) => {
 });
 
 // desafio7
-app.get('/talker/search', talkerSearch);
+// app.get('/talker/search', talkerSearch);
 
 // // desafio 1
 app.get('/talker', palestrantes);
@@ -29,7 +32,14 @@ app.get('/talker/:id', talkerId);
 app.post('/login', loguin);
 
 // // desafio4
-// app.post('/talker', post);
+app.post('/talker',
+validaToken,
+validaNome,
+validaAge,
+validaTalk,
+validaDate,
+validaRate,
+addTalker);
 // app.use('/talker', router);
 
 // // desafio5
