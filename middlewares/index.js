@@ -62,29 +62,28 @@ const validationPassword = (password) => {
 // https://www.youtube.com/watch?v=Rcpy2Den2Ik&ab_channel=DevNami
 function generateRandomToken() {
   return crypto.randomBytes(8).toString('hex');
-  // return '7mqaVRXJSp886CGr';
 }
 
 // REQUISITO 4
 const postTalker = async (req, res) => {
   const { name, age, talk } = req.body;
-  const listTalkers = await readTalkers().then((talkers) => {
-    JSON.parse(talkers);
-  });
-  const talkersLength = listTalkers.length;
+  const data = await readTalkers()
+  .then((talkers) => JSON.parse(talkers));
+  console.log(data);
+  const talkersLength = data.length;
   const newTalker = {
     id: talkersLength + 1,
     name,
     age,
     talk,
   };
-  listTalkers.push(newTalker);
-  await fs.writeFile('./talker.json', JSON.stringify(listTalkers));
+  data.push(newTalker);
+  await fs.writeFile('./talker.json', JSON.stringify(data));
   return res.status(HTTP_OK_CREATED).send(newTalker);
 };
 
 const validationToken = (req, res, next) => {
-  const token = req.headers.autorization;
+  const token = req.headers.authorization;
   const tokenNotFound = { message: 'Token não encontrado' };
   const invalidToken = { message: 'Token inválido' };
 
@@ -123,7 +122,7 @@ const validationTalk = (req, res, next) => {
   };
 
   if (!talk) return res.status(HTPP_BAD_REQUEST).json(talkRequired);
-  if (!talk.warchedAt && talk.warchedAt !== 0) {
+  if (!talk.watchedAt && talk.watchedAt !== 0) {
     return res.status(HTPP_BAD_REQUEST).json(talkRequired);
   }
 
@@ -132,7 +131,12 @@ const validationTalk = (req, res, next) => {
 
 const validationRate = (req, res, next) => {
   const { talk } = req.body;
+  const talkRequired = {
+    message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+  };
   const rateNumbers = { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
+
+  if (!talk.rate && talk.rate !== 0) return res.status(HTPP_BAD_REQUEST).json(talkRequired);
 
   if (talk.rate > 5 || talk.rate < 1) return res.status(HTPP_BAD_REQUEST).json(rateNumbers);
 
@@ -144,7 +148,7 @@ const validationDateWatchedAt = (req, res, next) => {
   const dateForm = { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
   const regex = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g;
 
-  if (!regex.test(talk.warchedAt)) return res.status(HTPP_BAD_REQUEST).json(dateForm);
+  if (!regex.test(talk.watchedAt)) return res.status(HTPP_BAD_REQUEST).json(dateForm);
 
   next();
 };
