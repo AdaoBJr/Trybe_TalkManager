@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
-const { getTalkers, filterTalker } = require('./handleFile.js');
+const { getTalkers, filterTalker, setTalkers } = require('./handleFile.js');
 const {
   validateEmail,
   validatePassword,
@@ -10,6 +10,8 @@ const {
   validateName,
   validateAge,
   validateTalk,
+  validateTalkRate,
+  validateTalkWatchedAt,
 } = require('./middlewares/validations.js');
 
 const app = express();
@@ -40,7 +42,7 @@ app.get('/talker/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(talker);
 });
 
-app.post('/login', validateEmail, validatePassword, async (_req, res) => {
+app.post('/login', validateEmail, validatePassword, async (req, res) => {
   res.status(HTTP_OK_STATUS).json({
     token: crypto.randomBytes(8).toString('hex'),
   });
@@ -52,8 +54,13 @@ app.post(
   validateName,
   validateAge,
   validateTalk,
-  (req, res) => {
-    res.status(201).json(req.body);
+  validateTalkRate,
+  validateTalkWatchedAt,
+  async (req, res) => {
+    const { body } = req;
+
+    const talker = await setTalkers(body);
+    res.status(201).json(talker);
   },
 );
 

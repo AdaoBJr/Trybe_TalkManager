@@ -11,6 +11,14 @@ const filterTalker = async (talkerID) => {
   return talker;
 };
 
+const setTalkers = async (content) => {
+  const talkers = await getTalkers();
+  const newTalker = { ...content, id: talkers.length + 1 };
+  talkers.push(newTalker);
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return newTalker;
+};
+
 // setTalkers
 
-module.exports = { getTalkers, filterTalker };
+module.exports = { getTalkers, filterTalker, setTalkers };
