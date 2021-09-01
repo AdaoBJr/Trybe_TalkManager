@@ -67,7 +67,7 @@ const validateGeneralTalk = (req, res, next) => {
     }
   const { rate } = talk; 
   const { watchedAt } = talk;
-  if (!rate || !watchedAt) {
+  if (rate === undefined || !watchedAt) {
     return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
       );
@@ -83,7 +83,7 @@ const validateTalk = (req, res, next) => {
       return res.status(400).json({
        message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' }); 
   }
-  if (rateNumber < 1 || rateNumber > 5 || !Number.isInteger(rateNumber)) {
+  if (rateNumber <= 0 || rateNumber > 5 || !Number.isInteger(rateNumber)) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
 }
   req.allItems = { talk, watchedAt, rate };
