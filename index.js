@@ -1,8 +1,9 @@
 const express = require('express');
-const bodyParser = require('body-parser');
-const { readData } = require('./middleware/index');
 
 const app = express();
+const bodyParser = require('body-parser');
+const { readData, filterTalkerId } = require('./middleware/index');
+
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
@@ -16,6 +17,7 @@ app.get('/', (_request, response) => {
 
 // Rotas
 app.get('/talker', readData);
+app.get('/talker/:id', filterTalkerId);
 
 app.listen(PORT, () => {
     console.log('Online');
