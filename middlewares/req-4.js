@@ -1,12 +1,13 @@
 const fs = require('fs').promises;
 
 const validaToken = (req, res, next) => {
-  const { token } = req.headers;
-  if (token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
+  const { authorization } = req.headers;
+  console.log(authorization);
+  if (authorization.length !== 16) {
+    return res.status(401).json('Token inválido');
   } 
-  if (!token) {
-    return res.status(401).json({ message: 'Token não encontrado' });
+  if (!authorization) {
+    return res.status(401).json('Token não encontrado');
   } 
   next();
 };
