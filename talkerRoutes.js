@@ -1,11 +1,19 @@
 const express = require('express');
 const { readTalkerFile, validateToken,
-  validateName, validateAge, validateTalk, writeTalkerFile } = require('./utils');
+  validateName, validateAge, validateTalk, writeTalkerFile, validateParams } = require('./utils');
 
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
 const HTTP_NOT_FOUND_STATUS = 404;
 const router = express.Router();
+
+router.get('/search', validateToken, validateParams, (req, res) => {
+  const { q } = req.query;
+  const talkers = readTalkerFile();
+
+  const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
+  return res.status(HTTP_OK_STATUS).json(filteredTalkers);
+});
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
