@@ -9,6 +9,7 @@ const {
   validateGeneralTalk,
   readAndWrite,
   attTalker,
+  deleteTalker,
 } = require('./middlewaresTalker');
 
 const router = express.Router();
@@ -30,6 +31,8 @@ validateAge,
 validateGeneralTalk,
 validateTalk,
 attTalker);
+
+router.delete('/:id', validateToken, deleteTalker);
 
 router.get('/:id', readFileId);
 

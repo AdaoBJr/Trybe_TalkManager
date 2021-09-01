@@ -128,6 +128,20 @@ const attTalker = async (req, res) => {
   });
 };
 
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+
+  const content = await fs.readFile(talkerJSON, 'utf-8');
+  const contentInJSON = JSON.parse(content);
+  const talkerIndex = contentInJSON.findIndex((r) => r.id === parseInt(id, 10));
+
+  contentInJSON.splice(talkerIndex, 1);
+
+  const contentInString = JSON.stringify(contentInJSON);
+  await fs.writeFile(talkerJSON, contentInString);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
  readFile,
  readFileId,
@@ -138,4 +152,5 @@ module.exports = {
  validateGeneralTalk,
  readAndWrite,
  attTalker,
+ deleteTalker,
 };
