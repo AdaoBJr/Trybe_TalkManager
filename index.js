@@ -21,10 +21,10 @@ const talkerCaller = async () => {
   return JSON.parse(data);
 };
 
-// app.get('/talker', async (req, res) => {
-//   const data = await talkerCaller();
-//   res.status(HTTP_OK_STATUS).send(data);
-// });
+app.get('/talker', async (req, res) => {
+  const data = await talkerCaller();
+  res.status(HTTP_OK_STATUS).send(data);
+});
 
 app.get('/talker/:id', async (req, res) => {
   const data = await talkerCaller();
