@@ -22,6 +22,17 @@ router.get('/', (_req, res) => {
   }
 });
 
+router.get('/search', isValidToken, (req, res) => {
+  const { q } = req.query;
+  const data = fs.readFileSync(fileData, 'utf8');
+  const talkers = JSON.parse(data);
+  
+  if (!q) return res.status(200).json(talkers);
+
+  const dataFilted = talkers.filter(({ name }) => name.includes(q));
+  res.status(200).json(dataFilted);
+});
+
 router.get('/:id', (req, res) => {
   const idParam = req.params.id;
   const data = fs.readFileSync(fileData, 'utf8');
