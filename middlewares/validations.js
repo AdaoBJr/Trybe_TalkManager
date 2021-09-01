@@ -78,7 +78,7 @@ const validateAge = (req, res, next) => {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
 
-  if (typeof age !== 'number') {
+  if (!Number.isInteger(age)) {
     return res
       .status(400)
       .json({ message: 'O campo "age" deve ser um inteiro' });
@@ -109,6 +109,12 @@ const validateTalk = (req, res, next) => {
 const validateTalkRate = (req, res, next) => {
   const { talk } = req.body;
 
+  if (talk.rate <= 0 || talk.rate > 5) {
+    return res
+      .status(400)
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  
   if (!talk.rate || talk.rate === '') {
     return res.status(400).json({
       message:
@@ -116,11 +122,6 @@ const validateTalkRate = (req, res, next) => {
     });
   }
 
-  if (talk.rate <= 0 || talk.rate > 5) {
-    return res
-      .status(400)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
   next();
 };
 

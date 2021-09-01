@@ -19,6 +19,25 @@ const setTalkers = async (content) => {
   return newTalker;
 };
 
-// setTalkers
+const editTalker = async (talkerID, body) => {
+  const talkers = await getTalkers();
+  const index = talkers.findIndex(({ id }) => id === parseInt(talkerID, 10));
+  const talker = talkers.find(({ id }) => id === parseInt(talkerID, 10));
+  const editedTalker = ({ ...talker, ...body });
+  talkers.splice(index, 1);
+  talkers.push(editedTalker);
+  talkers.sort((a, b) => {
+    if (a.id > b.id) {
+      return 1;
+    }
+    if (a.id < b.id) {
+      return -1;
+    }
+    return 0;
+  });
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
 
-module.exports = { getTalkers, filterTalker, setTalkers };
+  return editedTalker;
+};
+
+module.exports = { getTalkers, filterTalker, setTalkers, editTalker };

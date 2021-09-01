@@ -2,7 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
-const { getTalkers, filterTalker, setTalkers } = require('./handleFile.js');
+const { getTalkers, filterTalker, setTalkers, editTalker } = require('./handleFile.js');
 const {
   validateEmail,
   validatePassword,
@@ -61,6 +61,23 @@ app.post(
 
     const talker = await setTalkers(body);
     res.status(201).json(talker);
+  },
+);
+
+app.put(
+  '/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateTalkRate,
+  validateTalkWatchedAt,
+  async (req, res) => {
+    const { id } = req.params;
+    const { body } = req;
+    const talker = await editTalker(id, body);
+
+    res.send(talker);
   },
 );
 
