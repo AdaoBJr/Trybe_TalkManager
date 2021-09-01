@@ -89,10 +89,9 @@ app.post('/login',
   next(); // 4 Password com número de caracteres insuficientes.
 },
 (req, res) => {
-  const { email } = req.body;
+  const { email, password } = req.body;
   const validEmail = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g;
   const SIX = 6;
-  const { password } = req.body;
   if (validEmail.test(email) && password.length > SIX) {
        return res.status(200).json({ token: getToken() });
       }
