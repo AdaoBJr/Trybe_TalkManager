@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId, loguin, putFunction } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin, exclude } = require('./middlewares/index');
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,10 +30,10 @@ app.post('/login', loguin);
 // app.post('/talker', post);
 
 // // desafio5
-app.put('/talker/:id', putFunction);
+// app.put('/talker/:id', putFunction);
 
 // // desafio6
-// app.delete('/talker/:id', exclude);
+app.delete('/talker/:id', exclude);
 
 app.listen(PORT, () => {
   console.log('Online');
