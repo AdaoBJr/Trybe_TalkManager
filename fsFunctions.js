@@ -13,4 +13,9 @@ function generateToken() {
   return token;
 }
 
-module.exports = { readFile, generateToken };
+function writeFile(newTalker) {
+  const action = fs.writeFile('./talker.json', JSON.stringify(newTalker));
+  return action;
+}
+
+module.exports = { readFile, generateToken, writeFile };
