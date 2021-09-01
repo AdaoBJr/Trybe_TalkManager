@@ -1,3 +1,4 @@
+const fs = require('fs').promises;
 const express = require('express');
 const bodyParser = require('body-parser');
 
@@ -7,45 +8,31 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const talkers = [
-  {
-    name: 'Henrique Albuquerque',
-    age: 62,
-    id: 1,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Heloísa Albuquerque',
-    age: 67,
-    id: 2,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Ricardo Xavier Filho',
-    age: 33,
-    id: 3,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Marcos Costa',
-    age: 24,
-    id: 4,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-];
+const getTalkers = () => fs.readFile('./talker.json', 'utf-8').then((res) => JSON.parse(res));
 
-app.get('/talker/:id', (req, res) => {
+app.get('/talker/:id', async (req, res) => {
+  const talkerList = await getTalkers();
+
   const { id } = req.params;
-  const talkerFiltered = talkers.filter((manager) => parseInt(id, 10) === manager.id);
+  const talkerFiltered = talkerList.filter((manager) => parseInt(id, 10) === manager.id);
   
-  if (!talkerFiltered) {
-    return res.status(404).json({ message: 'Manager not found!' });
+  if (talkerFiltered.length === 0) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
   
   return res.status(HTTP_OK_STATUS).json({ talkerFiltered });
 });
 
-app.get('/talker', (req, res) => res.status(HTTP_OK_STATUS).json({ talkers } || []));
+app.get('/talker', async (req, res) => {
+  const talkerList = await getTalkers();
+
+  if (!talkerList === []) {
+    return res.status(HTTP_OK_STATUS).json({ message: [] });
+  }
+  return (
+    res.status(HTTP_OK_STATUS).json({ talkerList })
+  );
+});
 
 const validateEmail = (email) => {
   const emailTester = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i;
