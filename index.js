@@ -3,7 +3,7 @@ const rescue = require('express-rescue');
 const crypto = require('crypto');
 // const util = require('util');
 const express = require('express');
-// const bodyParser = require('body-parser');
+const bodyParser = require('body-parser');
 // const { json } = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
@@ -82,7 +82,7 @@ app.post('/login',
 (req, res, next) => {
   const SIX = 6;
   const { password } = req.body;
-  if (password.length > SIX) {
+  if (password.length < SIX) {
     return res.status(401).send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
       } 
 
