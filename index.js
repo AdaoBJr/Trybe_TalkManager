@@ -12,7 +12,8 @@ const {
   checkName,
   checkRate,
   checkTalk,
-  checkToken } = require('./middlewares');
+  checkToken, 
+  editTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -24,6 +25,8 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+app.get('/talker/search', checkToken);
 
 app.get('/talker', getAllTalkers);
 
@@ -39,6 +42,20 @@ app.post('/talker', [
   checkDate,
   checkRate,
   addNewTalker,
+]);
+
+app.put('/talker/:id', [
+  checkToken,
+  checkName,
+  checkAge,
+  checkTalk,
+  checkDate,
+  checkRate,
+  editTalker,
+]);
+
+app.delete('/talker/:id', [
+  checkToken,
 ]);
 
 app.listen(PORT, () => {
