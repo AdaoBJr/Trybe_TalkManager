@@ -23,7 +23,11 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
-const talkerFile = async () => JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
+function talkerFile() {
+  const talkers = fs.readFile('./talker.json', 'utf-8');
+  return talkers.then((data) => JSON.parse(data))
+  .catch((err) => JSON.parse(err));
+}
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
