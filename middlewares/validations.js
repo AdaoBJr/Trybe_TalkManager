@@ -48,19 +48,24 @@ const validateAge = (req, res, next) => {
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || talk === {} || !talk.rate || !talk.watchedAt) {
+  if (!talk || talk === {}) {
  return res.status(400).json(
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
-);
-  }
-
+); 
+}
   next();
 };
 
 const validateRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
-  if (!rate || rate < 1 || rate > 5
+  if (rate < 1 || rate > 5
     ) return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  
+  if (!rate) {
+ return res.status(400).json(
+    { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+); 
+} 
   next();
 };
 
@@ -72,9 +77,13 @@ const validateWatchedAt = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
   const dateRegex = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/;
 
-  if (!watchedAt || !dateRegex.test(watchedAt)
+  if (!watchedAt) {
+ return res.status(400).json(
+       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+   ); 
+  } 
+  if (!dateRegex.test(watchedAt)
   ) return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  
   next();
 };
 
