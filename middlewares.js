@@ -5,6 +5,14 @@ const getTalkers = async () => {
   return JSON.parse(readTalkers);
 };
 
+const getTalkerById = async (id) => {
+  const talkers = await getTalkers();
+  const talker = talkers.find((r) => r.id === parseInt(id, 10));
+
+  return talker;
+};
+
 module.exports = {
   getTalkers,
+  getTalkerById,
 };
