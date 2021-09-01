@@ -66,11 +66,6 @@ app.post('/login', (_request, response) => {
   });
 });
 
-// app.use((err, req, res, next) => {
-//   res.status(500);
-//   res.json({ error: err });
-// });
-
 app.listen(PORT, () => {
   console.log('Online');
 });
