@@ -1,8 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-
-// const talkers = require('./talker');
+// Busquei ajuda para utilizar o crypto nesse link:https://qastack.com.br/programming/8855687/secure-random-token-in-node-js;
+const crypto = require('crypto');
+const authLoginAndPassword = require('./login');
 
 const app = express();
 app.use(bodyParser.json());
@@ -37,6 +38,13 @@ app.get('/talker/:id', async (req, res) => {
   }
   return res.status(HTTP_OK_STATUS).send(getTheTalker);
 });
+
+// REQUISITO 3
+app.post('/login', authLoginAndPassword,
+  (_req, res) => {
+    const tolken = crypto.randomBytes(8).toString('hex');
+    res.status(200).json({ token: tolken });
+  });
 
 app.listen(PORT, () => {
   console.log('Online');
