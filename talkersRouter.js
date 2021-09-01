@@ -19,6 +19,16 @@ router.get('/', async (_req, res) => {
   res.status(200).json(palestrantes);
 });
 
+router.get('/search', isValidToken, async (req, res) => {
+  const { name } = req.query;
+  const palestrantes = await readTalkerJson();
+
+  if (!name) return res.status(200).json(palestrantes);
+
+  const filterPalestrantes = palestrantes.filter((palestrante) => palestrante.name.includes(name));
+  res.status(200).json(filterPalestrantes);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const palestrantes = await readTalkerJson();
