@@ -23,6 +23,7 @@ const validateToken = (req, res, next) => {
   if (token.length && token.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
+  
   next();
 };
 
@@ -58,6 +59,7 @@ const validateName = (req, res, next) => {
   if (name.length < 3) {
     return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
+
   next();
 };
 
@@ -70,6 +72,7 @@ const validateAge = (req, res, next) => {
     return res
       .status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
+
   next();
 };
 
@@ -81,6 +84,7 @@ const checkIfPasswordIsValid = (req, res, next) => {
   if (password.toString().length < 5) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
+
   next();
 };
 
@@ -94,6 +98,7 @@ const validateTalker = (req, res, next) => {
     return res.status(400)
      .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
+
   next();
 };
 
@@ -106,6 +111,7 @@ const validateRate = (req, res, next) => {
   if (rate < 1 || rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+
   next();
 };
 
@@ -116,6 +122,7 @@ const validateDate = (req, res, next) => {
     return res.status(400)
       .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
+
   next();
 };
 
@@ -134,37 +141,34 @@ const addTalker = async (req, res) => {
     talk,
   };
   getTalkersList.push(newTalker);
+
   await addTalkerToFileTalker(getTalkersList);
   return res.status(201).json(newTalker);
 };
 
-// -
-function readFile() {
-  const talkers = fs.readFile('./talker.json', 'utf-8');
-  return talkers.then((data) => JSON.parse(data));
-}
-
-function writeFileTalker(newTalker) {
+function writeTalker(newTalker) {
   return fs.writeFile('./talker.json', JSON.stringify(newTalker));
 }
 
 const editTalker = async (req, res) => {
   const { name, age, talk } = req.body;
-  let talkersList = await readFile();
   const { id } = req.params;  
-  talkersList = talkersList.filter((talkerUser) => talkerUser.id !== +id);
-  talkersList.push({ id: +id, name, age, talk });
+  let talkersList = await readFileTalker();
 
-  await writeFileTalker(talkersList);  
-  return res.status(200).json({ id: +id, name, age, talk });
+  talkersList = talkersList.filter((talkerUser) => talkerUser.id !== Number(id));
+  talkersList.push({ id: Number(id), name, age, talk });
+
+  await writeTalker(talkersList);  
+  return res.status(200).json({ id: Number(id), name, age, talk });
 };
 
-const deletaTalker = async (req, res) => {  
-  let talkersList = await readFile();
-  const { id } = req.params;  
-  talkersList = talkersList.filter((talkerUser) => talkerUser.id !== +id);
+const deleteTalker = async (req, res) => {  
+  let talkersList = await readFileTalker();
+  const { id } = req.params;
+
+  talkersList = talkersList.filter((talkerUser) => talkerUser.id !== Number(id));
   
-  await writeFileTalker(talkersList);  
+  await writeTalker(talkersList);  
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
@@ -182,5 +186,5 @@ module.exports = {
   validateToken,
   addTalker,
   editTalker,
-  deletaTalker,
+  deleteTalker,
 };
