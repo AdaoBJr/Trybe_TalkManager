@@ -26,7 +26,13 @@ const validatePassword = (request, response, next) => {
   next();
 };
 
+const validateToken = (request, response, next) => {
+
+  next();
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
+  validateToken,
 };
