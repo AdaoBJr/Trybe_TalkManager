@@ -143,6 +143,16 @@ async function editTalker(req, res) {
 }
 // reference: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex 
 
+async function deleteTalker(req, res) {
+  const { id } = req.params;
+
+  const curr = await readFileTalker();
+  const updatedTalkers = curr.filter((el) => el.id !== +id);
+  writeFile('./talker.json', updatedTalkers);
+
+  res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
+}
+
  module.exports = {
    getAllTalkers,
    getTalkerById,
@@ -154,4 +164,5 @@ async function editTalker(req, res) {
    talkValidation,
    addTalker,
    editTalker,
+   deleteTalker,
  };

@@ -10,6 +10,7 @@ const {
   rateValidation,
   watchedAtValidation,
   editTalker,
+  deleteTalker,
 } = require('../controllers/talkerControl');
 
 const router = express.Router();
@@ -36,6 +37,10 @@ router.route('/:id')
       rateValidation,
       watchedAtValidation,
       editTalker,
+    )
+    .delete(
+      tokenValidation,
+      deleteTalker,
     );
 
 module.exports = router;
