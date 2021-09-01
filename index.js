@@ -85,7 +85,7 @@ app.put('/talker/:id',
     const talkIndex = talkersList.findIndex((talker) => talker.id === Number(id));
     talkersList[talkIndex] = { id: Number(id), name, age, talk };
     fs.writeFile('./talker.json', JSON.stringify(talkersList));    
-    return res.status(201).json(talkersList[talkIndex]);
+    return res.status(200).json(talkersList[talkIndex]);
 });
 
 app.listen(PORT, () => {
