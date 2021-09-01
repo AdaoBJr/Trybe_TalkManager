@@ -59,15 +59,31 @@ app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
 
 app.post('/talker', isValidToken, isValidName, isValidAge,
 isValidTalk, isValidDate, isValidRate, (req, res) => {
-  const { id, name, age, talk: { watchedAt, rate } } = req.body;
-  
-  fs.readFile(talkerJson, 'utf8', (_err, content) => {    
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  fs.readFile(talkerJson, 'utf8', (_err, content) => {
+    const ONE = 1;
     const data = JSON.parse(content);
-    
-    data.push({ id, name, age, talk: { watchedAt, rate } });
-    return res.status(201).json({ id, name, age, talk: { watchedAt, rate } });     
+    const lastPosition = data[data.length - 1];
+    const id = lastPosition.id + ONE;
+    // talvez poderei utilizar a estrutura no próximo requisito
+    // const findTalker = data.find((talker) => talker.id === Number(id));
+    // if (findTalker) {
+    //   return res.status(409).json({
+    //     message: 'Pessoa palestrante já cadastrada' });
+    // }
+    const talker = { age, id, name, talk: { watchedAt, rate } };
+
+    data.push(talker);
+    fs.writeFile(talkerJson, JSON.stringify(data), 'utf8', () =>
+     res.status(201).json({ id, age, name, talk: { watchedAt, rate } }));
   });
 });
+// fonte para colaboração na realização do post acima < https://www.ti-enxame.com/pt/node.js/como-fazer-um-http-post-pedido-em-node.js/972845785/>
+    
+//     data.push({ id, name, age, talk: { watchedAt, rate } });
+//     return res.status(201).json({ id, name, age, talk: { watchedAt, rate } });     
+//   });
+// });
 
 app.put('/talker/:id', 
 isValidToken, isValidName, isValidAge, isValidTalk, isValidDate, isValidRate, (req, res) => {
