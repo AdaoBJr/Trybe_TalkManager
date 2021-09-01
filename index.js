@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 // não remova esse endpoint, e para o avaliador funcionar
 const HTTP_OK_STATUS = 200;
 app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
-app.use(authLogin);
+// app.use(authLogin);
 
 const PORT = '3000';
 
@@ -56,7 +56,7 @@ app.get('/talker/:id', rescue(async (_request, response) => {
 
 // REQUISITO 3
 
-app.post('/login', (_request, response) => {
+app.post('/login', authLogin, (_request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
   // const token = '7mqaVRXJSp886CGr'; 
 
