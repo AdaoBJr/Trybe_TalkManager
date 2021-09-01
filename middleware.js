@@ -178,7 +178,7 @@ const { id } = req.params;
 const list = await readFile();
 const result = list.filter((item) => item.id !== +id);
 await writeFile('./talker.json', result);
-return res.status(200).jason({ message: 'Pessoa palestrante deletada com sucesso' });
+return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
 module.exports = {
