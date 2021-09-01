@@ -23,7 +23,7 @@ const editTalker = async (talkerID, body) => {
   const talkers = await getTalkers();
   const index = talkers.findIndex(({ id }) => id === parseInt(talkerID, 10));
   const talker = talkers.find(({ id }) => id === parseInt(talkerID, 10));
-  const editedTalker = ({ ...talker, ...body });
+  const editedTalker = { ...talker, ...body };
   talkers.splice(index, 1);
   talkers.push(editedTalker);
   talkers.sort((a, b) => {
@@ -40,4 +40,20 @@ const editTalker = async (talkerID, body) => {
   return editedTalker;
 };
 
-module.exports = { getTalkers, filterTalker, setTalkers, editTalker };
+const deleteTalker = async (talkerID) => {
+  const talkers = await getTalkers();
+  const index = talkers.findIndex(({ id }) => id === parseInt(talkerID, 10));
+  if (index < 0) return false;
+  talkers.splice(index, 1);
+
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return true;
+};
+
+module.exports = {
+  getTalkers,
+  filterTalker,
+  setTalkers,
+  editTalker,
+  deleteTalker,
+};

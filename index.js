@@ -2,7 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
-const { getTalkers, filterTalker, setTalkers, editTalker } = require('./handleFile.js');
+const {
+  getTalkers,
+  filterTalker,
+  setTalkers,
+  editTalker,
+  deleteTalker,
+} = require('./handleFile.js');
 const {
   validateEmail,
   validatePassword,
@@ -77,9 +83,22 @@ app.put(
     const { body } = req;
     const talker = await editTalker(id, body);
 
-    res.send(talker);
+    res.status(200).json(talker);
   },
 );
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const response = await deleteTalker(id);
+
+  res
+    .status(200)
+    .json({
+      message: response
+        ? 'Pessoa palestrante deletada com sucesso'
+        : 'Pessoa palestrante não encontrado',
+    });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
