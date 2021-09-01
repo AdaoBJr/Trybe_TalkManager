@@ -23,10 +23,9 @@ app.get('/talker/:id', async (request, response) => {
   const { getTalkerID } = micro;
   const data = await getTalkerID(id);
   if (data) {
-    response.status(HTTP_OK_STATUS).send(data);
-    return;
+    return response.status(HTTP_OK_STATUS).send(data);
   }
-  response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
 // app.post('/talker', async (request, response) => {
@@ -43,13 +42,17 @@ app.get('/talker/:id', async (request, response) => {
 //   response.status(200).send('OK');
 // });
 
-app.post('/login', async (request, response) => {
-  const { email, password } = request.body;
-  const { validateEmail, validatePass } = micro;
-  validateEmail(email, response);
-  validatePass(password, response);
-  response.status(200).json({ token: '7mqaVRXJSp886CGr' });
-});
+// app.post('/login', async (request, response, next) => {
+//   const { email } = request.body;
+//     const { validateEmail } = micro;
+//     validateEmail(email, response);
+//     next();
+//   }, async (request, response, next) => {
+//     const { password } = request.body;
+//     const { validatePass } = micro;
+//     validatePass(password, response);
+//     next();
+//   }, (_request, response) => response.status(200).json({ token: '7mqaVRXJSp886CGr' }));
 
 app.listen(PORT, () => {
   console.log('Online');

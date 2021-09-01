@@ -16,25 +16,23 @@ const getTalkerID = async (id) => {
 const validateEmail = (email, response) => {
     const parseEmail = /\b[A-Z0-9._%+-]+@(?:[A-Z0-9-]+\.)+[A-Z]{2,6}\b/i;
     if (email === '' || !email) {
-   response
-      .status(400).json({ message: 'O campo "email" é obrigatório' }); 
-      return;
+      return response
+      .status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   
     if (!parseEmail.test(email)) {
-      response
+      return response
           .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
   };
   
   const validatePass = (password, response) => {
     if (password === '' || !password) {
-   response.status(400)
-    .json({ message: 'O campo "password" é obrigatório' });
-    return;
+      return response.status(400)
+        .json({ message: 'O campo "password" é obrigatório' });
   }
     if (password.length < 6) {
-        response.status(400).json({
+        return response.status(400).json({
             message: 'O "password" deve ter pelo menos 6 caracteres',
           });
         }
