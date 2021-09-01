@@ -2,9 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const {
   readContentFile,
-// writeContentFile,
+  writeContentFile,
 } = require('./helpers');
-const { validName, validPassword } = require('./validations');
+const { validEmail, validPassword, validName, validAge, validTalk,
+validToken, lintChatoWatchedAt, lintChatoRate } = require('./validations');
 
 const PATH_FILE = './talker.json';
 
@@ -40,8 +41,25 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // REQUISITO 3
-app.post('/login', validName, validPassword, async (req, res) => {
+app.post('/login', validEmail, validPassword, async (req, res) => {
   res.status(200).json({ token: '7mqaVRXJSp886CGr' });
+});
+
+// REQUISITO 4
+app.post('/talker', validToken, validName, validAge, validTalk, lintChatoWatchedAt, lintChatoRate,
+ async (req, res) => {
+  const newTalker = req.body;
+  writeContentFile(PATH_FILE, newTalker);
+
+  res.status(200).json({
+    id: 1,
+    name: 'Danielle Santos',
+    age: 56,
+    talk: {
+      watchedAt: '22/10/2019',
+      rate: 5,
+    },
+  });
 });
 
 app.listen(PORT, () => {
