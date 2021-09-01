@@ -107,11 +107,27 @@ async (req, res) => {
 router.put('/:id', validateToken, validateName, validateAge, validateTalk, validateTalkDateRate,
  async (req, res) => {
   const { id } = req.params;
-  // const { name, age, talk } = req.body;
+   const { name, age, talk } = req.body;
   const talkers = await getTalkers();
-  const talkerToEdit = talkers.find((t) => t.id === id);
+  const indexTalker = talkers.findIndex((t) => t.id === Number(id));
+  
+  const editedTalker = { id: Number(id), name, age, talk };
 
-  return res.status(HTTP_OK_STATUS).json(talkerToEdit);
+  talkers[indexTalker] = editedTalker;
+
+  await setTalkers(talkers);
+
+  return res.status(HTTP_OK_STATUS).json(talkers[indexTalker]);
+});
+
+router.delete('/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await getTalkers();
+  const indexTalker = talkers.findIndex((t) => t.id === Number(id));
+  talkers.splice(indexTalker, 1);
+  await setTalkers(talkers);
+
+  return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;
