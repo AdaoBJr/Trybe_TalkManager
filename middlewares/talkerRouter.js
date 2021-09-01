@@ -17,6 +17,7 @@ const {
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED = 201;
 const HTTP_NOT_FOUND = 404;
+const TALKER_JSON = './talker.json';
 
 const readFile = (filePath) => {
   const file = fs.readFile(filePath, 'utf8');
@@ -24,7 +25,7 @@ const readFile = (filePath) => {
 };
 
 router.get('/', async (_req, res) => {
-  const talkers = await readFile('./talker.json');
+  const talkers = await readFile(TALKER_JSON);
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 
@@ -37,7 +38,7 @@ router.post('/',
   validateRate,
   async (req, res) => {
     const { name, age, talk } = req.body;
-    const talkers = await readFile('./talker.json');
+    const talkers = await readFile(TALKER_JSON);
     const id = talkers.length + 1;
     const newTalker = {
       id,
@@ -47,14 +48,34 @@ router.post('/',
     };
     const newTalkers = JSON.stringify([...talkers, newTalker]);
 
-    fs.writeFile('./talker.json', newTalkers);
+    fs.writeFile(TALKER_JSON, newTalkers);
     return res.status(HTTP_CREATED).json(newTalker);
+});
+
+router.put('/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateRate,
+  validateWatchedAt,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkers = await readFile(TALKER_JSON);
+    const talkerIndex = talkers.findIndex((talker) => talker.id === +id);
+    const editedTalker = { id: +id, name, age, talk };
+
+    talkers.splice(talkerIndex, 1, editedTalker);
+    fs.writeFile(TALKER_JSON, JSON.stringify(talkers));
+
+    return res.status(HTTP_OK_STATUS).json(editedTalker);
 });
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const talkers = await readFile('./talker.json');
-  const talker = talkers.find((eachTalker) => eachTalker.id === parseInt(id, 2));
+  const talkers = await readFile(TALKER_JSON);
+  const talker = talkers.find((eachTalker) => eachTalker.id === +id);
 
   if (!talker) {
     return res.status(HTTP_NOT_FOUND).json({
