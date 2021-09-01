@@ -54,7 +54,9 @@ app.put('/talker/:id',
   editTalker);
 
 // // desafio6
-app.delete('/talker/:id', exclude);
+app.delete('/talker/:id',
+  validaToken,
+  exclude);
 
 app.listen(PORT, () => {
   console.log('Online');
