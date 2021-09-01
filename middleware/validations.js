@@ -98,11 +98,12 @@ const validateAge = (req, res, next) => {
 
 const validateTalk = (req, res, next) => {
   const { talk = '' } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
+    console.log('LINHA 102', talk.rate);
     return res.status(400).json(
       {
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-      },      
+      },
     );
   }
   next();
@@ -121,12 +122,36 @@ const validateWatchedAt = (req, res, next) => {
   next();
 };
 
+// const validateRate = (req, res, next) => {
+//   const { talk: { rate } } = req.body;
+//   const rating = Number(rate);
+//   if (rating < 1 || rating > 5) {
+//     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+//   }
+
+//   if (!rating || rating === '') {
+//     return res.status(400).json({ 
+//       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+//     });
+//   } 
+//   next();
+// };
+
 const validateRate = (req, res, next) => {
   const { talk: { rate = '' } } = req.body;
   if (rate < 1 || rate > 5) {
+    console.log(rate, 'OLAAAAAAA');
     return res.status(400).json(
       {
         message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+      },
+    );
+  }
+  if (!rate) {
+    console.log('RATE LINHA 150', rate);
+    return res.status(400).json(
+      {
+        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
       },
     );
   }
@@ -135,7 +160,6 @@ const validateRate = (req, res, next) => {
 
 const createToken = () => {
   const token = crypto.randomBytes(8).toString('hex');
-  console.log(token);
   return token; 
 };
 

@@ -3,6 +3,8 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 const fs2 = require('fs').promises;
 
+const talkerJson = './talker.json';
+
 const {
   validateEmail,
   validatePassword,
@@ -27,7 +29,7 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', (_req, res) => {
-  fs.readFile('./talker.json', 'utf-8', (err, content) => {
+  fs.readFile(talkerJson, 'utf-8', (err, content) => {
     if (err) {
       return res.status(200).json([]);
     }
@@ -52,10 +54,9 @@ app.post(
   validateWatchedAt,
   async (req, res) => {
     const { name, age, talk } = req.body;
-    const talkers = await fs2.readFile('./talker.json', 'utf-8');
+    const talkers = await fs2.readFile(talkerJson, 'utf-8');
     const parseTalkers = JSON.parse(talkers);
     const id = parseTalkers.length + 1;
-    console.log(id, 'IDDDDDDDDDDDDDDDDDDD');
     const newTalker = {
       id,
       name,
@@ -63,13 +64,13 @@ app.post(
       talk,
     };
     const addTalker = JSON.stringify([...parseTalkers, newTalker]);
-      await fs2.writeFile('./talker.json', addTalker);
+      await fs2.writeFile(talkerJson, addTalker);
       return res.status(201).json(newTalker);
     },
 );
 
 app.get('/talker/:id', (req, res) => {
-  fs.readFile('./talker.json', 'utf-8', (_err, content) => {
+  fs.readFile(talkerJson, 'utf-8', (_err, content) => {
     const data = JSON.parse(content);
     const findId = data.find(({ id }) => id === Number(req.params.id));
     if (!findId) {
@@ -82,6 +83,36 @@ app.get('/talker/:id', (req, res) => {
     return res.status(200).json(findId);
   });
 });
+
+app.put(
+  '/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    const talkers = await fs2.readFile(talkerJson, 'utf-8');
+    const parseTalkers = JSON.parse(talkers);
+    const findTalker = parseTalkers.find((talker) => talker.id === Number(req.params.id));
+    const foundIndex = parseTalkers.findIndex((talker) => talker.id === Number(req.params.id));
+    parseTalkers[foundIndex] = {
+      name,
+      age,
+      id: findTalker.id,
+      talk: {
+        watchedAt,
+        rate,
+      },
+    };
+    const updatedTalker = parseTalkers[foundIndex];
+    const addTalker = JSON.stringify(parseTalkers);
+    await fs2.writeFile(talkerJson, addTalker);
+    return res.status(200).json(updatedTalker);
+},
+);
 
 app.listen(PORT, () => {
   console.log('Online');
