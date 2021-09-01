@@ -3,7 +3,7 @@ const rescue = require('express-rescue');
 const crypto = require('crypto');
 // const util = require('util');
 const express = require('express');
-const bodyParser = require('body-parser');
+// const bodyParser = require('body-parser');
 // const { json } = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
