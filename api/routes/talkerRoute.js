@@ -1,14 +1,15 @@
 const express = require('express');
 const {
+  getAllTalkers,
+  getTalkerById,
   tokenValidation,
   nameValidation,
   ageValidation,
   talkValidation,
   addTalker,
-  getTalkerById,
-  getAllTalkers,
   rateValidation,
   watchedAtValidation,
+  editTalker,
 } = require('../controllers/talkerControl');
 
 const router = express.Router();
@@ -34,9 +35,7 @@ router.route('/:id')
       talkValidation,
       rateValidation,
       watchedAtValidation,
-      (_req, res) => {
-        res.status(200).send('Tudo certo');
-      },
+      editTalker,
     );
 
 module.exports = router;

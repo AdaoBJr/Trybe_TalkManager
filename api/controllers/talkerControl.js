@@ -114,24 +114,38 @@ function watchedAtValidation(req, res, next) {
 
  async function addTalker(req, res) {
   const { name, age, talk } = req.body;
-  const { watchedAt, rate } = talk;
 
   const talkerList = await readFileTalker();
   const newTalker = {
     id: (await idGenerator()),
     name,
     age,
-    talk: {
-      watchedAt,
-      rate,
-    },
+    talk,
   };
   writeFile('./talker.json', [...talkerList, newTalker]);
 
   return res.status(HTTP_CREATED).json(newTalker);
  }
 
+async function editTalker(req, res) {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+
+  const currTalkers = await readFileTalker();
+  const talkerIndex = currTalkers.findIndex((el) => el.id === +id);
+  delete currTalkers[talkerIndex];
+  
+  const editedTalker = { id: +id, name, age, talk };
+  currTalkers[talkerIndex] = editedTalker;
+  writeFile('./talker.json', currTalkers);
+
+  res.status(HTTP_OK_STATUS).json(editedTalker); 
+}
+// reference: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex 
+
  module.exports = {
+   getAllTalkers,
+   getTalkerById,
    tokenValidation,
    nameValidation,
    ageValidation,
@@ -139,6 +153,5 @@ function watchedAtValidation(req, res, next) {
    watchedAtValidation,
    talkValidation,
    addTalker,
-   getTalkerById,
-   getAllTalkers,
+   editTalker,
  };
