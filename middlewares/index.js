@@ -1,5 +1,7 @@
 const regexEmail = /\S+@\S+\.\S+/;
 const regexData = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
+const fs = require('fs').promises;
+let talkers = require('../talker.json');
 
 const authUser = (req, res, next) => {
   const { email, password } = req.body;
@@ -12,6 +14,7 @@ const authUser = (req, res, next) => {
       .status(400)
       .json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
+
   if (!password) {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
@@ -41,6 +44,7 @@ const validateNameAndAgeTalker = (req, res, next) => {
   if (Number(age < 18)) {
     return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
+
   next();
 };
 
@@ -53,22 +57,51 @@ const validateDateAndRateTalker = (req, res, next) => {
   if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
     res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+
   next();
 };
 
 const validateTalkTalker = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk) {
+  if (!talk || !talk.watchedAt) {
     return res
     .status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
-  if (!talk.watchedAt || !talk.rate) {
+  if (!talk.rate && talk.rate !== 0) {
     return res
     .status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
+
   next();
+  };
+
+  const writeFile = async (talker) => {
+    try {
+      await fs.writeFile('talker.json', JSON.stringify(talker));
+    } catch (e) {
+    console.log(`ocorreu um erro: ${e}`);  
+    }
+  };
+
+  const addTalker = async (req, res) => {
+    const { name, age, talk } = req.body;
+    const newTalker = { id: 5, name, age, talk };
+    talkers.push(newTalker);
+    // await fs.writeFile('./talker.json', JSON.stringify(talkers));
+    await writeFile(talkers);
+    return res.status(201).json(newTalker);
+  };
+
+  const editTalker = async (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;  
+    talkers = talkers.filter((t) => t.id === Number(id));
+    talkers.push({ id: Number(id), name, age, talk });
+    // await fs.writeFile('talker.json', JSON.stringify(talkers));
+    await writeFile(talkers);
+    return res.status(200).json({ id: Number(id), name, age, talk });
   };
 
 module.exports = { 
@@ -77,4 +110,6 @@ module.exports = {
   validateNameAndAgeTalker,
   validateDateAndRateTalker,
   validateTalkTalker,
+  addTalker,
+  editTalker,
 };
