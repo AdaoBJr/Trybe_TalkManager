@@ -14,7 +14,8 @@ const {
   checkTalk,
   checkToken, 
   editTalker, 
-  deleteTalker } = require('./middlewares');
+  deleteTalker, 
+  searchTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -27,7 +28,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker/search', checkToken);
+app.get('/talker/search', checkToken, searchTalker);
 
 app.get('/talker', getAllTalkers);
 

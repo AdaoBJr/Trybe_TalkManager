@@ -3,7 +3,7 @@ const getSingleTalker = require('./getSingleTalker');
 const error = require('./error');
 const checkEmail = require('./checkEmail');
 const checkPassword = require('./checkPassword');
-const createToken = require('./createToken');
+const createToken = require('./login');
 const addNewTalker = require('./addNewTalker');
 const checkAge = require('./checkAge');
 const checkDate = require('./checkDate');
@@ -13,6 +13,7 @@ const checkTalk = require('./checkTalk');
 const checkToken = require('./checkToken');
 const editTalker = require('./editTalker');
 const deleteTalker = require('./deleteTalker');
+const searchTalker = require('./searchTalker');
 
 module.exports = {
   error,
@@ -30,4 +31,5 @@ module.exports = {
   checkToken,
   editTalker,
   deleteTalker,
+  searchTalker,
 };
