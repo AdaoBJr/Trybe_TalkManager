@@ -17,6 +17,20 @@ router.get('/', async (_req, res) => {
   res.status(200).json(read);
 });
 
+router.get('/search',
+  autoriza,
+  async (req, res) => {
+  const { q } = req.query;
+  const readF = await readFile();
+  const filter = readF.filter((item) => {
+    const geral = item.name.toLowerCase();
+    const stringValue = q.toLowerCase();
+    return geral.includes(stringValue);
+  });
+  if (!q) return res.status(200).json(readF);
+  res.status(200).json(filter);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const readF = await readFile();
