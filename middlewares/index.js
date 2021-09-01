@@ -21,7 +21,7 @@ const authUser = (req, res, next) => {
   if (password.length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
-  next();
+  return next();
 };
 
 const validateToken = (req, res, next) => {
@@ -29,7 +29,7 @@ const validateToken = (req, res, next) => {
   if (!token) return res.status(401).json({ message: 'Token não encontrado' });
   if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
   
-  next();
+  return next();
 };
 
 const validateNameAndAgeTalker = (req, res, next) => {
@@ -45,7 +45,7 @@ const validateNameAndAgeTalker = (req, res, next) => {
     return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
 
-  next();
+  return next();
 };
 
 const validateDateAndRateTalker = (req, res, next) => {
@@ -58,7 +58,7 @@ const validateDateAndRateTalker = (req, res, next) => {
     res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
-  next();
+  return next();
 };
 
 const validateTalkTalker = (req, res, next) => {
@@ -74,14 +74,14 @@ const validateTalkTalker = (req, res, next) => {
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
 
-  next();
+  return next();
   };
 
   const writeFile = async (talker) => {
     try {
       await fs.writeFile('talker.json', JSON.stringify(talker));
-    } catch (e) {
-    console.log(`ocorreu um erro: ${e}`);  
+    } catch (err) {
+    console.log(`ocorreu um erro: ${err}`);  
     }
   };
 
