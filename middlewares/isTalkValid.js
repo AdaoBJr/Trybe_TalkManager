@@ -13,7 +13,7 @@ function isTalkExistent(req, res, next) {
 
 function isTalkInfoExistent(req, res, next) {
   const { talk: { watchedAt, rate } } = req.body;
-  if (!watchedAt || !rate) {
+  if (!watchedAt || (!rate && rate !== 0)) {
     res
       .status(400)
       .json({

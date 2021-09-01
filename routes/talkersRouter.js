@@ -7,9 +7,11 @@ const isTokenValid = require('../middlewares/isTokenValid');
 
 const router = express.Router();
 
+const TALKER_DATA = 'talker.json';
+
 router.get('/', (_req, res) => {
   try {
-    const talkerData = fs.readFileSync('talker.json');
+    const talkerData = fs.readFileSync(TALKER_DATA);
     res.status(200).json(JSON.parse(talkerData));
   } catch (err) {
     res.status(200).json(JSON.parse([]));
@@ -18,7 +20,7 @@ router.get('/', (_req, res) => {
 
 router.get('/:id', (req, res) => {
   const { id } = req.params;
-  const talkerData = JSON.parse(fs.readFileSync('talker.json'));
+  const talkerData = JSON.parse(fs.readFileSync(TALKER_DATA));
   const talker = talkerData.find((t) => t.id === Number(id));
   if (!talker) {
     res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
@@ -37,10 +39,35 @@ router.post(
   isTalkValid,
   (req, res) => {
     const { name, age, talk } = req.body;
-    const id = JSON.parse(fs.readFileSync('talker.json')).length + 1;
+    const id = JSON.parse(fs.readFileSync(TALKER_DATA)).length + 1;
     const newList = { id, name, age, talk };
-    fs.writeFileSync('talker.json', JSON.stringify([newList]));
+    fs.writeFileSync(TALKER_DATA, JSON.stringify([newList]));
     res.status(201).json(newList);
+  },
+);
+
+router.put(
+  '/:id',
+  isTokenValid,
+  isNameValid,
+  isAgeValid,
+  isTalkExistent,
+  isTalkInfoExistent,
+  isTalkValid,
+  (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+
+    const talkersList = JSON.parse(fs.readFileSync(TALKER_DATA));
+    const talkerSerched = talkersList.find((t) => t.id === Number(id));
+    const talkerIndex = talkersList.indexOf(talkerSerched);
+    talkersList[talkerIndex] = { id, name, age, talk };
+
+    const newList = talkersList[talkerIndex];
+
+    fs.writeFileSync(TALKER_DATA, JSON.stringify([newList]));
+
+    res.status(200).json(newList);
   },
 );
 
