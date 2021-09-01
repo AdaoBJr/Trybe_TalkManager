@@ -45,7 +45,17 @@ const talkerCaller = async () => {
 //   }));
 // });
 
-app.get('/talker', async (req, res) => {
+app.get('/talker/:id', async (req, res) => {
+  const data = await talkerCaller();
+  const { id } = req.params;
+  const result = data.find((c) => c.id === Number(id));
+  if (result.length === 0) {
+  return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
+  }
+  res.status(HTTP_OK_STATUS).send(result);
+});
+
+app.get('/talker/', async (req, res) => {
   const data = await talkerCaller();
   if (data.length === 0) return res.status(HTTP_OK_STATUS).send([]);
   res.status(HTTP_OK_STATUS).send(data);
