@@ -1,14 +1,18 @@
 const express = require('express');
 const fs = require('fs').promises;
 const rescue = require('express-rescue');
+const { validateEmail, validatePassword } = require('./helper/middleware');
 // const { readFile } = require('./helper/ fileHandling');
 
 const fileTalker = 'talker.json';
 
 const app = express();
 app.use(express.json());
+
 app.use((err, request, response, _next) => response.status(500)
-  .json({ error: `Erro: ${err.message}` }));
+.json({ error: `Erro: ${err.message}` }));
+
+app.use(validateEmail, validatePassword);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -29,7 +33,7 @@ app.get('/talker/:id', async (request, response) => {
       .json({ message: 'Pessoa palestrante não encontrada' });
   }
   
-  response.status(200).json(getById);
+  response.status(HTTP_OK_STATUS).json(getById);
 });
 
 app.get('/talker', rescue(async (_request, response) => {
@@ -37,8 +41,16 @@ app.get('/talker', rescue(async (_request, response) => {
 
   if (talker === null) return response.status(200).json([]);
 
-  response.status(200).json(JSON.parse(talker));
+  response.status(HTTP_OK_STATUS).json(JSON.parse(talker));
 }));
+
+app.post('/login', (request, response) => {
+  // const { email, password } = request.body;
+
+  const token = Math.random().toString(16).substr(2, 8) + Math.random().toString(16).substr(2, 8);
+
+  response.status(HTTP_OK_STATUS).json({ token });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
