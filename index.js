@@ -32,19 +32,19 @@ app.get('/talker/:id', async (req, res) => {
 app.get('/talker', (_req, res) => {
   try {
     const talkers = fs.readFileSync('talker.json');
-    res.status(HTTP_OK_STATUS).json(JSON.parse(talkers));
+    return res.status(HTTP_OK_STATUS).json(JSON.parse(talkers));
   } catch (error) {
-    res.status(HTTP_OK_STATUS).json(JSON.parse([]));
+    return res.status(HTTP_OK_STATUS).json(JSON.parse([]));
   }
 });
 
 app.post('/login', validEmail, validPassword, (_req, res) => {
   const cryptoToken = crypto.randomBytes(8).toString('hex');
-  res.status(HTTP_OK_STATUS).json({ token: `${cryptoToken}` });
+  return res.status(HTTP_OK_STATUS).json({ token: `${cryptoToken}` });
 });
 
 app.use((err, _req, res, _next) => {
-  res.status(500).json({ error: `Erro: ${err.message}` });
+  return res.status(500).json({ error: `Erro: ${err.message}` });
 });
 
 app.listen(PORT, () => {
