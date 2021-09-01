@@ -19,7 +19,7 @@ const post = async (req, res) => {
     age,
     talk: { watchedAt, rate } };
   convert.push(newPalester);
-  await fs.writeFile('./talker.json', JSON.stringify([...convert, newPalester]));
+  await fs.writeFile('./talker.json', JSON.stringify(convert));
   return res.status(200).json(newPalester);
 };
 
