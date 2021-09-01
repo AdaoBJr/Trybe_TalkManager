@@ -138,18 +138,7 @@ const addTalker = async (req, res) => {
   return res.status(201).json(newTalker);
 };
 
-const deleteTalker = async (req, res, _next) => {
-  const { id } = req.params;
-  // const getTalkers = JSON.parse(fs.readFileSync('talker.json'));
-  const getTalkersList = await readFileTalker();
-  const talkers = getTalkersList.filter((talk) => talk.id !== Number(id));
-
-  fs.writeFileSync(talker, JSON.stringify(talkers));
-
-  res.status(200).json({
-    message: 'Pessoa palestrante deletada com sucesso',
-  });
-};
+const updatePalestrantesList = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
 
 module.exports = {
   readFileTalker,
@@ -164,5 +153,5 @@ module.exports = {
   validateTalker,
   validateToken,
   addTalker,
-  deleteTalker,
+  updatePalestrantesList,
 };
