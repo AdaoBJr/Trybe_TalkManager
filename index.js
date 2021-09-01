@@ -27,7 +27,6 @@ const PORT = '3000';
 // const aleatoryToken = crypto.randomBytes(8).toString('hex');
 // return aleatoryToken;
 // };
-
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => 
   response.status(HTTP_OK_STATUS).send());
@@ -85,9 +84,3 @@ app.listen(PORT, () => {
   //   if (password === '') {
   //     return res.status(401).json({ message: 'O campo "password" é obrigatório' });
   //   }
-  
-  //   // validação do email e password para status 200
-  //   if (validEmail.test(email) && password.length > minOfCaracteres) {
-  //     res.status(200).json({ message: 'token here' });
-  //   }
-  // });
