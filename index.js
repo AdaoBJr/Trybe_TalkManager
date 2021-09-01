@@ -29,16 +29,15 @@ const PORT = '3000';
 // };
 
 // não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send('Diretorio Raiz');
-});
+app.get('/', (_request, response) => 
+  response.status(HTTP_OK_STATUS).send());
 // está escutando as requisições feitas pelos usuários.
 
 //  REQUISITO 1
 
 app.get('/talker', async (_request, response) => {
   const talker = await getTalker();
-  response.status(HTTP_OK_STATUS).send(talker);
+  return response.status(HTTP_OK_STATUS).send(talker);
 });
 
 // REQUISITO 2
@@ -61,7 +60,7 @@ app.post('/login', (_request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
   // const token = '7mqaVRXJSp886CGr'; 
 
-  response.status(HTTP_OK_STATUS).json({
+  return response.status(HTTP_OK_STATUS).json({
     token,
   });
 });
