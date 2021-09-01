@@ -8,10 +8,8 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-app.get('/talker', async (req, res) => {
-  return res.status(HTTP_OK_STATUS)
-  .send(JSON.parse(await fs.readFile('talker.json', 'utf-8')));
-});
+app.get('/talker', async (req, res) => res.status(HTTP_OK_STATUS)
+  .send(JSON.parse(await fs.readFile('talker.json', 'utf-8'))));
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
