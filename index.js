@@ -65,3 +65,17 @@ app.post('/talker', verifyToken, verifyName, verifyAge, verifyTalk,
     fs.writeFile(talkerJson, JSON.stringify(x));
     res.status(201).json(y);
   }));
+
+  // Requisito 5
+  app.put('/talker/:id', verifyToken, verifyName, verifyAge, verifyTalk,
+  verifyWatchAt, verifyRate, rescue(async (req, res) => {
+    const { id } = req.params;
+    const { body } = req;
+    const talkers = await fs.readFile(talkerJson);
+    const old = JSON.parse(talkers);
+    const indexId = old.findIndex((index) => Number(id) === index.id);
+    const newBody = { ...body, id: Number(id) };
+    old[indexId] = newBody;
+    fs.writeFile(talkerJson, JSON.stringify(old));
+    res.status(200).json(newBody);
+  }));
