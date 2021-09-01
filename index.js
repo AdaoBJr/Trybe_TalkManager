@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId, loguin } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin, exclude } = require('./middlewares/index');
 const { validaToken,
   validaTalk,
   validaRate,
@@ -54,7 +54,7 @@ app.put('/talker/:id',
   editTalker);
 
 // // desafio6
-// app.delete('/talker/:id', exclude);
+app.delete('/talker/:id', exclude);
 
 app.listen(PORT, () => {
   console.log('Online');
