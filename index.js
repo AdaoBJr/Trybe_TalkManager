@@ -69,7 +69,24 @@ app.post('/talker',
     talkersList.push({ id: talkersList.length + 1, name, age, talk });
     fs.writeFile('./talker.json', JSON.stringify(talkersList));    
     return res.status(201).json(talkersList[talkersList.length - 1]);
-  });
+});
+
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAndRate,
+  async (req, res) => {
+    // console.log('caiu aqui?')
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkersList = await getTalkers();
+    const talkIndex = talkersList.findIndex((talker) => talker.id === Number(id));
+    talkersList[talkIndex] = { id: Number(id), name, age, talk };
+    fs.writeFile('./talker.json', JSON.stringify(talkersList));    
+    return res.status(201).json(talkersList[talkIndex]);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
