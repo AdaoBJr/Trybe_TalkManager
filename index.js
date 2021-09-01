@@ -20,9 +20,7 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  return response.status(HTTP_OK_STATUS).send();
-});
+app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
 
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
@@ -46,9 +44,8 @@ app.get('/talker', rescue(async (_request, response) => {
   return response.status(HTTP_OK_STATUS).json(JSON.parse(talker));
 }));
 
-app.post('/talker', validateToken, (request, response) => {
-  return response.status(201).json({ message: 'OK' });
-});
+app.post('/talker', validateToken, (_request, response) =>
+  response.status(201).json({ message: 'OK' }));
 
 app.post('/login', validateEmail, validatePassword, (_request, response) => {
   const token = Math.random().toString(16).substr(2, 8) + Math.random().toString(16).substr(2, 8);
