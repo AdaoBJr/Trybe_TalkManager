@@ -49,7 +49,7 @@ app.post('/talker',
 
 app.post('/login',
   authUser,
-  (req, res) => res.status(HTTP_OK_STATUS).json({ token: getToken() })); 
+  (_req, res) => res.status(HTTP_OK_STATUS).json({ token: getToken() })); 
 
 app.put('/talker/:id',
   validateToken,
