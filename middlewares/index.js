@@ -5,6 +5,7 @@ const validateToken = require('./validateToken');
 const validateTalker = require('./validateTalker');
 const addTalker = require('./addTalker');
 const editTalker = require('./editTalker');
+const deleteTalker = require('./deleteTalker');
 
 module.exports = {
   talker,
@@ -14,4 +15,5 @@ module.exports = {
   validateTalker,
   addTalker,
   editTalker,
+  deleteTalker,
 };
