@@ -1,7 +1,9 @@
 const express = require('express');
+const crypto = require('crypto');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const fsp = require('fs').promises;
+const { validEmail, validPassword } = require('./middlewares/validate');
 
 const app = express();
 app.use(bodyParser.json());
@@ -34,6 +36,15 @@ app.get('/talker', (_req, res) => {
   } catch (error) {
     res.status(HTTP_OK_STATUS).json(JSON.parse([]));
   }
+});
+
+app.post('/login', validEmail, validPassword, (_req, res) => {
+  const cryptoToken = crypto.randomBytes(8).toString('hex');
+  res.status(HTTP_OK_STATUS).json({ token: `${cryptoToken}` });
+});
+
+app.use((err, _req, res, _next) => {
+  res.status(500).json({ error: `Erro: ${err.message}` });
 });
 
 app.listen(PORT, () => {
