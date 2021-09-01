@@ -6,9 +6,18 @@ function getTalkers() {
     .then((fileContent) => JSON.parse(fileContent));
 }
 
+function setTalkers(newTalker) {
+  return fs.writeFile('./talker.json', JSON.stringify(newTalker));
+}
+
 function regexEmail(email) {
   const valid = /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/;
   return valid.test(String(email).toLowerCase());
+}
+
+function regexDate(input) {
+  const valid = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
+  return valid.test(input);
 }
 
 // https://stackoverflow.com/questions/48524452/base64-encoder-via-crypto-js
@@ -20,4 +29,4 @@ function generateToken(myString) {
 
 console.log(generateToken(Math.random().toFixed(8)));
 
-module.exports = { getTalkers, generateToken, regexEmail };
+module.exports = { getTalkers, setTalkers, generateToken, regexEmail, regexDate };
