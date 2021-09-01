@@ -87,8 +87,8 @@ const validateTalkTalker = (req, res, next) => {
 
   const addTalker = async (req, res) => {
     const { name, age, talk } = req.body;
-    // const qtyTalkers = talkers.length;
-    const newTalker = { id: 5, name, age, talk };
+    const qtyTalkers = talkers.length;
+    const newTalker = { id: qtyTalkers + 1, name, age, talk };
     talkers.push(newTalker);
     // await fs.writeFile('./talker.json', JSON.stringify(talkers));
     await writeFile(talkers);
@@ -105,6 +105,13 @@ const validateTalkTalker = (req, res, next) => {
     return res.status(200).json({ id: Number(id), name, age, talk });
   };
 
+  const deleteTalker = (req, res) => {
+    const { id } = req.params;
+    const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+    talkers.splice(talkerIndex, 1);
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  };
+
 module.exports = { 
   authUser,
   validateToken,
@@ -113,4 +120,5 @@ module.exports = {
   validateTalkTalker,
   addTalker,
   editTalker,
+  deleteTalker,
 };
