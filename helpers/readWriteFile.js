@@ -2,8 +2,8 @@ const fs = require('fs').promises;
 
 const readContentFile = async (path) => {
   try {
-    const content = await fs.readFile(path, 'utf-8');
-    return JSON.parse(content);
+    const contentFile = await fs.readFile(path, 'utf-8');
+    return JSON.parse(contentFile);
   } catch (error) {
     return null;
   }
@@ -12,7 +12,7 @@ const readContentFile = async (path) => {
 const writeContentFile = async (path, content) => {
   try {
     const contentFile = await readContentFile(path);
-    contentFile.push(content);
+    contentFile.push(content); 
     await fs.writeFile(path, JSON.stringify(contentFile));
 
     return content;
@@ -21,4 +21,12 @@ const writeContentFile = async (path, content) => {
   }
 };
 
-module.exports = { readContentFile, writeContentFile };
+const overwriteFile = async (path, content) => {
+  try {
+    await fs.writeFile(path, JSON.stringify(content));
+  } catch (error) {
+    return null;
+  }
+};
+
+module.exports = { readContentFile, writeContentFile, overwriteFile };

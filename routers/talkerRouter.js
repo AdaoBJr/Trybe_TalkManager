@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { readContentFile, writeContentFile } = require('../helpers/readWriteFile');
+const { readContentFile, writeContentFile, overwriteFile } = require('../helpers/readWriteFile');
 const { 
   validateToken,
   validateName,
@@ -48,10 +48,13 @@ validateRate,
 validateWatchedAt,
 
 async (req, res) => {
-  const newTalker = { ...req.body };
+  const talkers = await readContentFile(PATH_FILE);
+  const id = talkers.length + 1;
+  const newTalker = { id, ...req.body };
+
   const talker = await writeContentFile(PATH_FILE, newTalker);
 
-  return res.status(201).json([talker]);
+  return res.status(201).json(talker);
 });
 
 router.put('/:id',
@@ -65,18 +68,22 @@ validateWatchedAt,
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const talkers = await readContentFile(PATH_FILE) || [];
+  
   const talkerId = talkers.findIndex((talker) => talker.id === Number(id));
-
-  talkers[talkerId] = { id, name, age, talk };
-  return res.status(200).json({ name, age, talk });
+  talkers[talkerId] = { id: Number(id), name, age, talk };
+  
+  await overwriteFile(PATH_FILE, talkers);
+  return res.status(200).json({ id: Number(id), name, age, talk });
 });
 
 router.delete('/:id', validateToken, async (req, res) => {
   const { id } = req.params;
   const talkers = await readContentFile(PATH_FILE) || [];
   const talkerId = talkers.findIndex((talker) => talker.id === Number(id));
-  
+
   talkers.splice(talkerId, 1);
+  
+  await overwriteFile(PATH_FILE, talkers);
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
