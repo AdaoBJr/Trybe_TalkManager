@@ -126,6 +126,27 @@ validTalker, validTalkWatched, validRate, async (req, res) => {
   const newData = await writeContentFile(data);
   return res.status(201).json(newData);
 });
+// #5 Cria o endpoint PUT /talker/:id
+const editContentFile = async (id, content) => {
+  try {
+    const contentId = parseInt(id, 10);
+    const contentTalker = await readContentFile();
+    const newContent = { id: contentId, ...content };
+    const indice = contentTalker.findIndex((entry) => entry.id === contentId);
+    contentTalker[indice] = newContent;
+    await fs.writeFile('./talker.json', JSON.stringify(contentTalker));
+    return newContent;
+  } catch (error) {
+    return null;
+  }
+};
+app.put('/talker/:id', validToken, validName, validAge,
+validTalker, validTalkWatched, validRate, async (req, res) => {
+  const { id } = req.params;
+  const content = req.body;
+  const newContent = await editContentFile(id, content);
+  return res.status(200).json(newContent);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
