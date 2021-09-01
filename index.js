@@ -7,6 +7,13 @@ const {
   validationEmail,
   validationPassword,
   generateRandomToken,
+  postTalker,
+  validationToken,
+  validationName,
+  validationAge,
+  validationTalk,
+  validationRate,
+  validationDateWatchedAt,
 } = require('./middlewares/index'); 
 
 const app = express();
@@ -46,3 +53,12 @@ app.post('/login', (req, res) => {
     token: generateRandomToken(),
   });
 });
+
+app.post('/talker',
+validationToken,
+validationName,
+validationAge,
+validationTalk,
+validationRate,
+validationDateWatchedAt,
+postTalker);
