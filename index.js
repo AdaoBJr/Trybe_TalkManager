@@ -25,8 +25,8 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', (req, res) => {
-  const talkers = readData();
+app.get('/talker', async (req, res) => {
+  const talkers = await readData();
 
   if (!talkers) return res.status(200).json({});
 
