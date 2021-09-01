@@ -2,11 +2,11 @@ const fs = require('fs').promises;
 
 const validaToken = (req, res, next) => {
   const { token } = req.headers;
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  } 
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
-  } 
-  if (token.length && token.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
   } 
   next();
 };
@@ -84,6 +84,7 @@ const addTalker = async (req, res) => {
     talk: { watchedAt, rate } };
   convert.push(newPalester);
   await fs.writeFile('./talker.json', JSON.stringify(convert));
+  console.log('cheguei aqui');
   return res.status(201).json(newPalester);
 };
 

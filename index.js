@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId, loguin, exclude } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin } = require('./middlewares/index');
 const { validaToken,
   validaTalk,
   validaRate, validaNome, validaDate, validaAge, addTalker } = require('./middlewares/req-4');
@@ -33,20 +33,20 @@ app.post('/login', loguin);
 
 // // desafio4
 app.post('/talker',
-validaToken,
-validaNome,
-validaAge,
-validaTalk,
-validaDate,
-validaRate,
-addTalker);
+  validaToken,
+  validaNome,
+  validaAge,
+  validaTalk,
+  validaDate,
+  validaRate,
+  addTalker);
 // app.use('/talker', router);
 
 // // desafio5
 // app.put('/talker/:id', putFunction);
 
 // // desafio6
-app.delete('/talker/:id', exclude);
+// app.delete('/talker/:id', exclude);
 
 app.listen(PORT, () => {
   console.log('Online');
