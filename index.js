@@ -66,15 +66,21 @@ isValidAge,
 isValidTalk,
 isValidWatchedAt,
 isValidRate,
-(req, res) => {
-  const { id } = req.params;
-  const { name, age, talk:{ watchedAt, rate} }
+async (req, res) => {
+  const paramns = req.params.id;
+  const id = Number(paramns);
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const objResponse = { id, name, age, talk: { watchedAt, rate } };
 
+  const dataFile = await fs.promises.readFile(talkerJson, 'utf8');
+  const dataArray = await JSON.parse(dataFile);
+  const peopleIdex = dataArray.findIndex((e) => e.id === id);
 
-
-
+  if (peopleIdex === -1) return res.status(400).json({ message: 'Palestrante não encontrado' });
+  dataArray[peopleIdex] = objResponse;
   
-  res.status(200).json({ massage: 'cheguei aqui' });
+  fs.writeFile(talkerJson, JSON.stringify(dataArray), () => 
+  res.status(200).json(objResponse));
 });
 
 app.post('/login',
