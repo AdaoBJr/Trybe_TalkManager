@@ -86,10 +86,10 @@ const validaToken = (req, res, next) => {
 const validaName = (req, res, next) => {
   const { name } = req.body;
   if (!name) {
-    res.status(400).json({ message: 'O campo "name" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
   if (name.length < 3) {
-    res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
 };
@@ -98,10 +98,10 @@ const validaName = (req, res, next) => {
 const validaAge = (req, res, next) => {
   const { age } = req.body;
   if (!age) {
-    res.status(400).json({ message: 'O campo "age" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
   if (Number(age) < 18) {
-    res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };
@@ -110,7 +110,7 @@ const validaAge = (req, res, next) => {
 const validaTalker = (req, res, next) => {
   const { talk } = req.body;
   if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
-    res.status(400)
+    return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   next();
@@ -121,11 +121,11 @@ const validaTalkerFormato = (req, res, next) => {
   const { talk } = req.body;
   const pattern = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
   if (!talk.watchedAt.match(pattern)) {
-    res.status(400)
+    return res.status(400)
     .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   if (Number(talk.rate) > 5 || Number(talk.rate) < 1) {
-    res.status(400)
+    return res.status(400)
     .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
@@ -158,6 +158,29 @@ const searchTalker = async (req, res) => {
     return res.status(OK_STATUS).json(novaPessoa);
 };
 
+// idit Talker
+const editTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  // const talkerEdit = { ...req.body, id: Number(id) };
+  const list = await readFile();
+  const result = list.filter((elem) => elem.id !== Number(id));
+  result.push({ id: +id, name, age, talk });
+  const editado = result.find((elem) => elem.id === +id);
+  await writeFile('./talker.json', result);
+
+  return res.status(200).json(editado);
+};
+
+// Delete talker.
+const deletetTalker = async (req, res) => {
+const { id } = req.params;
+const list = await readFile();
+const result = list.filter((item) => item.id !== +id);
+await writeFile('./talker.json', result);
+return res.status(200).jason({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   readFile,
   writeFile,
@@ -172,5 +195,7 @@ module.exports = {
   validaTalker,
   validaTalkerFormato,
   searchTalker,
+  editTalker,
+  deletetTalker,
 
 };

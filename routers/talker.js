@@ -11,7 +11,8 @@ const { readFile,
       validaTalker,
        validaTalkerFormato,
         createNewPalestrant,
-        searchTalker } = require('../middleware');
+         searchTalker,
+          deletetTalker, editTalker } = require('../middleware');
 
 const router = express.Router();
 
@@ -38,14 +39,18 @@ router.get('/', async (req, res) => {
   return res.status(OK_STATUS).json(result);
 });
 
-// 5
-router.put('/:id', async (req, res) => {
-  const { id } = req.params;
-  const list = await readFile('../talker.json');
-  const result = list.find((elem) => elem.id === Number(id));
-  return res.status(200).json(result);
-});
+// requesito 6
+router.delete('/:id', validaToken, deletetTalker);
 
+// 5
+router.put('/:id', validaToken,
+validaName,
+ validaAge,
+  validaTalker,
+   validaTalkerFormato,
+    editTalker);
+
+// 4
 router.post('/', validaToken,
  validaName,
   validaAge,
