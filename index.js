@@ -42,21 +42,16 @@ app.post('/login', validateEmail, validatePassword, (_req, res) =>
   res.status(200).json({ token: createToken(16) }));
 
 app.post('/talker', validateToken, validateName, validateAge,
-validateWatched, validateRate, validateTalk,
+ validateTalk, validateWatched, validateRate,
   (req, res) => {
-    const { id, name, age, talk: { watchedAt, rate } } = req.body;
-    fs.readFile('./talker.json', 'utf-8', (_err, content) => {
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    fs.readFile(talkerJson, (_err, content) => {
       const data = JSON.parse(content);
-      const result = data.push({
-        id, 
-        name,
-        age,
-        talk: {
-          watchedAt,
-          rate,
-        },
-      });
-      return res.status(201).json(result);
+      const lastId = data[data.length - 1];
+      const id = lastId.id + 1;
+      data.push({ name, age, id, talk: { watchedAt, rate } });
+    fs.writeFile('./talker.json', JSON.stringify(data), (_error) => 
+      res.status(201).json({ id, name, age, talk: { watchedAt, rate } }));
     });
 });
 

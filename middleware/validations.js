@@ -43,7 +43,7 @@ const validateToken = (req, res, next) => {
   next();
 };
 
-const validateName = (req, res, next) => {
+const validateName = async (req, res, next) => {
   const { name } = req.body;
   if (!name || name === '') {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
@@ -68,6 +68,11 @@ const validateAge = (req, res, next) => {
 const validateWatched = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
   const validDate = /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/([12][0-9]{3})$/g;
+  if (!watchedAt) {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
   if (!watchedAt.match(validDate)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
@@ -77,15 +82,19 @@ const validateWatched = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
   const rating = Number(rate);
+  if (!rating) {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  } 
   if (!(rating >= 1 && rating <= 5)) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  } 
+  }
   next();
 };
 
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
-  // const { talk: { watchedAt, rate } } = req.body;
   if (!talk) {
     return res.status(400).json({ 
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
