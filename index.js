@@ -22,7 +22,10 @@ app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
   const { getTalkerID } = micro;
   const data = await getTalkerID(id);
-  if (data) response.status(HTTP_OK_STATUS).send(data);
+  if (data) {
+    response.status(HTTP_OK_STATUS).send(data);
+    return;
+  }
   response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
