@@ -42,7 +42,7 @@ isValidAge,
 isValidTalk,
 isValidWatchedAt,
 isValidRate,
-(req, _res) => {
+(_req, _res) => {
   // const objTalker = req.body;
   // const a = fs.writeFile('./talker.json', objTalker);
   // return console.log(a, 'AQUI');
