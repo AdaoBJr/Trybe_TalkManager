@@ -8,6 +8,7 @@ const {
   validateToken,
   validateTalker,
   addTalker,
+  editTalker,
   } = require('./middlewares');
 
 const app = express();
@@ -36,6 +37,16 @@ app.post('/talker',
   validateTalker.validateTalkDate,
   validateTalker.validateTalkRate,
   addTalker);
+
+app.put('/talker/:id',
+  validateToken,
+  validateTalker.validateName,
+  validateTalker.validateAge,
+  validateTalker.validateTalk1,
+  validateTalker.validateTalk2,
+  validateTalker.validateTalkDate,
+  validateTalker.validateTalkRate,
+  editTalker);
 
 app.listen(PORT, () => {
   console.log('Online, beleza?');
