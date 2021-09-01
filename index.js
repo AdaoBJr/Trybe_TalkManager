@@ -119,7 +119,7 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.delete('/talker/:id', 
-// validateToken, 
+validateToken, 
 async (req, res) => {
   const { id } = req.params;
   const talker = await readTalkersList();
