@@ -35,6 +35,3 @@ router.post('/', emailValidator, passwordValidator, (_req, res) => {
 });
 
 module.exports = router;
-
-// /^[\w.]+@[a-z]+.\w{2,3}$/g
-// /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g
