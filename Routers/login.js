@@ -12,7 +12,7 @@ login.post('/', (req, res) => {
   if (checkEmail !== 'ok') res.status(400).json(checkEmail);
   if (checkPassword !== 'ok') res.status(400).json(checkPassword);
 
-  res.status(200).json({
+  return res.status(200).json({
     token: gerarToken(),
   });
 });
