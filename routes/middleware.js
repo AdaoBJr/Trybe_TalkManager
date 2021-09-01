@@ -24,7 +24,7 @@ const isValidEmail = (req, res, next) => {
 
   if (!email.match(regex)) {
     return res.status(400)
-    .json({ message: 'O campo "email" deve ter o formato email@email.com' });
+    .json({ message: 'O "email" deve ter o formato email@email.com' });
   }
     
   next();
