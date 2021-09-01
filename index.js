@@ -140,6 +140,19 @@ app.post('/login', validarEmail, validarPassword, (req, res) => {
   });
 });
 
+app.get('/talker/search', validarToken, async (req, res) => {
+  const {
+    name,
+  } = req.query;
+  const data = await readFile(talker);
+  const filterName = data.filter((a) => a.name.includes(name));
+    
+  if (!name) {
+    return res.status(200).json(data);
+  }
+  return res.status(200).json(filterName);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const {
     id,
