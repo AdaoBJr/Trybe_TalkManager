@@ -20,9 +20,8 @@ router.get('/', (_req, res) => {
   }
 });
 
-router.post('/', isValidToken, isValidTalk, isValidName, isValidAge,
-  isValidDate, isValidRate,
-  (req, res) => {
+router.post('/', isValidToken, isValidTalk, isValidName, isValidAge, isValidDate, isValidRate,
+(req, res) => {
   const data = fs.readFileSync('./talker.json', 'utf8');
   const talkers = JSON.parse(data);
   const { name, age, talk: { watchedAt, rate } } = req.body;
