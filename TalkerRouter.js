@@ -49,20 +49,9 @@ const validateAge = (req, res, next) => {
   next();
 };
 
-const validateTalk = (req, res, next) => {
-  const { talk } = req.body;
-  if (!talk || !talk.rate || !talk.watchedAt) {
-    return res.status(HTTP_BAD_REQUEST).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
-    });
-  }
-  
-  next();
-};
-
 const validateTalkDateRate = (req, res, next) => {
   const { watchedAt, rate } = req.body.talk;
-
+  
   if (rate < Number(1) || rate > Number(5)) {
     return res.status(HTTP_BAD_REQUEST).json({ 
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
@@ -73,6 +62,17 @@ const validateTalkDateRate = (req, res, next) => {
       message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"', 
     });
   }
+  next();
+};
+
+const validateTalk = (req, res, next) => {
+  const { talk } = req.body;
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
+    return res.status(HTTP_BAD_REQUEST).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
+    });
+  }
+  
   next();
 };
 
@@ -101,7 +101,17 @@ async (req, res) => {
 
   await setTalkers(talkers);
 
-  res.status(201).json(talkers[talkers.length - 1]);
+  return res.status(201).json(talkers[talkers.length - 1]);
+});
+
+router.put('/:id', validateToken, validateName, validateAge, validateTalk, validateTalkDateRate,
+ async (req, res) => {
+  const { id } = req.params;
+  // const { name, age, talk } = req.body;
+  const talkers = await getTalkers();
+  const talkerToEdit = talkers.find((t) => t.id === id);
+
+  return res.status(HTTP_OK_STATUS).json(talkerToEdit);
 });
 
 module.exports = router;
