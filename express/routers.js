@@ -9,6 +9,7 @@ const {
   validateWatchedAt,
   validateRate,
   createTalker,
+  editTalker,
 } = require('./controllers');
 
 const router = express.Router();
@@ -26,6 +27,15 @@ router.route('/')
     );
 
 router.route('/:id')
-  .get(getTalker);
+  .get(getTalker)
+  .put(
+    validateToken,
+    validateName,
+    validateAge,
+    validateTalk,
+    validateWatchedAt,
+    validateRate,
+    editTalker,
+  );
 
 module.exports = router;

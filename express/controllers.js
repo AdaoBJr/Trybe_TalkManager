@@ -68,7 +68,7 @@ const validateAge = (req, res, next) => {
 
 const validateTalk = (req, res, next) => {
  const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -96,16 +96,24 @@ const createTalker = async (req, res, _next) => {
   const { name, age, talk } = req.body;
   const talkers = await readFile(TALKER_JSON);
   const id = talkers.length + 1;
-  const newTalker = {
-    id,
-    name,
-    age,
-    talk,
-  };
-  const arr = [...talkers, newTalker];
+  const obj = { id, name, age, talk };
+  const arr = [...talkers, obj];
   await writeFile(TALKER_JSON, arr);
   
-  res.status(201).json(newTalker);
+  res.status(201).json(obj);
+};
+
+const editTalker = async (req, res, _next) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const talkers = await readFile(TALKER_JSON);
+  const item = talkers.find((talker) => talker.id === +id); // acho o id q eu quero
+  const position = talkers.indexOf(item); // pego a posição
+  talkers.splice(position, 1); // removo o item
+  const obj = { ...item, name, age, talk }; // mantenho o id e atualizo as informações
+  const arr = [...talkers, obj]; // crio um novo array colocando talkers e o novo obj
+  await writeFile(TALKER_JSON, arr); // escrevo o arquivo
+  res.status(200).json(obj);
 };
 
 module.exports = { 
@@ -120,4 +128,5 @@ module.exports = {
   validateWatchedAt,
   validateRate,
   createTalker,
+  editTalker,
  };
