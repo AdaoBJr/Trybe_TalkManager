@@ -1,15 +1,19 @@
 const router = require('express').Router();
+const crypto = require('crypto');
+
 const {
-    isValidToken,
     isValidEmail,
     isValidPassword,
   } = require('./middleware');
 
   router.post(
     '',
-    isValidToken,
     isValidEmail,
     isValidPassword,
-    (_req, res) => res.status(200).json({ token: '7mqaVRXJSp886CGr' }),
+    (_req, res) => { 
+    const tok = crypto.randomBytes(8).toString('hex');
+    console.log(tok);
+    res.status(200).json({ token: tok });
+    },
   );
   module.exports = router;

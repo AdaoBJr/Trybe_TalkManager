@@ -5,14 +5,14 @@ const app = express();
 app.use(bodyParser.json());
 app.use(express.json());
 
-const isValidToken = (req, res, next) => {
-  const token = req.headers.authorization;
-  const tokenRegex = !/^[a-zA-Z0-9]{16}$/;
+// const isValidToken = (req, res, next) => {
+//   const token = req.headers.authorization;
+//   const tokenRegex = !/^[a-zA-Z0-9]{16}$/;
   
-  if (!token || tokenRegex.test(token)) return res.status(401).json({ message: 'invalid token' });
+//   if (!token || tokenRegex.test(token)) return res.status(401).json({ message: 'invalid token' });
   
-    next();
-  };
+//     next();
+//   };
 
 const isValidEmail = (req, res, next) => { 
   const { email } = req.body;
@@ -44,4 +44,4 @@ const isValidEmail = (req, res, next) => {
     next();
   };
   
-  module.exports = { isValidToken, isValidEmail, isValidPassword };
+  module.exports = { isValidEmail, isValidPassword };
