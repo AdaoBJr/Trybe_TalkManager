@@ -75,4 +75,23 @@ router.put('/:id', isValidToken, isValidTalk, isValidName, isValidAge, isValidDa
   }
 });
 
+router.delete('/:id', isValidToken, (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const data = fs.readFileSync(fileData, 'utf8');
+    const talkers = JSON.parse(data);
+    const indexTalker = talkers.findIndex((t) => Number(t.id) === Number(id));
+    if (indexTalker === -1) return res.status(404).json({ message: 'talker not found!' });
+    
+    talkers.splice(indexTalker, 1);
+    const talkerString = JSON.stringify(talkers);
+    fs.writeFileSync(fileData, talkerString);
+  
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (err) {
+    res.status(501).json({ Erro: err.message });
+  }
+});
+
 module.exports = router;
