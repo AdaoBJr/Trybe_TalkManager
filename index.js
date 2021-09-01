@@ -19,7 +19,7 @@ const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
+  return response.status(HTTP_OK_STATUS).send();
 });
 
 app.listen(PORT, () => {
@@ -31,12 +31,12 @@ app.get('/talker/:id', (req, res) => {
   const talker = talkers.find((t) => t.id === Number(id));
   
   if (!talker) res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(HTTP_OK_STATUS).json(talker);
+  return res.status(HTTP_OK_STATUS).json(talker);
 });
 
 app.get('/talker', async (_req, res) => {
   const talker = await fs.readFile('talker.json', 'utf-8');
-  res.status(HTTP_OK_STATUS).send(JSON.parse(talker));
+  return res.status(HTTP_OK_STATUS).send(JSON.parse(talker));
 });
 
 app.post('/talker',
@@ -47,7 +47,7 @@ app.post('/talker',
   addTalker);
 
 app.post('/login', authUser, (req, res) => {
-  res.status(HTTP_OK_STATUS).json({ token: getToken() });
+  return res.status(HTTP_OK_STATUS).json({ token: getToken() });
 }); 
 
 app.put('/talker/:id',
