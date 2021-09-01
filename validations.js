@@ -77,14 +77,6 @@ const validateTalkCreate = (req, res, next) => {
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
       });
   }
-  // const keysTalk = Object.keys(talk);
-  // if (keysTalk[0] !== 'watchedAt' || keysTalk[1] !== 'rate') {
-  //   return res
-  //     .status(400)
-  //     .json({ 
-  //       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-  //     });
-  // }
 
   next();
 };

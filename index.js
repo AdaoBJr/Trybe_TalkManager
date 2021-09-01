@@ -32,6 +32,24 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkerList = await getTalkers();
+  const upperSearch = q.toUpperCase();
+ 
+  const searchTerm = talkerList.filter(({ name }) => name.toUpperCase().includes(upperSearch));
+
+  if (!q) {
+    return res.status(200).json(talkerList);
+  }
+
+  if (searchTerm === undefined) {
+    return res.status(200).json([]);
+  }
+
+  res.status(200).json(searchTerm);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talkerList = await getTalkers();
@@ -45,7 +63,6 @@ app.get('/talker/:id', async (req, res) => {
 
 app.get('/talker', async (req, res) => {
   const talkersList = await getTalkers();
-  console.log(talkersList);
   res.status(200).json(talkersList);
 });
 
