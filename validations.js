@@ -115,7 +115,7 @@ const validToken = (req, res, next) => {
     });
   }
 
-  if (token.length < 16) {
+  if (token !== '7mqaVRXJSp886CGr') {
     return res.status(401).json({
       message: 'Token inválido',
     });
