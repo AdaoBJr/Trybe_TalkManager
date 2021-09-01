@@ -12,10 +12,10 @@ function readFile() {
 }
 
 function writeFile(props) {
-  fs.writeFile('./talker.json', JSON.stringify(props));
+  return fs.writeFile('./talker.json', JSON.stringify(props));
 }
 
 module.exports = { gerarToken, 
   readFile, 
   writeFile, 
-}; 
+};

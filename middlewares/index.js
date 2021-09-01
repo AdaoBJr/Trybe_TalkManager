@@ -1,9 +1,9 @@
+const { readFile, writeFile } = require('../utils/talkers');
+
 const findOne = (id, listTalkers) => {
   const talkerFind = listTalkers.find((talker) => talker.id === +id);
   return talkerFind;
 };
-
-const fs = require('fs').promises;
 
 const validarEmail = (email) => {
   const obrigatorio = { message: 'O campo "email" é obrigatório' };
@@ -97,15 +97,6 @@ const validaDate = (req, res, next) => {
   next();
 };
 
-function readFile() {
-  const talkers = fs.readFile('./talker.json', 'utf-8');
-  return talkers.then((data) => JSON.parse(data));
-}
-
-function writeFileTalker(newTalker) {
-  return fs.writeFile('./talker.json', JSON.stringify(newTalker));
-}
-
 const addTalker = async (req, res) => {
   const { name, age, talk } = req.body;
   const talkersList = await readFile();
@@ -117,7 +108,7 @@ const addTalker = async (req, res) => {
     talk,
   };
   talkersList.push(newTalker);
-  await writeFileTalker(talkersList);
+  await writeFile(talkersList);
   return res.status(201).json(newTalker);
 };
 
@@ -128,7 +119,7 @@ const editTalker = async (req, res) => {
   talkersList = talkersList.filter((talker) => talker.id !== +id);
   talkersList.push({ id: +id, name, age, talk });
 
-  await writeFileTalker(talkersList);  
+  await writeFile(talkersList);  
   return res.status(200).json({ id: +id, name, age, talk });
 };
 
@@ -150,7 +141,7 @@ const deletaTalker = async (req, res) => {
   const { id } = req.params;  
   talkersList = talkersList.filter((talker) => talker.id !== +id);
   
-  await writeFileTalker(talkersList);  
+  await writeFile(talkersList);  
   return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
   
