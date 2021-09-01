@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { palestrantes, talkerId, loguin, exclude } = require('./middlewares/index');
+const { palestrantes, talkerId, loguin, exclude, talkerSearch } = require('./middlewares/index');
 const { validaToken,
   validaTalk,
   validaRate,
@@ -21,7 +21,9 @@ app.get('/', (_request, response) => {
 });
 
 // desafio7
-// app.get('/talker/search', talkerSearch);
+app.get('/talker/search',
+  validaToken,
+  talkerSearch);
 
 // // desafio 1
 app.get('/talker', palestrantes);

@@ -1,10 +1,10 @@
 const fs = require('fs').promises;
-const { validate } = require('./Validade');
+// const { validate } = require('./Validade');
 
 const talkerSearch = async (req, res) => {
-  const { headers: { token }, query: { q } } = req;
+  const { query: { q } } = req;
 
-  validate(token, res);
+  // validate(token, res);
  
   const response = await fs.readFile('./talker.json', 'utf-8');
   const convert = JSON.parse(response);
