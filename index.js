@@ -118,6 +118,18 @@ app.get('/talker/:id', async (req, res) => {
   return res.status(200).json(person);
 });
 
+app.delete('/talker/:id', 
+// validateToken, 
+async (req, res) => {
+  const { id } = req.params;
+  const talker = await readTalkersList();
+// console.log(talker);
+  const newList = talker.filter((el) => el.id !== Number(id));
+  fs.writeFile('./talker.json', JSON.stringify(newList));
+
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.put('/talker/:id', 
 validateToken, validateTalker, validateTalkExists, 
 validateTalkerTalk, 
@@ -146,6 +158,7 @@ app.get('/talker', async (req, res) => {
   if (talker === []) return res.status(200).json([]);
   return res.status(200).json(talker);
 });
+
 app.post('/talker', validateToken, validateTalker, 
 validateTalkExists, validateTalkerTalk, async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
@@ -169,18 +182,3 @@ validateTalkExists, validateTalkerTalk, async (req, res) => {
 });
 
 app.post('/login', validateUser, (req, res) => res.status(200).json({ token }));
-
-// const fs = require('fs').promises;
-
-// const readTalkersList = () => fs.readFile('./talker.json', 'utf-8')
-//   .then((fileContent) => JSON.parse(fileContent));
-
-// const teste = async () => {
-//     const talker = await readTalkersList();
-//     // console.log(talker);
-  
-//     const personFinder = talker.findIndex((el) => el.id === 3);
-
-//     console.log(personFinder);
-// }; 
-// teste();
