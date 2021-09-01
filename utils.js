@@ -1,6 +1,7 @@
 const fs = require('fs');
 
 const TALKER_JSON_PATH = 'talker.json';
+const HTTP_OK_STATUS = 200;
 const HTTP_BAD_REQUEST_STATUS = 400;
 const HTTP_UNHAUTHORIZED_STATUS = 401;
 
@@ -130,6 +131,17 @@ function validateTalk(req, res, next) {
   next();
 }
 
+function validateParams(req, res, next) {
+  const { q } = req.query;
+  
+  if (!q) {
+    const talkers = readTalkerFile();
+    return res.status(HTTP_OK_STATUS).json(talkers);
+  }
+
+  next();
+}
+
 module.exports = {
   readTalkerFile,
   writeTalkerFile,
@@ -139,4 +151,5 @@ module.exports = {
   validateName,
   validateAge,
   validateTalk,
+  validateParams,
 };
