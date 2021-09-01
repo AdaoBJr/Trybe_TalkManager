@@ -2,7 +2,11 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const talkers = require('./talker.json');
-const { authUser } = require('./middlewares');
+const { authUser,
+  validateToken,
+  validateNameAndAgeTalker,
+  validateDateAndRateTalker,
+  validateTalkTalker } = require('./middlewares');
 const { getToken } = require('./getToken');
 
 const app = express();
@@ -33,6 +37,19 @@ app.get('/talker', async (_req, res) => {
   res.status(HTTP_OK_STATUS).send(JSON.parse(talker));
 });
 
-app.post('/login', authUser, (req, res) => {
-  res.status(200).json({ token: getToken() });
+app.post('/talker',
+  validateToken,
+  validateNameAndAgeTalker,
+  validateTalkTalker,
+  validateDateAndRateTalker,
+  async (req, res) => {
+    const { name, age, talk } = req.body;
+    const newTalker = { id: 5, name, age, talk };
+    talkers.push(newTalker);
+    await fs.writeFile('./talker.json', JSON.stringify(talkers));
+    res.status(201).json(newTalker);
 });
+
+app.post('/login', authUser, (req, res) => {
+  res.status(HTTP_OK_STATUS).json({ token: getToken() });
+}); 
