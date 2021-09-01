@@ -10,6 +10,7 @@ const {
   validateRate,
   createTalker,
   editTalker,
+  deleteTalker,
 } = require('./controllers');
 
 const router = express.Router();
@@ -36,6 +37,7 @@ router.route('/:id')
     validateWatchedAt,
     validateRate,
     editTalker,
-  );
+  )
+  .delete(validateToken, deleteTalker);
 
 module.exports = router;

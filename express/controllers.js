@@ -116,6 +116,14 @@ const editTalker = async (req, res, _next) => {
   res.status(200).json(obj);
 };
 
+const deleteTalker = async (req, res, _next) => {
+  const { id } = req.params;
+  const talkers = await readFile(TALKER_JSON);
+  const newTalkers = talkers.find((talker) => talker.id !== +id);
+  await writeFile(TALKER_JSON, newTalkers); // escrevo o arquivo
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = { 
   getAllTalker,
   getTalker,
@@ -129,4 +137,5 @@ module.exports = {
   validateRate,
   createTalker,
   editTalker,
+  deleteTalker,
  };
