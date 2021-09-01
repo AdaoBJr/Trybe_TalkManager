@@ -39,6 +39,15 @@ router.put(
   },
 );
 
+router.delete('/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+  const talkers = readTalkerFile();
+
+  const newTalkers = talkers.filter((talker) => talker.id !== Number(id));
+  writeTalkerFile(JSON.stringify(newTalkers));
+  res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 router.get('/', (req, res) => {
   const talkers = readTalkerFile();
   return res.status(HTTP_OK_STATUS).json(talkers);
