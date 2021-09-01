@@ -34,17 +34,6 @@ const validPassword = (req, res, next) => {
   next();
 };
 
-/*
-app.get('/recipes/:id', (req, res) => {
-  const { id } = req.params;
-  const result = recipes.find((elem) => elem.id === Number(id));
-  if (!result) {
-    return res.status(404).json({ message: 'Item nao encontarado' });
-  }
-  return res.status(200).json(result);
-});
-*/
-
 // lendo os arquivos
 const readFile = async () => {
     const file = await fs.readFile('./talker.json', 'utf8');

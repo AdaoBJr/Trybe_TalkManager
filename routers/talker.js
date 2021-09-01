@@ -1,5 +1,4 @@
 const express = require('express');
- // const talker = require('../talker.json');
 
  const OK_STATUS = 200;
  const NOT_FOUND_STATUS = 404;
@@ -19,6 +18,7 @@ const router = express.Router();
 // 7
 router.get('/search', validaToken, searchTalker);
 
+// 2
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const result = await readFile();
@@ -31,7 +31,8 @@ router.get('/:id', async (req, res) => {
   return res.status(OK_STATUS).json(palestrante);
 });
 
-router.get('/', async (req, res) => {
+// 1
+router.get('/', async (_req, res) => {
   const result = await readFile();
   if (!result) {
   return res.status(OK_STATUS).json([]);
