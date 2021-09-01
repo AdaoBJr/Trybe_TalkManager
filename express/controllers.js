@@ -124,6 +124,15 @@ const deleteTalker = async (req, res, _next) => {
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchTalker = async (req, res, _next) => {
+  const { q } = req.query;
+  const talkers = await readFile(TALKER_JSON);
+  if (!q) return res.status(200).json(talkers);
+  const filterTalker = talkers.filter((talker) => talker.name.includes(q));
+  if (!filterTalker) return res.stastus(200).json(Array.from([]));
+  return res.status(200).json(filterTalker);
+};
+
 module.exports = { 
   getAllTalker,
   getTalker,
@@ -138,4 +147,5 @@ module.exports = {
   createTalker,
   editTalker,
   deleteTalker,
+  searchTalker,
  };

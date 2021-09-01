@@ -11,6 +11,7 @@ const {
   createTalker,
   editTalker,
   deleteTalker,
+  searchTalker,
 } = require('./controllers');
 
 const router = express.Router();
@@ -27,6 +28,9 @@ router.route('/')
     createTalker,
     );
 
+router.route('/search')
+  .get(validateToken, searchTalker);
+  
 router.route('/:id')
   .get(getTalker)
   .put(
