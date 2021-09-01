@@ -10,13 +10,13 @@ const { readFile,
       validaTalker,
        validaTalkerFormato,
         createNewPalestrant,
-         searchTalker,
+         // searchTalker,
           deletetTalker, editTalker } = require('../middleware');
 
 const router = express.Router();
 
 // 7
-router.get('/search', validaToken, searchTalker);
+// router.get('/search', validaToken, searchTalker);
 
 // 2
 router.get('/:id', async (req, res) => {
@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
 });
 
 // 1
-router.get('/', async (_req, res) => {
+router.get('/', async (req, res) => {
   const result = await readFile();
   if (!result) {
   return res.status(OK_STATUS).json([]);
