@@ -57,7 +57,7 @@ app.get('/talker/:id', rescue(async (_request, response) => {
 
 // REQUISITO 3
 
-app.post('/login', authLogin, (_request, response) => {
+app.post('/login', (_request, response) => {
   const token = crypto.randomBytes(8).toString('hex');
   // const token = '7mqaVRXJSp886CGr'; 
 
