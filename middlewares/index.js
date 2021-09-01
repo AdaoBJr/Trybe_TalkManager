@@ -55,7 +55,7 @@ const validateDateAndRateTalker = (req, res, next) => {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   if (!Number.isInteger(rate) || rate < 1 || rate > 5) {
-    res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
   return next();
@@ -87,6 +87,7 @@ const validateTalkTalker = (req, res, next) => {
 
   const addTalker = async (req, res) => {
     const { name, age, talk } = req.body;
+    // const qtyTalkers = talkers.length;
     const newTalker = { id: 5, name, age, talk };
     talkers.push(newTalker);
     // await fs.writeFile('./talker.json', JSON.stringify(talkers));
