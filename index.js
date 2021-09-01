@@ -94,7 +94,7 @@ app.post('/login',
   const SIX = 6;
   const { password } = req.body;
   if (validEmail.test(email) && password.length > SIX) {
-        res.status(200).json({ token: getToken() });
+       return res.status(200).json({ token: getToken() });
       }
 });
 
