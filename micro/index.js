@@ -18,18 +18,20 @@ const validateEmail = (email, response) => {
     if (email === '' || !email) {
    response
       .status(400).json({ message: 'O campo "email" é obrigatório' }); 
+      return;
   }
   
     if (!parseEmail.test(email)) {
       response
-          .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' }); 
+          .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
   };
   
   const validatePass = (password, response) => {
     if (password === '' || !password) {
    response.status(400)
-    .json({ message: 'O campo "password" é obrigatório' }); 
+    .json({ message: 'O campo "password" é obrigatório' });
+    return;
   }
     if (password.length < 6) {
         response.status(400).json({
