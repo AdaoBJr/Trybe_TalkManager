@@ -50,9 +50,11 @@ app.post('/login', validEmail, validPassword, async (req, res) => {
 app.post('/talker', validToken, validName, validAge, validTalk, lintChatoWatchedAt, lintChatoRate,
  async (req, res) => {
   const newTalker = req.body;
-  writeContentFile(PATH_FILE, newTalker);
+  const result = { ...newTalker, id: 5 };
+  console.log(result);
+  writeContentFile(PATH_FILE, result);
 
-  res.status(201).json(newTalker);
+  res.status(201).json(result);
 });
 
 app.listen(PORT, () => {
