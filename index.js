@@ -27,7 +27,7 @@ app.get('/talker', async (req, res) => {
   const talkerList = await getTalkers();
 
   if (!talkerList === []) {
-    return res.status(HTTP_OK_STATUS).json({ message: [] });
+    return res.status(HTTP_OK_STATUS).json([]);
   }
   return (
     res.status(HTTP_OK_STATUS).json({ talkerList })
@@ -49,16 +49,16 @@ const validatePassword = (password) => {
 app.post('/login', (req, res) => {
   const { email, password } = req.headers;
 
-  if (!email) return res.status(400).json({ message: 'O campo email é obrigatório' });
+  if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
 
-  if (!password) return res.status(400).json({ message: 'O campo passoword é obrigatório' });
+  if (!password) return res.status(400).json({ message: 'O campo "passoword" é obrigatório' });
 
   if (!validateEmail(email)) {
-    return res.status(400).json({ message: 'O email deve ter o formato email@email.com' });
+    return res.status(400).json({ message: 'O "email" deve ter o formato email@email.com' });
   }
 
   if (!validatePassword(password)) {
-    return res.status(400).json({ message: 'O password deve ter pelo menos 6 caracteres' });
+    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
   return res.status(HTTP_OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
