@@ -48,4 +48,20 @@ router.post('/',
     res.status(201).json(result);
 });
 
+router.put('/:id',
+  autoriza,
+  nome,
+  idade,
+  talkExist,
+  data,
+  async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const readF = await readFile();
+  const peopleIndex = readF.findIndex((item) => item.id === Number(id));
+  readF[peopleIndex] = { ...readF[peopleIndex], name, age, talk };
+  await fs.writeFile('talker.json', JSON.stringify(readF));
+  res.status(200).json(readF[peopleIndex]);
+});
+
 module.exports = router;
