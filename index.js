@@ -12,8 +12,7 @@ const { findId,
   validateAge, 
   validateTalk, 
   validateDate, 
-  validateRate,
-  addToTalkers } = require('./middlewares');
+  validateRate, addToTalkers } = require('./middlewares');
 
 function generateToken() {
   return crypto.randomBytes(8).toString('hex');
