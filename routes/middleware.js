@@ -14,14 +14,15 @@ app.use(express.json());
 //     next();
 //   };
 
-const isValidEmail = (req, res, next) => { 
+const isValidEmail = (req, res, next) => {
+  const regex = /((\w+)@(\w+)\.(\w+))/i;
   const { email } = req.body;
   
   if (email.length === 0) {
    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
 
-  if (!email.includes('@') || !email.includes('.com')) {
+  if (!email.match(regex)) {
     return res.status(400)
     .json({ message: 'O campo "email" deve ter o formato email@email.com' });
   }
