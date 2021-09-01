@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const fs = require('fs').promises;
 
-const talkers = require('./talker');
+// const talkers = require('./talker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,11 +15,14 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', (_req, res) => {
-  if (talkers.length === 0) {
+// Usei o async/await por se tratar de um funcção assíncrona (readFile);
+app.get('/talker', async (_req, res) => {
+  const getTalkers = await fs.readFile('./talker.json');
+  const talkersJson = await JSON.parse(getTalkers);
+  if (talkersJson.length === 0) {
     return res.status(200).send([]);
   }
-  return res.status(200).send(talkers);
+  return res.status(200).json(talkersJson);
 });
 
 app.listen(PORT, () => {
