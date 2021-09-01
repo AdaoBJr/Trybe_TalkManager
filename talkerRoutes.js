@@ -20,6 +20,25 @@ router.get('/:id', (req, res) => {
   return res.status(HTTP_OK_STATUS).json(talkerFound);
 });
 
+router.put(
+  '/:id', 
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  (req, res) => {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+    const talkers = readTalkerFile();
+
+    const talkerFoundIndex = talkers.findIndex((talker) => talker.id === Number(id));
+    talkers.splice(talkerFoundIndex, 1, { ...talkers[talkerFoundIndex], name, age, talk });
+
+    writeTalkerFile(JSON.stringify([...talkers]));
+    res.status(HTTP_OK_STATUS).json(talkers[talkerFoundIndex]);
+  },
+);
+
 router.get('/', (req, res) => {
   const talkers = readTalkerFile();
   return res.status(HTTP_OK_STATUS).json(talkers);
