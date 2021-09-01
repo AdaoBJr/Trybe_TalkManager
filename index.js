@@ -11,9 +11,21 @@ const toRead = () => (
   .then((response) => JSON.parse(response))
 );
 
-// MIDDLEWARE PARA GERAR O TOKEN
+// MIDDLEWARE PARA GERAR TOKEN ALEATÓRIO
+const toToken = () => {
+  let text = '';
+  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+  for (let i = 0; i < 16; i += 1) {
+    text += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+  }
+  
+  return text;
+};
+
+// MIDDLEWARE PARA RETORNAR O TOKEN
 const toGenerateToken = (req, res, next) => {
-  const token = Math.random().toString(16);
+  const token = toToken();
   req.headers.authorization = token;
   res.status(200).json({ token });
   next();
@@ -67,6 +79,12 @@ app.get('/talker', async (_req, res) => {
 
 // REQUISITO 3
 app.post('/login', toEmail, toPassword, toGenerateToken);
+
+// // REQUISITO 4
+// app.post('/talker', (req, res) => {
+//   const { name, age, talk: { watchedAt, rate } } = req.body;
+
+// });
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
