@@ -22,7 +22,7 @@ const validateToken = (req, res, next) => {
   } 
   if (token.length && token.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
-  } 
+  }
   next();
 };
 
@@ -138,7 +138,19 @@ const addTalker = async (req, res) => {
   return res.status(201).json(newTalker);
 };
 
-const updatePalestrantesList = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
+const { promisify } = require('util');
+
+const editTalker = async (req, res) => {
+  fs.readFile('./talker.json', 'utf-8', promisify((err, content) => {
+    const { body } = req;
+    const { id } = req.params;
+    let allTalkers = JSON.parse(content);
+    allTalkers = allTalkers.filter((talkerUser) => talkerUser.id !== id);
+    const novaListaTalker = [...allTalkers, body];
+    fs.writeFileSync('./talker.json', JSON.stringify(novaListaTalker));
+    res.status(201).json(body);
+  }));
+};
 
 module.exports = {
   readFileTalker,
@@ -153,5 +165,5 @@ module.exports = {
   validateTalker,
   validateToken,
   addTalker,
-  updatePalestrantesList,
+  editTalker,
 };
