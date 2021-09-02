@@ -20,6 +20,18 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 const talkerJson = './talker.json';
 
+// 7
+app.get('/talker/search', isValidToken, async (req, res) => {
+  const { q } = req.query;
+  const dataFile = await fs.promises.readFile(talkerJson, 'utf8');
+  const dataFileAll = await JSON.parse(dataFile);
+  const arrayResult = dataFileAll.filter((e) => e.name.includes(q));
+  if (!arrayResult || arrayResult === 0) { 
+    return res.status(401).json(dataFileAll); 
+  }
+  res.status(200).json(arrayResult);
+});
+
 // 2
 app.get('/talker/:id', async (req, res, _next) => {
   const dataSpeaker = await fs.promises.readFile(talkerJson, 'utf8');
@@ -98,7 +110,6 @@ async (req, res) => {
 
   // deleta o obj no index encontrado
   dataArray.splice(peopleIdex, 1);
-
   fs.writeFile(talkerJson, JSON.stringify(dataArray), () => 
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }));
 });
