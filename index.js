@@ -73,14 +73,14 @@ app.get(
   '/talker/search',
   validateToken,
   async (req, res) => {
-    console.log(req.query)
+    console.log(req.query);
     const talkers = await fs2.readFile(talkerJson, 'utf-8');
     const parseTalkers = await JSON.parse(talkers);
     const filterByName = parseTalkers.filter((talker) => talker.name !== req.query.q);
     console.log(filterByName);
-    if(!filterByName || filterByName === 0){
+    if (!filterByName || filterByName === 0) {
       return res.status(401).json(parseTalkers);
-    };
+    }
     return res.status(200).send(filterByName);
   },
 );
