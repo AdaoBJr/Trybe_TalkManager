@@ -116,17 +116,6 @@ const toPassword = (req, res, next) => {
   next();
 };
 
-// REQUISITO 2
-app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  const talkers = await toRead();
-  const getTalker = talkers.find((talker) => talker.id === Number(id));
-  
-  if (!getTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-
-  return res.status(200).json(getTalker);
-});
-
 // REQUISITO 1
 app.get('/talker', async (_req, res) => {
   const talkers = await toRead();
@@ -136,6 +125,30 @@ app.get('/talker', async (_req, res) => {
   if (!talkers) return res.status(200).send([]);
     
   return res.status(200).send(talkers);
+});
+
+// REQUISITO 7
+app.get('/talker/search', toAnalizeToken, async (req, res) => {
+  const { xablau } = req.query;
+  const data = await toRead();
+  const filteredData = data.filter((talker) => talker.name.includes(xablau));
+
+  if (!filteredData || filteredData === '') {
+    return res.status(200).json(data);
+  }
+
+  return res.status(200).json({ filteredData });
+});
+
+// REQUISITO 2
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talkers = await toRead();
+  const getTalker = talkers.find((talker) => talker.id === Number(id));
+  
+  if (!getTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+
+  return res.status(200).json(getTalker);
 });
 
 // REQUISITO 3
@@ -153,7 +166,7 @@ app.post('/talker', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
 });
 
 // REQUISITO 5
-app.put('./talker/:id', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
+app.put('/talker/:id', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
   const { name, age, talk } = req.body;
   const { id } = req.params;
   const data = await toRead();
@@ -162,6 +175,16 @@ app.put('./talker/:id', toAnalizeToken, toName, toAge, toTalk, async (req, res) 
   const addData = data[dataIndex];
   await toWrite(data);
   return res.status(200).json(addData);
+});
+
+// REQUISITO 6
+app.delete('./talker/:id', toAnalizeToken, async (req, res) => {
+  const { id } = req.params;
+  const data = await toRead();
+  const dataIndex = data.findIndex((talker) => talker.id === Number(id));
+  data.splice(dataIndex, 1);
+  await toWrite(data);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 const HTTP_OK_STATUS = 200;
