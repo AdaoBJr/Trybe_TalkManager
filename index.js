@@ -37,18 +37,33 @@ app.get('/talker', (_req, res) => {
   });
 });
 
+app.get('/talker/search', isValidToken, (req, res) => {
+  const { query } = req.query;
+  
+  fs.readFile(talkerJson, 'utf8', (_err, content) => {
+    const data = JSON.parse(content);
+
+    if (!query) {
+      return res.status(200).json(data);
+    }
+
+    const filterTalker = data.filter(({ name }) => name.includes(query));
+    return res.status(200).json(filterTalker); 
+  });
+});
+
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   
   fs.readFile(talkerJson, 'utf8', (_err, content) => {    
     const data = JSON.parse(content);
     const findTalker = data.find((talker) => talker.id === Number(id));
-
+    
     if (!findTalker) {
-  return res.status(404).json({
+      return res.status(404).json({
        message: 'Pessoa palestrante não encontrada' }); 
-}
-  return res.status(200).json(findTalker);
+      }
+      return res.status(200).json(findTalker);
   });
 });
 
