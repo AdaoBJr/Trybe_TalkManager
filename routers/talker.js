@@ -56,4 +56,14 @@ watchedValidator, ratedValidator, async (req, res) => {
   return res.status(200).send(talkers[indexTalker]);
 });
 
+router.delete('/:id', tokenValidator, async (req, res) => {
+  const { id } = req.params;
+  const talkers = await fileReader();
+  const indexTalker = talkers.findIndex((item) => item.id === +id);
+  
+  talkers.splice(indexTalker, 1);
+  await insertTalker(talkers);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;
