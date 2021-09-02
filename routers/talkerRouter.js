@@ -46,9 +46,9 @@ router.post(
     const nextId = talkers.length + 1;
     
     talkers.push({ id: nextId, name, age, talk });
-    
-    fs.writeFileSync('../talker.json', JSON.stringify(talkers));
 
+    fs.writeFileSync('./talker.json', JSON.stringify(talkers));
+    
     return res.status(201).json({ id: nextId, name, age, talk });
   },
 );
