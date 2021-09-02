@@ -18,6 +18,17 @@ router.get('/', (_req, res) => {
   }
 });
 
+router.get('/search', isTokenValid, (req, res) => {
+  const { q } = req.query;
+  const talkerData = JSON.parse(fs.readFileSync(TALKER_DATA));
+  const searchResult = talkerData.filter((t) => t.name.includes(q));
+  if (!q || searchResult.length === 0) {
+    res.status(200).json(talkerData);
+  }
+
+  res.status(200).json(searchResult);
+});
+
 router.get('/:id', (req, res) => {
   const { id } = req.params;
   const talkerData = JSON.parse(fs.readFileSync(TALKER_DATA));
@@ -39,10 +50,12 @@ router.post(
   isTalkValid,
   (req, res) => {
     const { name, age, talk } = req.body;
-    const id = JSON.parse(fs.readFileSync(TALKER_DATA)).length + 1;
-    const newList = { id, name, age, talk };
-    fs.writeFileSync(TALKER_DATA, JSON.stringify([newList]));
-    res.status(201).json(newList);
+    const currentList = JSON.parse(fs.readFileSync(TALKER_DATA));
+    const id = currentList.length + 1;
+    const newItem = { id, name, age, talk };
+    const newList = currentList.concat(newItem);
+    fs.writeFileSync(TALKER_DATA, JSON.stringify(newList));
+    res.status(201).json(newItem);
   },
 );
 
