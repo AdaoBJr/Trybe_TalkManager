@@ -1,0 +1,1 @@
+const talkerId = require('../services/talkerId');
