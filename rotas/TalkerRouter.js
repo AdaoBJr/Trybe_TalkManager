@@ -30,7 +30,7 @@ const nameValidation = (req, res, next) => {
     }
     if (name.length < 3) {
         return res.status(HTTP_NOT_OK_STATUS)
-        .json({ message: 'O campo "name" deve ter pelo menos 3 caracteres' });
+        .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
     }
     return next();
 };
@@ -119,15 +119,15 @@ RateValidation,
 async (req, res) => {
     const { name, age, talk } = req.body;
     const talkers = await readTalkers();
-    talkers.push({
+    const newTalker = {
         id: talkers.length + 1,
         name,
         age,
         talk,
-    });
+    };
+    talkers.push(newTalker);
     await setTalkers(talkers);
-    console.log(talkers);
-    res.status(201).send(talkers);
+    res.status(201).send(newTalker);
 });
 
 module.exports = router;
