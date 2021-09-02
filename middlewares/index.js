@@ -88,7 +88,7 @@ const validateTalkTalker = (req, res, next) => {
   const addTalker = async (req, res) => {
     const { name, age, talk } = req.body;
     const qtyTalkers = talkers.length;
-    const newTalker = { id: qtyTalkers + 1, name, age, talk };
+    const newTalker = { id: (qtyTalkers + 1), name, age, talk };
     talkers.push(newTalker);
     // await fs.writeFile('./talker.json', JSON.stringify(talkers));
     await writeFile(talkers);
