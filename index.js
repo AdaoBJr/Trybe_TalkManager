@@ -2,11 +2,22 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const { 
-  getTalker,
+  readTalker,
   getTalkerById,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  validateToken,
+  addTalker,
+  findTalkerById,
+} = require('./middlewares/talkerMiddleware');
+
+const {
   validateEmail,
   validatePassword,
-} = require('./middleware');
+} = require('./middlewares/loginValidate');
 
 const { generateToken } = require('./randomToken');
 
@@ -30,7 +41,7 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const data = await getTalker();
+  const data = await readTalker();
   res.status(HTTP_OK_STATUS).send(data);
 });
 
@@ -47,6 +58,28 @@ app.post('/login', (req, res) => {
     token,
   });
 });
+
+app.post(
+  '/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  addTalker,
+);
+
+app.put(
+  '/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  findTalkerById,
+);
 
 app.listen(PORT, () => {
   console.log('Online');
