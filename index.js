@@ -111,6 +111,13 @@ app.listen(PORT, () => {
 });
 
 // app.get('/talker/search?q=searchTerm',
+// // validateToken, 
+// async (req, res) => {
+//   const { search } = req.query;
+//   const talker = await readTalkersList();
+//   talker.
+// }
+
 // })
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
