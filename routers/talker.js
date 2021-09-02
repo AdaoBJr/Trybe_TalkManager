@@ -14,11 +14,12 @@ const fileReader = async () => {
   return JSON.parse(talkerList);
 };
 
+recebi a ajuda do Diegho e Cristian Bugs no requisito para encontrar o nome
 router.get('/search', tokenValidator, async (req, res) => {
   const { name } = req.query;
   const talkers = await fileReader();
   if (!name) return res.status(200).json(talkers);
-  const filterTalker = talkers.filter((item) => item.name.includes(name));
+  const filterTalker = talkers.find((item) => item.name.includes(name));
  
   return res.status(200).json(filterTalker);
 });
