@@ -1,20 +1,20 @@
 // O regex eu peguei do meu projeto App de receitas;
 
-const validaEmail = (email, validateEmail, res) => {
-    if (!email || email === '') {
-        return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-    }
+// const validaEmail = (email, validateEmail, res) => {
+//     if (!email || email === '') {
+//         return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+//     }
 
-    if (!validateEmail
-        ) {
-        return res
-            .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-    }
-};
+//     if (!validateEmail
+//         ) {
+//         return res
+//             .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+//     }
+// };
 
 const validaSenha = (password, res) => {
     if (!password || password === '') {
-        return res.status(400).json({ message: 'o campo "password" é obrigatório' });
+        return res.status(400).json({ message: 'O campo "password" é obrigatório' });
     }
 
     if (password.length < 6) {
@@ -27,11 +27,20 @@ const authLoginAndPassword = (req, res, next) => {
     const validateEmail = email.match(/[a-z]+@[a-z]+.com/g);
     const response = res;
 
-    validaEmail(email, validateEmail, response);
+    // validaEmail(email, validateEmail, response);
+    if (!email || email === '') {
+        return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+    }
+
+    if (!validateEmail
+        ) {
+        return res
+            .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+    }
 
     validaSenha(password, response);
 
-    return next();
+    next();
 };
 
 module.exports = authLoginAndPassword;

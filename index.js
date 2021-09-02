@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 // Busquei ajuda para utilizar o crypto nesse link:https://qastack.com.br/programming/8855687/secure-random-token-in-node-js;
 const crypto = require('crypto');
-const authLoginAndPassword = require('./login');
+// const authLoginAndPassword = require('./login');
 
 const app = express();
 app.use(bodyParser.json());
@@ -40,11 +40,45 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // REQUISITO 3
-app.post('/login', authLoginAndPassword,
+const validaEmail = (req, res, next) => {
+  const { email } = req.body;
+  const validateEmail = email.match(/[a-z]+@[a-z]+.com/g);
+
+  if (!email || email === '') {
+      return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+  }
+
+  if (!validateEmail
+      ) {
+      return res
+          .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+  }
+
+  next();
+};
+const validaSenha = (req, res, next) => {
+  const { password } = req.body;
+
+  if (!password || password === '') {
+      return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+  }
+
+  if (password.length < 6) {
+      return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+
+  next();
+};
+app.post('/login', validaEmail,
+  validaSenha,
   (_req, res) => {
     const tolken = crypto.randomBytes(8).toString('hex');
     return res.status(200).json({ token: tolken });
   });
+
+// app.use((err, _req, res, _next) => {
+//   res.status(500).json({ message: `Opa! Deu ruim: ${err.message}` });
+// });
 
 app.listen(PORT, () => {
   console.log('Online');
