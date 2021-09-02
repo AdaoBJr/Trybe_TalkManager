@@ -11,6 +11,7 @@ const {
   validateRate,
   validateTalkInfo,
   readAndPushNewTalker,
+  editTalker,
 } = require('./midlewares');
 
 const app = express();
@@ -35,14 +36,20 @@ app.post('/login', validateUser);
 app.use(validateToken);
 
 app.post('/talker',
-validateName,
-validateAge,
-validateTalkInfo,
-validateRate,
-validateWatchedAt,
-readAndPushNewTalker);
+  validateName,
+  validateAge,
+  validateTalkInfo,
+  validateRate,
+  validateWatchedAt,
+  readAndPushNewTalker);
 
-// app.put('/talker/:id', (req, res, next) => {});
+app.put('/talker/:id',
+  validateName,
+  validateAge, 
+  validateTalkInfo,
+  validateRate,
+  validateWatchedAt, 
+  editTalker);
 
 // app.delete('/talker/:id', (req, res, next) => {});
 

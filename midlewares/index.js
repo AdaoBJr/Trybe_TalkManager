@@ -2,6 +2,7 @@ const readAllTalkers = require('./readAllTalkers');
 const readTalkerById = require('./readTalkerById');
 const validateUser = require('./validateUser');
 const validateToken = require('./validadeToken');
+const editTalker = require('./editTalker');
 const { 
   validateName,
   validateAge, 
@@ -22,4 +23,5 @@ module.exports = {
   validateRate,
   validateTalkInfo,
   readAndPushNewTalker,
+  editTalker,
 };

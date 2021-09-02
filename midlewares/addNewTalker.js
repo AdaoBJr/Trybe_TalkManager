@@ -18,9 +18,11 @@ const validateAge = (req, res, next) => {
   next();
 };
 
+// Obs: A condicao: !(talk.watchedAt && talk.rate) esta reprensentando a tabela verdade de portas logicas NAND (Insumos de poucos estudos que tive de eletronica/mecatronica)
+
 const validateTalkInfo = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !(talk.watchedAt && talk.rate)) {
+  if (!talk || (!(talk.watchedAt && talk.rate) && talk.rate !== 0)) {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
