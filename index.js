@@ -19,6 +19,7 @@ const {
   validationTalk,
   validationRate,
   validationDateWatchedAt,
+  updateTalker,
 } = require('./middlewares/index'); 
 
 const app = express();
@@ -82,3 +83,12 @@ async (req, res) => {
   console.log(newTalker);
   return res.status(HTTP_OK_CREATED).send(newTalker);
 });
+
+app.put('/talker/:id',
+validationToken,
+validationName,
+validationAge,
+validationTalk,
+validationRate,
+validationDateWatchedAt,
+updateTalker);

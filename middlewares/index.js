@@ -8,8 +8,8 @@ app.use(express.json());
 const fs = require('fs').promises;
 
 const HTTP_OK_STATUS = 200;
-// const HTTP_OK_CREATED = 201;
 
+const HTTP_NOT_FOUND = 404;
 const HTPP_BAD_REQUEST = 400;
 const HTTP_UNAUTHORIZED = 401;
 
@@ -136,6 +136,20 @@ const validationDateWatchedAt = (req, res, next) => {
   next();
 };
 
+const updateTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+
+  const data = await readTalkers()
+  .then((talkers) => JSON.parse(talkers));
+  const talkerIndex = data.findIndex((index) => index.id === +id);
+
+  if (talkerIndex === -1) return res.status(HTTP_NOT_FOUND).send();
+
+  data[talkerIndex] = { id, name, age, talk };
+
+  return res.status(HTTP_OK_STATUS).send(data[talkerIndex]);
+};
 module.exports = {
   getTalkers,
   getTalkerById,
@@ -148,4 +162,5 @@ module.exports = {
   validationTalk,
   validationRate,
   validationDateWatchedAt,
+  updateTalker,
 };
