@@ -1,22 +1,16 @@
-// const validateUserName = (req, res, next) => {
-//   const { username } = req.body;
-
-//   if (!username || username < 3) {
-//     res.status(400).json({ message: 'Invalid username' });
-//   }
-
-//   next();
-// };
-
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
 
   if (!email || email === '') {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+    return res
+      .status(400)
+      .json({ message: 'O campo "email" é obrigatório' });
   }
 
   if (!email.includes('@') || !email.includes('.com')) {
-    return res.status(400).json({
+    return res
+      .status(400)  
+      .json({
       message: 'O "email" deve ter o formato "email@email.com"',
     });
   }
@@ -46,11 +40,15 @@ const validateToken = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || authorization === '') {
-    return res.status(401).json({ message: 'Token não encontrado' });
+    return res
+      .status(401)
+      .json({ message: 'Token não encontrado' });
   }
 
   if (authorization.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
+    return res
+      .status(401)
+      .json({ message: 'Token inválido' });
   }
 
   next();
@@ -60,7 +58,9 @@ const validateName = (req, res, next) => {
   const { name } = req.body;
 
   if (!name || name === '') {
-    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+    return res
+      .status(400)
+      .json({ message: 'O campo "name" é obrigatório' });
   }
 
   if (name.length < 3) {
@@ -114,7 +114,7 @@ const validateTalkRate = (req, res, next) => {
       .status(400)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
-  
+
   if (!talk.rate || talk.rate === '') {
     return res.status(400).json({
       message:
@@ -143,15 +143,8 @@ const validateTalkWatchedAt = (req, res, next) => {
 
   next();
 };
-const validateSearch = async (req, res, next) => {
-  // const { searchTerm } = req.query;
-  // if (!searchTerm || searchTerm === '') return res.status(200).json(search);
-
-  next();
-};
 
 module.exports = {
-  // validateUserName,
   validateEmail,
   validatePassword,
   validateToken,
@@ -160,5 +153,4 @@ module.exports = {
   validateTalk,
   validateTalkRate,
   validateTalkWatchedAt,
-  validateSearch,
 };
