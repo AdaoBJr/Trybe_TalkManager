@@ -1,8 +1,9 @@
 const express = require('express');
+const crypto = require('crypto');
 
 const app = express();
 const bodyParser = require('body-parser');
-const { readData, filterTalkerId } = require('./middleware/index');
+const { readData, filterTalkerId, checkEmail, checkPassword } = require('./middleware/index');
 
 app.use(bodyParser.json());
 
@@ -17,7 +18,14 @@ app.get('/', (_request, response) => {
 
 // Rotas
 app.get('/talker', readData);
+
 app.get('/talker/:id', filterTalkerId);
+
+app.post('/login', checkEmail, checkPassword, (_req, res) => {
+    const token = crypto.randomBytes(8).toString('hex');
+
+    return res.status(200).json(token);
+});
 
 app.listen(PORT, () => {
     console.log('Online');
