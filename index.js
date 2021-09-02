@@ -175,7 +175,6 @@ validateTalker,
 validateTalkExists, validateTalkerTalk, async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
   const talker = await readTalkersList();
-  // console.log(talker);
   const ids = talker.map(({ id }) => id);
   const id = ((ids.length - 1) + 1) + 1; 
   const newTalker = {
