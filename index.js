@@ -11,6 +11,11 @@ const toRead = () => (
   .then((response) => JSON.parse(response))
 );
 
+// MIDDLEWARE PARA ESCREVER NO DOCUMENTO TALKER
+const toWrite = (content) => (
+  fs.writeFile('./talker.json', JSON.stringify(content), 'utf8')
+);
+
 // MIDDLEWARE PARA GERAR TOKEN ALEATÓRIO
 const toToken = () => {
   let text = '';
@@ -28,6 +33,62 @@ const toGenerateToken = (req, res, next) => {
   const token = toToken();
   req.headers.authorization = token;
   res.status(200).json({ token });
+  next();
+};
+
+// MIDDLEWARE PARA VERIFICAR DO TOKEN
+const toAnalizeToken = (req, res, next) => {
+  const { token } = req.headers.authorization;
+  if (!token || token === '') {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token !== toGenerateToken) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  next();
+};
+
+// MIDDLEWARE PARA VERIFICAR O NOME
+const toName = (req, res, next) => {
+  const { name } = req.body;
+  if (!name || name === '') {
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  }
+  if (name < 3) {
+    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+  next();
+};
+
+// MIDDLEWARE PARA VERIFICAR A IDADE
+const toAge = (req, res, next) => {
+  const { age } = req.body;
+  if (!age || age === '') {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  next();
+};
+
+// MIDDLEWARE PARA VERIFICAR O CAMPO TALK E SUAS "SUB CHAVES"
+const toTalk = (req, res, next) => {
+  const { talk } = req.body;
+
+  if (!talk || talk === '') {
+    return res.status(400)
+    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+
+  const { watchedAt, rate } = talk;
+
+  if (!(/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/).test(watchedAt)) {
+    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  if (!(/^[1-5]\d*$/).test(rate)) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
   next();
 };
 
@@ -80,11 +141,14 @@ app.get('/talker', async (_req, res) => {
 // REQUISITO 3
 app.post('/login', toEmail, toPassword, toGenerateToken);
 
-// // REQUISITO 4
-// app.post('/talker', (req, res) => {
-//   const { name, age, talk: { watchedAt, rate } } = req.body;
-
-// });
+// REQUISITO 4
+app.post('/talker', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
+  const data = await toRead();
+  const addData = req.body;
+  const newData = [...data, addData];
+  await toWrite(newData);
+  return res.status(201).json(addData);
+});
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
