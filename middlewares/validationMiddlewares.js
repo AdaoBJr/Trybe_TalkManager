@@ -105,13 +105,10 @@ const checkWatchedAt = (req, res, next) => {
 const checkRate = (req, res, next) => {
   const { talk } = req.body;
   if (!validateRate(talk)) {
-    console.log('é falso');
     return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
   }
-  
-  console.log('é veradadeiro');
 
   next();
 };
