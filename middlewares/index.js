@@ -1,8 +1,8 @@
-const express = require('express');
+// const express = require('express');
 const handleReadFile = require('../helpers/handleReadFile');
 
-const app = express();
-app.use(express.json());
+// const app = express();
+// app.use(express.json());
 
 const HTTP_OK_STATUS = 200;
 
