@@ -39,10 +39,10 @@ const toGenerateToken = (req, res, next) => {
 // MIDDLEWARE PARA VERIFICAR DO TOKEN
 const toAnalizeToken = (req, res, next) => {
   const { token } = req.headers.authorization;
-  if (!token || token === '') {
+  if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token !== toGenerateToken) {
+  if (token.length < 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
   next();
@@ -51,10 +51,10 @@ const toAnalizeToken = (req, res, next) => {
 // MIDDLEWARE PARA VERIFICAR O NOME
 const toName = (req, res, next) => {
   const { name } = req.body;
-  if (!name || name === '') {
+  if (!name) {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
-  if (name < 3) {
+  if (name.length < 3) {
     return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
@@ -63,7 +63,7 @@ const toName = (req, res, next) => {
 // MIDDLEWARE PARA VERIFICAR A IDADE
 const toAge = (req, res, next) => {
   const { age } = req.body;
-  if (!age || age === '') {
+  if (!age) {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
   if (age < 18) {
@@ -76,7 +76,7 @@ const toAge = (req, res, next) => {
 const toTalk = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || talk === '') {
+  if (!talk) {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
@@ -95,7 +95,7 @@ const toTalk = (req, res, next) => {
 // MIDDLEWARE PARA VERIFICAR O EMAIL
 const toEmail = (req, res, next) => {
   const { email } = req.body;
-  if (!email || email === '') {
+  if (!email) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   if (!(/^[^\s@]+@[^\s@]+\.[^\s@]+$/).test(email)) {
@@ -107,7 +107,7 @@ const toEmail = (req, res, next) => {
 // MIDDLEWARE PARA VERIFICAR O PASSWORD
 const toPassword = (req, res, next) => {
   const { password } = req.body;
-  if (!password || password === '') {
+  if (!password) {
     return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
   if (password.length < 6) {
