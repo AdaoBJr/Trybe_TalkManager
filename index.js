@@ -5,6 +5,11 @@ const {
   validateEmail,
   validatePassword,
   validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
 } = require('./helper/middleware');
 // const { readFile } = require('./helper/ fileHandling');
 
@@ -44,8 +49,32 @@ app.get('/talker', rescue(async (_request, response) => {
   return response.status(HTTP_OK_STATUS).json(JSON.parse(talker));
 }));
 
-app.post('/talker', validateToken, (_request, response) =>
-  response.status(201).json({ message: 'OK' }));
+app.post('/talker',
+  validateTalk,
+  validateToken,
+  validateName,
+  validateAge,
+  validateWatchedAt,
+  validateRate,
+  async (request, response) => {
+    const { name, age, talk } = request.body;
+    const talker = await fs.readFile(fileTalker, 'utf-8');
+    const jsonTalkers = JSON.parse(talker);
+
+    const lastId = jsonTalkers.length;
+    const newRegister = {
+      id: lastId + 1,
+      name,
+      age,
+      talk,
+    };
+    
+    jsonTalkers.push(newRegister);
+    const jsonString = JSON.stringify(jsonTalkers);
+    
+    fs.writeFile(fileTalker, jsonString)
+      .then(() => response.status(201).json(newRegister));
+  });
 
 app.post('/login', validateEmail, validatePassword, (_request, response) => {
   const token = Math.random().toString(16).substr(2, 8) + Math.random().toString(16).substr(2, 8);
