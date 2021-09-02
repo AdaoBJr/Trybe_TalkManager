@@ -14,7 +14,7 @@ const fileReader = async () => {
   return JSON.parse(talkerList);
 };
 
-recebi a ajuda do Diegho e Cristian Bugs no requisito para encontrar o nome
+// recebi a ajuda do Diegho e Cristian Bugs no requisito para encontrar o nome
 router.get('/search', tokenValidator, async (req, res) => {
   const { name } = req.query;
   const talkers = await fileReader();
