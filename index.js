@@ -151,15 +151,15 @@ async (req, res) => {
 const talker = await readTalkersList();
 
 const filterUpdatedList = talker.filter((el) => el.id !== Number(id));
-const newTalker = {
-  name, age, id: Number(id), talk: { watchedAt, rate },
-};
-console.log(newTalker);
-  filterUpdatedList.push(newTalker);
+// const newTalker = {
+//   name, age, id: Number(id), talk: { watchedAt, rate },
+// };
+// console.log(newTalker);
+  filterUpdatedList.push({ name, age, id: Number(id), talk: { watchedAt, rate } });
   filterUpdatedList.sort((a, b) => a.id - b.id);
 fs.writeFile('./talker.json', JSON.stringify(filterUpdatedList));
 
- return res.status(200).json({ newTalker });
+ return res.status(200).json({ name, age, id: Number(id), talk: { watchedAt, rate } });
 });
 
 app.get('/talker', async (req, res) => {
@@ -176,19 +176,19 @@ validateTalkExists, validateTalkerTalk, async (req, res) => {
   const talker = await readTalkersList();
   const ids = talker.map(({ id }) => id);
   const id = ((ids.length - 1) + 1) + 1; 
-  const newTalker = {
-    name,
-    age,
-    id,
-    talk: {
-      watchedAt,
-      rate,
-    },
-  };
-  talker.push(newTalker); 
+  // const newTalker = {
+  //   name,
+  //   age,
+  //   id,
+  //   talk: {
+  //     watchedAt,
+  //     rate,
+  //   },
+  // };
+  talker.push({ name, age, id: Number(id), talk: { watchedAt, rate } }); 
      fs.writeFile('./talker.json', JSON.stringify(talker));
 
-  return res.status(201).json(newTalker);    
+  return res.status(201).json({ name, age, id: Number(id), talk: { watchedAt, rate } });    
 });
 
 app.post('/login', validateUser, (req, res) => res.status(200).json({ token }));
