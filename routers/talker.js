@@ -40,7 +40,7 @@ router.post('/', tokenValidator, nameValidator, ageValidator,
     talk,
   };
   talkers.push(newTalker);
-  insertTalker(talkers);
+  await insertTalker(talkers);
   res.status(201).send(newTalker);
 });
 
