@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs');
+const fs = require('fs').promises;
 
 const router = express.Router();
 
@@ -43,9 +43,29 @@ router.post(
     const id = talkers.length + 1;
     const newTalker = { id, name, age, talk };
     talkers.push(newTalker);
-    fs.writeFileSync('./talker.json', JSON.stringify(talkers));
+    fs.writeFile('./talker.json', JSON.stringify(talkers));
 
     res.status(201).json(newTalker);
+  },
+);
+
+router.put(
+  '/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkers = await getTalkers();
+    const talkerIndex = talkers.findIndex((r) => r.id === parseInt(id, 10));
+
+    talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk };
+    fs.writeFile('./talker.json', JSON.stringify(talkers));
+    res.status(200).json(talkers[talkerIndex]);    
   },
 );
 

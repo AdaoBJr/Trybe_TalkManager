@@ -12,8 +12,6 @@ const getTalkerById = async (id) => {
   return talker;
 };
 
-// const writeTalker = (content) => fs.writeFileSync('./talker.json', JSON.stringify(content));
-
 module.exports = {
   getTalkers,
   getTalkerById,
