@@ -6,6 +6,20 @@ const express = require('express');
 const bodyParser = require('body-parser');
 // const { json } = require('body-parser');
 const authLogin = require('./middleware/login.js');
+const { 
+  isValidToken, 
+  isValidName,
+  isValidAge,
+  isValidDate,
+  isValidRate,
+  isValidWatchAndDate,
+  isValidTalk, 
+  // isValidWatchOrRate, 
+  // isValidWatchAndAte, 
+  // isValidWatchAndDate, 
+  // isValidRate,
+  // isValidDate 
+} = require('./middleware/talker.js');
 
 const app = express();
 
@@ -23,14 +37,12 @@ const PORT = '3000';
   return JSON.parse(resConvert);
 };
 
-// Função para criar o Token!
+// const writeTalker = async (people) => {
+//   const objectoAtual = await getTalker(),
 
-// const getToken = () => {
-// const aleatoryToken = crypto.randomBytes(8).toString('hex');
-// return aleatoryToken;
+//   const resConvert = await fs.writeFile('./talker.json',);
+//   return JSON.parse(people);
 // };
-
-// está escutando as requisições feitas pelos usuários.
 
 //  REQUISITO 1
 
@@ -63,6 +75,25 @@ app.post('/login', authLogin, (_request, response) => {
   return response.status(HTTP_OK_STATUS).json({
     token,
   });
+});
+
+// REQUISITO 4
+
+app.post('/talker', 
+isValidToken, 
+    isValidName,
+     isValidAge,
+     isValidTalk,
+      isValidDate, 
+      isValidRate, 
+      isValidWatchAndDate,
+       async (request, response) => {
+  const { name, age, talk } = request.body;
+  const objectoAtual = await getTalker();
+  const id = objectoAtual.length + 1;
+  objectoAtual.push({ name, age, id, talk });
+  fs.writeFile('./talker.json', JSON.stringify(objectoAtual))
+  .then(() => response.status(201).json({ name, age, id, talk }));
 });
 
 app.listen(PORT, () => {
