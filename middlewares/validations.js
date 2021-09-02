@@ -143,6 +143,12 @@ const validateTalkWatchedAt = (req, res, next) => {
 
   next();
 };
+const validateSearch = async (req, res, next) => {
+  // const { searchTerm } = req.query;
+  // if (!searchTerm || searchTerm === '') return res.status(200).json(search);
+
+  next();
+};
 
 module.exports = {
   // validateUserName,
@@ -154,4 +160,5 @@ module.exports = {
   validateTalk,
   validateTalkRate,
   validateTalkWatchedAt,
+  validateSearch,
 };

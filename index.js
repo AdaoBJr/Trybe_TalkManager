@@ -18,6 +18,7 @@ const {
   validateTalk,
   validateTalkRate,
   validateTalkWatchedAt,
+  // validateSearch,
 } = require('./middlewares/validations.js');
 
 const app = express();
@@ -37,6 +38,17 @@ app.get('/talker', async (_req, res) => {
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkers();
+  let searchResult;
+  
+  if (!q || q === '') searchResult = talkers;
+  else searchResult = talkers.filter((t) => t.name.includes(q));
+
+  res.status(200).json(searchResult);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await filterTalker(id);
@@ -48,7 +60,7 @@ app.get('/talker/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(talker);
 });
 
-app.post('/login', validateEmail, validatePassword, async (req, res) => {
+app.post('/login', validateEmail, validatePassword, async (_req, res) => {
   res.status(HTTP_OK_STATUS).json({
     token: crypto.randomBytes(8).toString('hex'),
   });
@@ -91,13 +103,11 @@ app.delete('/talker/:id', validateToken, async (req, res) => {
   const { id } = req.params;
   const response = await deleteTalker(id);
 
-  res
-    .status(200)
-    .json({
-      message: response
-        ? 'Pessoa palestrante deletada com sucesso'
-        : 'Pessoa palestrante não encontrado',
-    });
+  res.status(200).json({
+    message: response
+      ? 'Pessoa palestrante deletada com sucesso'
+      : 'Pessoa palestrante não encontrado',
+  });
 });
 
 app.listen(PORT, () => {
