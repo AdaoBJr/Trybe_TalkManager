@@ -3,7 +3,7 @@ const watchedValidator = (req, res, next) => {
   const { talk } = req.body;
   const dataRegEx = RegExp(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/);
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res.status(400).json({
        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
       });

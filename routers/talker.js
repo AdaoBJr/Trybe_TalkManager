@@ -44,4 +44,16 @@ router.post('/', tokenValidator, nameValidator, ageValidator,
   res.status(201).send(newTalker);
 });
 
+router.put('/:id', tokenValidator, nameValidator, ageValidator, 
+watchedValidator, ratedValidator, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const talkers = await fileReader();
+  const indexTalker = talkers.findIndex((item) => item.id === +id);
+
+  talkers[indexTalker] = { id: Number(id), name, age, talk };
+  await insertTalker(talkers);
+  return res.status(200).send(talkers[indexTalker]);
+});
+
 module.exports = router;
