@@ -9,46 +9,13 @@ function criarNovoPalestrante(novoPalestrante) {
   return fs.writeFile('./talker.json', JSON.stringify(novoPalestrante));
 }
 
-function tokenGenerate(length) {
-  let result = '';
-  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const charactersLength = characters.length;
-  for (let i = 0; i < length; i += 1) {
-     result += characters.charAt(Math.floor(Math.random() * charactersLength));
-    }
-    return result;
-}
-
-const verifyToken = async (req, res, next) => {
-  await tokenGenerate();
-  const { token } = req.headers.autorization;
-  if (!token) {
+const verifyToken = (req, res, next) => {
+  const { authorization } = req.headers;
+  if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-  if (token !== tokenGenerate()) {
+  if (authorization.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
-  }
-  next();
-};
-
-const verifyemail = (req, res, next) => {
-  const { email } = req.body;
-  if (!email) {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  }
-  if (!email.includes('@') || !email.includes('.com')) {
-  return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
-  next();
-};
-
-const verifyPassword = (req, res, next) => {
-const { password } = req.body;
-if (!password) {
-  return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-}
-if (password.length < 5) {
-  return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   next();
 };
@@ -104,9 +71,6 @@ const verifyRate = (req, res, next) => {
 module.exports = {
   getAllTalkers,
   criarNovoPalestrante,
-  verifyPassword,
-  verifyemail,
-  tokenGenerate,
   verifyname,
   verifyToken,
   verifyAge,
