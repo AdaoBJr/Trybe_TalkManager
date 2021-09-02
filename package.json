@@ -18,7 +18,8 @@
     "cors": "^2.8.5",
     "email-validator": "^2.0.4",
     "express": "4.17.1",
-    "express-rescue": "1.1.30"
+    "express-rescue": "1.1.30",
+    "luxon": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "6.8.0",

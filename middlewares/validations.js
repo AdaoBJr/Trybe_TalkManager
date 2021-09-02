@@ -1,4 +1,5 @@
 const emailValidator = require('email-validator');
+const { DateTime } = require('luxon');
 const { filterTalker, getTalkers } = require('../functions/handleFile.js');
 
 const validateEmail = (req, res, next) => {
@@ -7,7 +8,7 @@ const validateEmail = (req, res, next) => {
   if (!email || email === '') {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
-  
+
   if (!emailValidator.validate(email)) {
     return res.status(400).json({
       message: 'O "email" deve ter o formato "email@email.com"',
@@ -127,8 +128,8 @@ const validateTalkWatchedAt = (req, res, next) => {
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
-
-  if (!talk.watchedAt.match(/^\d{2}\/\d{2}\/\d{4}$/gm)) {
+  const dateWatched = DateTime.fromFormat(talk.watchedAt, 'dd/mm/yyyy').isValid;
+  if (!dateWatched) {
     return res
       .status(400)
       .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
