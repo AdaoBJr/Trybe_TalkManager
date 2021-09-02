@@ -27,6 +27,24 @@ const PORT = '3000';
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
 
+app.get('/talker/search', validateToken, async (request, response) => {
+  const { name } = request.params;
+  const talker = await fs.readFile(fileTalker, 'utf-8');
+  const jsonTalkers = JSON.parse(talker);
+
+  const filteredByName = jsonTalkers.findIndex((el) => el.name === name);
+
+  if (name === '' || !name) {
+    return response.status(200).json(jsonTalkers);
+  }
+
+  if (filteredByName === -1) {
+    return response.status(200).json([]);
+  }
+  
+  response.status(200).json(filteredByName);
+});
+
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
   const talkers = await fs.readFile(fileTalker, 'utf-8');
@@ -112,7 +130,7 @@ app.delete('/talker/:id', validateToken, async (request, response) => {
   const talkerIndex = jsonTalkers.findIndex((el) => parseInt(el.id, 10) === parseInt(id, 10));
 
   jsonTalkers.splice(talkerIndex, 1);
-  const jsonString = JSON.stringify(jsonTalkers); 
+  const jsonString = JSON.stringify(jsonTalkers);
 
   fs.writeFile(fileTalker, jsonString)
     .then(() => response.status(HTTP_OK_STATUS).json({
