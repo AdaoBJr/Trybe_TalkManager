@@ -76,6 +76,34 @@ app.post('/talker',
       .then(() => response.status(201).json(newRegister));
   });
 
+  app.put('/talker/:id',
+    validateTalk,
+    validateToken,
+    validateName,
+    validateAge,
+    validateWatchedAt,
+    validateRate,
+    async (request, response) => {
+      const { name, age, talk } = request.body;
+      const { id } = request.params;
+      const talker = await fs.readFile(fileTalker, 'utf-8');
+      const jsonTalkers = JSON.parse(talker);
+
+      const filteredList = jsonTalkers.filter((el) => parseInt(el.id, 10) !== parseInt(id, 10));
+      const updateTalker = {
+        id: parseInt(id, 10),
+        name,
+        age,
+        talk,
+      };
+
+      filteredList.push(updateTalker);
+      const jsonString = JSON.stringify(filteredList);
+
+      fs.writeFile(fileTalker, jsonString)
+        .then(() => response.status(200).json(updateTalker));
+    });
+
 app.post('/login', validateEmail, validatePassword, (_request, response) => {
   const token = Math.random().toString(16).substr(2, 8) + Math.random().toString(16).substr(2, 8);
 
