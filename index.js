@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const talker = require('./routers/talkerReader');
+const talker = require('./routers/talker');
 const login = require('./routers/login');
 
 const app = express();
