@@ -88,7 +88,7 @@ const validateTalkTalker = (req, res, next) => {
   const addTalker = async (req, res) => {
     const { name, age, talk } = req.body;
     const qtyTalkers = talkers.length;
-    const newTalker = { id: (qtyTalkers + 1), name, age, talk };
+    const newTalker = { id: qtyTalkers, name, age, talk };
     talkers.push(newTalker);
     // await fs.writeFile('./talker.json', JSON.stringify(talkers));
     await writeFile(talkers);
@@ -98,11 +98,11 @@ const validateTalkTalker = (req, res, next) => {
   const editTalker = async (req, res) => {
     const { name, age, talk } = req.body;
     const { id } = req.params;  
-    talkers = talkers.filter((t) => t.id === Number(id));
+    talkers = talkers.filter((t) => t.id === +id);
     talkers.push({ id: Number(id), name, age, talk });
     // await fs.writeFile('talker.json', JSON.stringify(talkers));
     await writeFile(talkers);
-    return res.status(200).json({ id: Number(id), name, age, talk });
+    return res.status(200).json({ id: +id, name, age, talk });
   };
 
   const deleteTalker = async (req, res) => {
@@ -117,7 +117,7 @@ const validateTalkTalker = (req, res, next) => {
 
   const searchTalker = (req, res) => {
     const { q } = req.query;
-    const filteredTalker = talkers.filter((talker) => talker.name.includes(q));
+    const filteredTalker = talkers.filter((talker) => talker.name.startsWith(q));
     return res.status(200).json(filteredTalker);
   };
 
