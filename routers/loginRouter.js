@@ -1,6 +1,6 @@
 const express = require('express');
 const { randomBytes } = require('crypto');
-const { checkEmail } = require('../middlewares');
+const { checkEmail } = require('../middlewares/validationMiddlewares');
 
 const router = express.Router();
 
@@ -17,7 +17,6 @@ const validateParams = (req, res, next) => {
 router.post('/', validateParams, (req, res) => {
   const { email, password } = req.body;
   const validEmail = checkEmail(email);
-  console.log(validEmail);
   if (!validEmail) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
