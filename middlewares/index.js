@@ -15,4 +15,26 @@ const getTalkers = (_req, res) => {
   .catch((err) => res.status(400).json({ message: `Error ${err}` }));
 };
 
-module.exports = getTalkers;
+// 2º Requisito:
+
+const getTalkerByID = (req, res) => {
+  const { id } = req.params;
+
+  handleReadFile()
+  .then((talkers) => JSON.parse(talkers))
+  .then((talkers) => {
+    const talker = talkers.find((e) => e.id === Number(id));
+    
+    if (!talker) {
+      return res.status(404).json({
+        message: 'Pessoa palestrante não encontrada' });
+    }
+    return res.status(HTTP_OK_STATUS).json(talker);
+  })
+  .catch((err) => res.status(400).json({ message: `Error ${err}` }));
+};
+
+module.exports = {
+  getTalkers,
+  getTalkerByID,
+};
