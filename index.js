@@ -143,11 +143,12 @@ app.post('/login', toEmail, toPassword, toGenerateToken);
 
 // REQUISITO 4
 app.post('/talker', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
+  const { name, age, talk } = req.body;
   const data = await toRead();
-  const addData = req.body;
-  addData.id = data[data.length - 1].id + 1;
-  const newData = [...data, addData];
-  await toWrite(newData);
+  const toGenerateId = data.length + 1;
+  const addData = { id: toGenerateId, name, age, talk };
+  data.push(addData);
+  await toWrite(data);
   return res.status(201).json(addData);
 });
 
