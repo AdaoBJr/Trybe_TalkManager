@@ -12,6 +12,7 @@ const {
   validateTalkInfo,
   readAndPushNewTalker,
   editTalker,
+  deleteTalker,
 } = require('./midlewares');
 
 const app = express();
@@ -19,8 +20,6 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
-
-// Source: https://stackoverflow.com/questions/8855687/secure-random-token-in-node-js
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -51,7 +50,7 @@ app.put('/talker/:id',
   validateWatchedAt, 
   editTalker);
 
-// app.delete('/talker/:id', (req, res, next) => {});
+app.delete('/talker/:id', deleteTalker);
 
 // app.get('/talker/search?q=searchTerm', (req, res, next) => {});
 

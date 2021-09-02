@@ -3,13 +3,14 @@ const readTalkerById = require('./readTalkerById');
 const validateUser = require('./validateUser');
 const validateToken = require('./validadeToken');
 const editTalker = require('./editTalker');
+const deleteTalker = require('./deleteTalker');
 const { 
   validateName,
   validateAge, 
   validateWatchedAt, 
   validateRate, 
   validateTalkInfo,
-  readAndPushNewTalker, 
+  readAndPushNewTalker,
 } = require('./addNewTalker');
 
 module.exports = {
@@ -24,4 +25,5 @@ module.exports = {
   validateTalkInfo,
   readAndPushNewTalker,
   editTalker,
+  deleteTalker,
 };
