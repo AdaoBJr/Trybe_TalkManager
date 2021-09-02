@@ -79,3 +79,14 @@ app.post('/talker', verifyToken, verifyName, verifyAge, verifyTalk,
     fs.writeFile(talkerJson, JSON.stringify(old));
     res.status(200).json(newBody);
   }));
+
+  // Requisito 6 
+  app.delete('/talker/:id', verifyToken, async (req, res) => {
+    const { id } = req.params;
+    const talkers = await fs.readFile(talkerJson);
+    const old = JSON.parse(talkers);
+    const indexId = old.findIndex((index) => Number(id) === index.id);
+    old.splice(indexId, 1);
+    fs.writeFile(talkerJson, JSON.stringify(old));
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  });
