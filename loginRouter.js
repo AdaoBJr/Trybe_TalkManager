@@ -3,7 +3,7 @@ const crypto = require('crypto');
 
 const router = express.Router();
 
-const { validateEmail, validatePassword } = require('./middlewares');
+const { validateEmail, validatePassword } = require('./validations');
 
 router.post('/', validateEmail, validatePassword, (_req, res) => {
   const createToken = crypto.randomBytes(8).toString('hex');
