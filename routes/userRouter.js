@@ -59,6 +59,6 @@ router.post('/talker', isValidToken, isValidPassword,
     const { name, age, talk: { watchedAt }, talk: { rate } } = req.body;
     const data = await talkerWriter();
     data.push({ name, age, watchedAt, rate });
-    res.status(200).json(data);
+    res.status(201).send(data);
 });
   module.exports = router;
