@@ -59,6 +59,7 @@ isValidRate,
   });
 });
 
+// 5
 app.put('/talker/:id',
 isValidToken,
 isValidName,
@@ -83,11 +84,23 @@ async (req, res) => {
   res.status(200).json(objResponse));
 });
 
-app.post('/login',
-isValidEmail,
-isValidPassword,
-(_req, res) => {
+app.post('/login', isValidEmail, isValidPassword, (_req, res) => {
   res.status(200).json({ token: createToken(16) });
+});
+
+app.delete('/talker/:id', isValidToken,
+async (req, res) => {
+  const { id } = req.params;
+  const dataFile = await fs.promises.readFile(talkerJson, 'utf8');
+  const dataArray = await JSON.parse(dataFile);
+  const peopleIdex = dataArray.findIndex((e) => e.id === Number(id));
+  if (peopleIdex === -1) return res.status(400).json({ message: 'Pessoa não encontrada' });
+
+  // deleta o obj no index encontrado
+  dataArray.splice(peopleIdex, 1);
+
+  fs.writeFile(talkerJson, JSON.stringify(dataArray), () => 
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }));
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
