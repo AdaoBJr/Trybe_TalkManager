@@ -154,6 +154,7 @@ const filterUpdatedList = talker.filter((el) => el.id !== Number(id));
 const newTalker = {
   name, age, id: Number(id), talk: { watchedAt, rate },
 };
+console.log(newTalker);
   filterUpdatedList.push(newTalker);
   filterUpdatedList.sort((a, b) => a.id - b.id);
 fs.writeFile('./talker.json', JSON.stringify(filterUpdatedList));
