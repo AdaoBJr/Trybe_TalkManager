@@ -44,7 +44,7 @@ const validaEmail = (req, res, next) => {
   const { email } = req.body;
   const validateEmail = email.match(/[a-z]+@[a-z]+.com/g);
 
-  if (!email || email === '') {
+  if (!email) {
       return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
 
@@ -59,7 +59,7 @@ const validaEmail = (req, res, next) => {
 const validaSenha = (req, res, next) => {
   const { password } = req.body;
 
-  if (!password || password === '') {
+  if (!password) {
       return res.status(400).json({ message: 'O campo "password" é obrigatório' });
   }
 
