@@ -36,10 +36,10 @@ router.get('/:id', async (req, res) => {
 const tokenValidation = (req, res, next) => {
     const token = req.headers.authorization;
     if (!token) {
-        return res.status(UNAUTHORIZED_STATUS).json({ message: 'Token não encontrado' });
+        return res.status(UNAUTHORIZED_STATUS).send({ message: 'Token não encontrado' });
     }
     if (token.length !== 16) {
-        return res.status(UNAUTHORIZED_STATUS).json({ message: 'Token inválido' });
+        return res.status(UNAUTHORIZED_STATUS).send({ message: 'Token inválido' });
     }
     return next();
 };
@@ -83,7 +83,7 @@ const watchedAtValidation = (req, res, next) => {
     // https://www.delftstack.com/pt/howto/javascript/javascript-validate-date/
     const dateRegex = /^(0[1-9]|1[0-2])\/(0[1-9]|1\d|2\d|3[01])\/(0[1-9]|1[1-9]|2[1-9])$/;
     if (!dateRegex.test(talk.watchedAt)) {
-        return res.status(400)
+        return res.status(HTTP_NOT_OK_STATUS)
         .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
     }
     return next();
@@ -92,7 +92,7 @@ const watchedAtValidation = (req, res, next) => {
 const RateValidation = (req, res, next) => {
     const { talk } = req.body;
     if (talk.rate <= 0 || talk.rate >= 6) {
-        return res.status(400)
+        return res.status(HTTP_NOT_OK_STATUS)
         .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
     return next();
@@ -111,13 +111,13 @@ async (req, res) => {
     const { name, age, talk } = req.body;
     const talkers = await readTalkers();
     talkers.push({
-        id: talkers.length + 1,
         name,
         age,
         talk,
     });
     await setTalkers(talkers);
-    res.status(201).end();
+    console.log(talkers);
+    res.status(201).send(talkers);
 });
 
 module.exports = router;
