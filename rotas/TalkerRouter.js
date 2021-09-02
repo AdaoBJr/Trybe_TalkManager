@@ -64,6 +64,12 @@ const talkValidation = (req, res, next) => {
 const watchedAtValidation = (req, res, next) => {
     const { talk } = req.body;
     const dateRegex = RegExp(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/);
+    if (!talk || !talk.watchedAt || talk.rate === undefined) {
+        return res.status(HTTP_NOT_OK_STATUS)
+        .json({
+            message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+        });
+    }
     if (!dateRegex.test(talk.watchedAt)) {
         return res.status(HTTP_NOT_OK_STATUS)
         .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
@@ -114,8 +120,8 @@ tokenValidation,
 nameValidation,
 ageValidation,
 talkValidation,
-watchedAtValidation,
 RateValidation,
+watchedAtValidation,
 async (req, res) => {
     const { name, age, talk } = req.body;
     const talkers = await readTalkers();
@@ -128,6 +134,40 @@ async (req, res) => {
     talkers.push(newTalker);
     await setTalkers(talkers);
     res.status(201).send(newTalker);
+});
+
+// Vai editar uma pessoas já cadastrada
+router.put('/:id',
+tokenValidation,
+nameValidation,
+ageValidation,
+watchedAtValidation,
+RateValidation,
+async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkers = await readTalkers();
+    const talkerIndex = talkers.findIndex((r) => r.id === +id);
+
+    talkers[talkerIndex] = { id: Number(id), name, age, talk };
+
+    await setTalkers(talkers);
+
+    res.status(HTTP_OK_STATUS).send(talkers[talkerIndex]);
+});
+
+// Deletar uma pessoa cadastrada
+router.delete('/:id',
+tokenValidation,
+async (req, res) => {
+    const { id } = req.params;
+    const talkers = await readTalkers();
+    const talkerIndex = talkers.findIndex((r) => r.id === +id);
+
+    talkers.splice(talkerIndex, 1);
+    await setTalkers(talkers);
+
+    res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;

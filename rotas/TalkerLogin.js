@@ -34,7 +34,6 @@ const passwordValidation = (req, res, next) => {
 // endpoint tipo POST que usa as funções de validação email/senha e gera um token
 router.post('/', emailValidation, passwordValidation, (req, res) => {
     const Token = crypto.randomBytes(8).toString('hex');
-    console.log(Token);
     res.status(200).json({ token: Token });
 });
 
