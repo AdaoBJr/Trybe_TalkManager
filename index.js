@@ -60,19 +60,20 @@ next();
 const validateTalkerTalk = (req, res, next) => {
   const { talk: { watchedAt, rate } } = req.body;
   const verifyNumber = numberList.find((el) => el === rate);
-  if (!watchedAt || !rate) {
+
+  if (watchedAt === undefined || rate === undefined) {
  return res.status(400)
   .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' }); 
 } 
+if (!verifyNumber) {
+  return res.status(400)
+ .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5',
+ }); 
+ } 
   if (!watchedAt.match(dateFormat)) {
  return res.status(400)
   .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' }); 
 }
-if (!verifyNumber) {
- return res.status(400)
-.json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5',
-}); 
-} 
 next();
 };
 
@@ -131,7 +132,8 @@ async (req, res) => {
 });
 
 app.put('/talker/:id', 
-validateToken, validateTalker, validateTalkExists, 
+// validateToken, 
+validateTalker, validateTalkExists, 
 validateTalkerTalk, 
 async (req, res) => {
  const { id } = req.params; 
@@ -139,9 +141,7 @@ async (req, res) => {
 
 const talker = await readTalkersList();
 
-const personFinder = talker.findIndex((el) => el.id === Number(id));
 const filterUpdatedList = talker.filter((el) => el.id !== Number(id));
-console.log(personFinder); 
 const newTalker = {
   name, age, id: Number(id), talk: { watchedAt, rate },
 };
@@ -159,7 +159,9 @@ app.get('/talker', async (req, res) => {
   return res.status(200).json(talker);
 });
 
-app.post('/talker', validateToken, validateTalker, 
+app.post('/talker', 
+validateToken, 
+validateTalker, 
 validateTalkExists, validateTalkerTalk, async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
   const talker = await readTalkersList();
