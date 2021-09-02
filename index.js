@@ -27,37 +27,37 @@ app.listen(PORT, () => {
 
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
-  const talker = talkers.find((t) => t.id === Number(id));
+  const talker = talkers.find((t) => t.id === +id);
   
-  if (!talker || talker === undefined) {
+  if (!talker) {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
+
   return res.status(200).json(talker);
 });
 
-app.get('/talker', async (_req, res) => {
-  const talker = await fs.readFile('talker.json', 'utf-8');
-  return res.status(200).send(JSON.parse(talker));
-});
-
-app.post('/talker',
-  validateToken,
-  validateNameAndAgeTalker,
-  validateTalkTalker,
-  validateDateAndRateTalker,
-  addTalker);
+app
+  .route('/talker')
+  .get(async (_req, res) => {
+    const talker = await fs.readFile('talker.json', 'utf-8');
+    return res.status(200).send(JSON.parse(talker));
+  })
+  .post(validateToken,
+    validateNameAndAgeTalker,
+    validateTalkTalker,
+    validateDateAndRateTalker,
+    addTalker);
 
 app.post('/login',
   authUser,
   (_req, res) => res.status(200).json({ token: getToken() })); 
 
-app.put('/talker/:id',
-  validateToken,
-  validateNameAndAgeTalker,
-  validateTalkTalker,
-  validateDateAndRateTalker,
-  editTalker);
-
-app.delete('/talker/:id',
-  validateToken,
-  deleteTalker);
+app
+  .route('/talker/:id')
+  .put(validateToken,
+    validateNameAndAgeTalker,
+    validateTalkTalker,
+    validateDateAndRateTalker,
+    editTalker)
+  .delete(validateToken,
+    deleteTalker);

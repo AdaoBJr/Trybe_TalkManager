@@ -79,7 +79,7 @@ const validateTalkTalker = (req, res, next) => {
 
   const writeFile = async (talker) => {
     try {
-      await fs.writeFile('talker.json', JSON.stringify(talker));
+      return await fs.writeFile('talker.json', JSON.stringify(talker));
     } catch (err) {
     console.log(`ocorreu um erro: ${err}`);  
     }
@@ -105,11 +105,12 @@ const validateTalkTalker = (req, res, next) => {
     return res.status(200).json({ id: Number(id), name, age, talk });
   };
 
-  const deleteTalker = (req, res) => {
+  const deleteTalker = async (req, res) => {
     const { id } = req.params;
     const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
 
     talkers.splice(talkerIndex, 1);
+    await writeFile(talkers);
     
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   };
