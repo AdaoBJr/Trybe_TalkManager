@@ -152,6 +152,18 @@ app.post('/talker', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
   return res.status(201).json(addData);
 });
 
+// REQUISITO 5
+app.put('./talker/:id', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const data = await toRead();
+  const dataIndex = data.findIndex((talker) => talker.id === Number(id));
+  data[dataIndex] = { id: Number(id), name, age, talk };
+  const addData = data[dataIndex];
+  await toWrite(data);
+  return res.status(200).json(addData);
+});
+
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
