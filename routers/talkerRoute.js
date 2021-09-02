@@ -47,7 +47,7 @@ const ageValidator = (req, res, next) => {
 
 const talkValidator = (req, res, next) => {
   const { talk } = req.body;
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res.status(HTTP_BADREQUEST_STATUS)
       .send(
         { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
@@ -69,7 +69,7 @@ const talkKeysValidator = (req, res, next) => {
   next();
 };
 
-const addNewTalker = async (newTalker) => {
+const updateTalkersList = async (newTalker) => {
   try {
     await fs.writeFile('./talker.json', JSON.stringify(newTalker));
     console.log('Talker has been successfully added');
@@ -94,7 +94,8 @@ router.get('/:id', async (req, res) => {
   res.status(HTTP_OK_STATUS).json(talker);
 });
 
-router.post('/',
+router.post(
+  '/',
   tokenValidator,
   nameValidator,
   ageValidator,
@@ -105,8 +106,26 @@ router.post('/',
     const talkersList = await getTalkerList();
     const addThisTalker = { name, age, id: talkersList.length + 1, talk };
     const listUpdated = [...talkersList, addThisTalker];
-    await addNewTalker(listUpdated);
+    await updateTalkersList(listUpdated);
     res.status(HTTP_CREATED_STATUS).json(addThisTalker);
-  });
+  },
+);
+
+router.put(
+  '/:id',
+  tokenValidator,
+  nameValidator,
+  ageValidator,
+  talkValidator,
+  talkKeysValidator,
+  async (req, res) => {
+    const { id } = req.params;
+    const talkersList = await getTalkerList();
+    const talkerIndex = talkersList.findIndex((t) => t.id !== Number(id));
+    talkersList[talkerIndex] = { ...req.body, id: Number(id) };
+    await updateTalkersList(talkersList);
+    res.status(HTTP_OK_STATUS).json(talkersList[talkerIndex]);
+  },
+);
 
 module.exports = router;
