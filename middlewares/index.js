@@ -8,7 +8,7 @@ app.use(express.json());
 const fs = require('fs').promises;
 
 const HTTP_OK_STATUS = 200;
-const HTTP_OK_CREATED = 201;
+// const HTTP_OK_CREATED = 201;
 
 const HTPP_BAD_REQUEST = 400;
 const HTTP_UNAUTHORIZED = 401;
@@ -65,30 +65,13 @@ function generateRandomToken() {
 }
 
 // REQUISITO 4
-const postTalker = async (req, res) => {
-  const { name, age, talk } = req.body;
-  const data = await readTalkers()
-  .then((talkers) => JSON.parse(talkers));
-  console.log(data);
-  const talkersLength = data.length;
-  const newTalker = {
-    id: talkersLength + 1,
-    name,
-    age,
-    talk,
-  };
-  data.push(newTalker);
-  await fs.writeFile('./talker.json', JSON.stringify(data));
-  return res.status(HTTP_OK_CREATED).send(newTalker);
-};
-
 const validationToken = (req, res, next) => {
   const token = req.headers.authorization;
   const tokenNotFound = { message: 'Token não encontrado' };
   const invalidToken = { message: 'Token inválido' };
 
-  if (!token) return res.status(HTTP_UNAUTHORIZED).json(invalidToken);
-  if (token.length !== 16) return res.status(HTTP_UNAUTHORIZED).json(tokenNotFound);
+  if (!token) return res.status(HTTP_UNAUTHORIZED).json(tokenNotFound);
+  if (token.length !== 16) return res.status(HTTP_UNAUTHORIZED).json(invalidToken);
 
   next();
 };
@@ -159,7 +142,6 @@ module.exports = {
   validationEmail,
   validationPassword,
   generateRandomToken,
-  postTalker,
   validationToken,
   validationName,
   validationAge,
