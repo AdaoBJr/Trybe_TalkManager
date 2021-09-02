@@ -14,6 +14,15 @@ const fileReader = async () => {
   return JSON.parse(talkerList);
 };
 
+router.get('/search', tokenValidator, async (req, res) => {
+  const { name } = req.query;
+  const talkers = await fileReader();
+  if (!name) return res.status(200).json(talkers);
+  const filterTalker = talkers.filter((item) => item.name.includes(name));
+ 
+  return res.status(200).json(filterTalker);
+});
+
 router.get('/', async (req, res) => {
   const talkers = await fileReader();
 return res.status(200).send(talkers);

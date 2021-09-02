@@ -1,5 +1,5 @@
 const watchedValidator = (req, res, next) => {
-  // recebi o auxilio de Jonathan Souza e Lucas Martins para finalização do requisito 
+  // recebi o auxilio de Jonathan Souza e Lucas Martins para finalização do requisito com RegEx 
   const { talk } = req.body;
   const dataRegEx = RegExp(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/);
 
