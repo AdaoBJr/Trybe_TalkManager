@@ -9,7 +9,8 @@ const { authUser,
   validateTalkTalker,
   addTalker,
   editTalker,
-  deleteTalker } = require('./middlewares');
+  deleteTalker,
+  searchTalker } = require('./middlewares');
 const { getToken } = require('./getToken');
 
 const app = express();
@@ -24,6 +25,8 @@ app.get('/', (_request, response) => response.status(HTTP_OK_STATUS).send());
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+app.get('/talker/search', validateToken, searchTalker);
 
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;

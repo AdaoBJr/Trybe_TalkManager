@@ -115,6 +115,12 @@ const validateTalkTalker = (req, res, next) => {
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   };
 
+  const searchTalker = (req, res) => {
+    const { q } = req.query;
+    const filteredTalker = talkers.filter((talker) => talker.name.includes(q));
+    return res.status(200).json(filteredTalker);
+  };
+
 module.exports = { 
   authUser,
   validateToken,
@@ -124,4 +130,5 @@ module.exports = {
   addTalker,
   editTalker,
   deleteTalker,
+  searchTalker,
 };
