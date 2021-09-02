@@ -79,9 +79,9 @@ app.post('/login', validaEmail,
     return res.status(200).json({ token: tolken });
   });
 
-// app.use((err, _req, res, _next) => {
-//   res.status(500).json({ message: `Opa! Deu ruim: ${err.message}` });
-// });
+app.use((err, _req, res, _next) => {
+  res.status(500).json({ message: `Opa! Deu ruim: ${err.message}` });
+});
 
 app.listen(PORT, () => {
   console.log('Online');
