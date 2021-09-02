@@ -74,35 +74,51 @@ app.post('/talker',
     
     fs.writeFile(fileTalker, jsonString)
       .then(() => response.status(201).json(newRegister));
-  });
+});
 
-  app.put('/talker/:id',
-    validateTalk,
-    validateToken,
-    validateName,
-    validateAge,
-    validateWatchedAt,
-    validateRate,
-    async (request, response) => {
-      const { name, age, talk } = request.body;
-      const { id } = request.params;
-      const talker = await fs.readFile(fileTalker, 'utf-8');
-      const jsonTalkers = JSON.parse(talker);
+app.put('/talker/:id',
+  validateTalk,
+  validateToken,
+  validateName,
+  validateAge,
+  validateWatchedAt,
+  validateRate,
+  async (request, response) => {
+    const { name, age, talk } = request.body;
+    const { id } = request.params;
+    const talker = await fs.readFile(fileTalker, 'utf-8');
+    const jsonTalkers = JSON.parse(talker);
 
-      const filteredList = jsonTalkers.filter((el) => parseInt(el.id, 10) !== parseInt(id, 10));
-      const updateTalker = {
-        id: parseInt(id, 10),
-        name,
-        age,
-        talk,
-      };
+    const filteredList = jsonTalkers.filter((el) => parseInt(el.id, 10) !== parseInt(id, 10));
+    const updateTalker = {
+      id: parseInt(id, 10),
+      name,
+      age,
+      talk,
+    };
 
-      filteredList.push(updateTalker);
-      const jsonString = JSON.stringify(filteredList);
+    filteredList.push(updateTalker);
+    const jsonString = JSON.stringify(filteredList);
 
-      fs.writeFile(fileTalker, jsonString)
-        .then(() => response.status(200).json(updateTalker));
-    });
+    fs.writeFile(fileTalker, jsonString)
+      .then(() => response.status(200).json(updateTalker));
+});
+
+app.delete('/talker/:id', validateToken, async (request, response) => {
+  const { id } = request.params;
+  const talker = await fs.readFile(fileTalker, 'utf-8');
+  const jsonTalkers = JSON.parse(talker);
+
+  const talkerIndex = jsonTalkers.findIndex((el) => parseInt(el.id, 10) === parseInt(id, 10));
+
+  jsonTalkers.splice(talkerIndex, 1);
+  const jsonString = JSON.stringify(jsonTalkers); 
+
+  fs.writeFile(fileTalker, jsonString)
+    .then(() => response.status(HTTP_OK_STATUS).json({
+      message: 'Pessoa palestrante deletada com sucesso',
+  }));
+});
 
 app.post('/login', validateEmail, validatePassword, (_request, response) => {
   const token = Math.random().toString(16).substr(2, 8) + Math.random().toString(16).substr(2, 8);
