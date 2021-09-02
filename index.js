@@ -72,7 +72,7 @@ const toAge = (req, res, next) => {
   next();
 };
 
-// MIDDLEWARE PARA VERIFICAR O CAMPO TALK E SUAS "SUB CHAVES"
+// MIDDLEWARE PARA VERIFICAR O CAMPO TALK
 const toTalk = (req, res, next) => {
   const { talk } = req.body;
 
@@ -80,15 +80,36 @@ const toTalk = (req, res, next) => {
     return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
+  next();
+};  
 
-  const { watchedAt, rate } = talk;
+// MIDDLEWARE PARA VERIFICAR O CAMPO WACHEDAT
+const toWachedAt = (req, res, next) => {
+  const { talk: { watchedAt } } = req.body;
 
+  if (!watchedAt || watchedAt === '') {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+    }
   if (!(/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/).test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
+
+  next();
+};
+
+// MIDDLEWARE PARA VERIFICAR O CAMPO RATE
+const toRate = (req, res, next) => {
+  const { talk: { rate } } = req.body;
+
   if (!(/^[1-5]\d*$/).test(rate)) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
+  if (!rate || rate === '') {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+
   next();
 };
 
@@ -116,26 +137,32 @@ const toPassword = (req, res, next) => {
   next();
 };
 
+// MIDDLEWARE PARA VERIFICAR A QUERY
+const toQuery = async (req, res, next) => {
+  const { xablau } = req.query;
+  const data = await toRead();
+
+  if (!xablau) {
+    return res.status(200).json(data);
+  }
+
+  next();
+};
+
 // REQUISITO 1
 app.get('/talker', async (_req, res) => {
   const talkers = await toRead();
 
-  console.log(talkers);
-
-  if (!talkers) return res.status(200).send([]);
+  if (!talkers) return res.status(200).json([]);
     
-  return res.status(200).send(talkers);
+  return res.status(200).json(talkers);
 });
 
 // REQUISITO 7
-app.get('/talker/search', toAnalizeToken, async (req, res) => {
+app.get('/talker/search', toAnalizeToken, toQuery, async (req, res) => {
   const { xablau } = req.query;
   const data = await toRead();
   const filteredData = data.filter((talker) => talker.name.includes(xablau));
-
-  if (!filteredData || filteredData === '') {
-    return res.status(200).json(data);
-  }
 
   return res.status(200).json({ filteredData });
 });
@@ -143,19 +170,19 @@ app.get('/talker/search', toAnalizeToken, async (req, res) => {
 // REQUISITO 2
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const talkers = await toRead();
-  const getTalker = talkers.find((talker) => talker.id === Number(id));
+  const data = await toRead();
+  const getData = data.find((talker) => talker.id === Number(id));
   
-  if (!getTalker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  if (!getData) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
-  return res.status(200).json(getTalker);
+  return res.status(200).json(getData);
 });
 
 // REQUISITO 3
 app.post('/login', toEmail, toPassword, toGenerateToken);
 
 // REQUISITO 4
-app.post('/talker', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
+app.post('/talker', toAnalizeToken, toName, toAge, toTalk, toWachedAt, toRate, async (req, res) => {
   const { name, age, talk } = req.body;
   const data = await toRead();
   const toGenerateId = data.length + 1;
@@ -166,7 +193,14 @@ app.post('/talker', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
 });
 
 // REQUISITO 5
-app.put('/talker/:id', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
+app.put('/talker/:id',
+  toAnalizeToken,
+  toName,
+  toAge,
+  toTalk,
+  toWachedAt,
+  toRate,
+  async (req, res) => {
   const { name, age, talk } = req.body;
   const { id } = req.params;
   const data = await toRead();
