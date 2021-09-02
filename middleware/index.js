@@ -53,6 +53,10 @@ function checkPassword(req, res, next) {
     next();
 }
 
+// function checkToken(req, res, next) {
+//   const { authorization } = req.headers;
+// }
+
 module.exports = {
     readData,
     filterTalkerId,
