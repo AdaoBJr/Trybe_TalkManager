@@ -1,18 +1,14 @@
-const { filterTalker } = require('../functions/handleFile.js');
+const { filterTalker, getTalkers } = require('../functions/handleFile.js');
 
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
 
   if (!email || email === '') {
-    return res
-      .status(400)
-      .json({ message: 'O campo "email" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
 
   if (!email.includes('@') || !email.includes('.com')) {
-    return res
-      .status(400)  
-      .json({
+    return res.status(400).json({
       message: 'O "email" deve ter o formato "email@email.com"',
     });
   }
@@ -42,15 +38,11 @@ const validateToken = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || authorization === '') {
-    return res
-      .status(401)
-      .json({ message: 'Token não encontrado' });
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
 
   if (authorization.length !== 16) {
-    return res
-      .status(401)
-      .json({ message: 'Token inválido' });
+    return res.status(401).json({ message: 'Token inválido' });
   }
 
   next();
@@ -60,9 +52,7 @@ const validateName = (req, res, next) => {
   const { name } = req.body;
 
   if (!name || name === '') {
-    return res
-      .status(400)
-      .json({ message: 'O campo "name" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
 
   if (name.length < 3) {
@@ -159,6 +149,19 @@ const validateSearchParams = async (req, res, next) => {
   next();
 };
 
+const validateSearchQuery = async (req, res, next) => {
+  const { q } = req.query;
+  const talkers = await getTalkers();
+  let searchResult;
+
+  if (!q || q === '') searchResult = talkers;
+  else searchResult = talkers.filter((t) => t.name.includes(q));
+
+  req.searchResult = searchResult;
+
+  next();
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
@@ -169,4 +172,5 @@ module.exports = {
   validateTalkRate,
   validateTalkWatchedAt,
   validateSearchParams,
+  validateSearchQuery,
 };

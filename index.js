@@ -17,6 +17,7 @@ const {
   validateTalkRate,
   validateTalkWatchedAt,
   validateSearchParams,
+  validateSearchQuery,
   // validateSearch,
 } = require('./middlewares/validations.js');
 const { createToken } = require('./functions/token.js');
@@ -38,20 +39,19 @@ app.get('/talker', async (_req, res) => {
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 
-app.get('/talker/search', validateToken, async (req, res) => {
-  const { q } = req.query;
-  const talkers = await getTalkers();
-  let searchResult;
-  
-  if (!q || q === '') searchResult = talkers;
-  else searchResult = talkers.filter((t) => t.name.includes(q));
-
-  res.status(200).json(searchResult);
-});
+app.get(
+  '/talker/search',
+  validateToken,
+  validateSearchQuery,
+  async (req, res) => {
+    const { searchResult } = req;
+    res.status(200).json(searchResult);
+  },
+);
 
 app.get('/talker/:id', validateSearchParams, async (req, res) => {
   const { talker } = req;
-  
+
   res.status(HTTP_OK_STATUS).json(talker);
 });
 
