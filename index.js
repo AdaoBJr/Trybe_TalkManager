@@ -1,13 +1,12 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
 
 const {
   getTalkers,
   setTalkers,
   editTalker,
   deleteTalker,
-} = require('./handleFile.js');
+} = require('./functions/handleFile.js');
 const {
   validateEmail,
   validatePassword,
@@ -20,6 +19,7 @@ const {
   validateSearchParams,
   // validateSearch,
 } = require('./middlewares/validations.js');
+const { createToken } = require('./functions/token.js');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -57,7 +57,7 @@ app.get('/talker/:id', validateSearchParams, async (req, res) => {
 
 app.post('/login', validateEmail, validatePassword, async (_req, res) => {
   res.status(HTTP_OK_STATUS).json({
-    token: crypto.randomBytes(8).toString('hex'),
+    token: createToken(),
   });
 });
 

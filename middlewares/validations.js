@@ -1,4 +1,4 @@
-const { filterTalker } = require('../handleFile.js');
+const { filterTalker } = require('../functions/handleFile.js');
 
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
