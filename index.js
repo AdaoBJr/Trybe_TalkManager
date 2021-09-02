@@ -208,7 +208,7 @@ app.put('/talker/:id',
 });
 
 // REQUISITO 6
-app.delete('./talker/:id', toAnalizeToken, async (req, res) => {
+app.delete('/talker/:id', toAnalizeToken, async (req, res) => {
   const { id } = req.params;
   const data = await toRead();
   const dataIndex = data.findIndex((talker) => talker.id === Number(id));
