@@ -54,4 +54,17 @@ isValidAge, isValidTalkWatchedAt, isValidTalkRate,
     res.status(201).json(newSpeaker);
  });
 
+ router.put('/talker/:id', isValidToken, isValidName,
+ isValidAge, isValidTalkWatchedAt, isValidTalkRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const data = await talkerCaller();
+    const result = data.findIndex((dat) => dat.id === +id);
+
+    data[result] = { id: Number(id), name, age, talk };
+    await talkerWriter(data);
+    res.status(200).send(data[result]);
+  });
+
 module.exports = router;
