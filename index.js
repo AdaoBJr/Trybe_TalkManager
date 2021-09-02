@@ -164,7 +164,6 @@ fs.writeFile('./talker.json', JSON.stringify(filterUpdatedList));
 
 app.get('/talker', async (req, res) => {
   const talker = await readTalkersList();
-  // console.log(talker);
   if (talker === []) return res.status(200).json([]);
   return res.status(200).json(talker);
 });
