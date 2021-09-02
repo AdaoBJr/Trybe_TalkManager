@@ -1,13 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
+const fs = require('fs').promises;
+
+const readTalkers = () => fs.readFile('./talker.json', 'utf8');
+
+const HTTP_OK_CREATED = 201;
+
 const {
   getTalkers,
   getTalkerById,
   validationEmail,
   validationPassword,
   generateRandomToken,
-  postTalker,
   validationToken,
   validationName,
   validationAge,
@@ -61,4 +66,19 @@ validationAge,
 validationTalk,
 validationRate,
 validationDateWatchedAt,
-postTalker);
+async (req, res) => {
+  const { name, age, talk } = req.body;
+  const data = await readTalkers()
+  .then((talkers) => JSON.parse(talkers));
+  const talkersLength = data.length;
+  const newTalker = {
+    id: talkersLength + 1,
+    name,
+    age,
+    talk,
+  };
+  data.push(newTalker);
+  await fs.writeFile('./talker.json', JSON.stringify(data));
+  console.log(newTalker);
+  return res.status(HTTP_OK_CREATED).send(newTalker);
+});
