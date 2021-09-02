@@ -29,18 +29,15 @@ app.get('/talker', async (_req, res, next) => {
   }
 });
 
-app.get('/talker/:id', async (req, res, next) => {
+app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  try {
-    const file = JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
-    const fileFilter = file.filter((item) => item.id === parseInt(id, 10));
-    res.status(HTTP_OK_STATUS).json(fileFilter);
-  } catch (message) {
-    next({
-      status: HTPP_ERROR_STATUS,
-      message: 'Pessoa palestrante não encontrada',
-    });
+  const file = JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
+  const fileFilter = file.filter((item) => item.id === parseInt(id, 10));
+
+  if (fileFilter.length === 0) {
+    return res.status(HTPP_ERROR_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
   }
+    res.status(HTTP_OK_STATUS).json(fileFilter);
 });
 
 app.listen(PORT, () => {
