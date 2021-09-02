@@ -1,9 +1,15 @@
+const fs = require('fs').promises;
 const router = require('express').Router();
 const crypto = require('crypto');
 
 const {
-    isValidEmail,
-    isValidPassword,
+    isValidEmail, 
+    isValidPassword, 
+    isValidToken, 
+    isValidName, 
+    isValidAge,
+    isValidTalkWatchedAt,
+    isValidTalkRate,
   } = require('./middleware');
 
 router.post(
@@ -17,10 +23,19 @@ router.post(
     },
 );
 
-// const talkerCaller = async () => {
-//     const data = await fs.readFile('./talker.json', 'utf-8');
-//     return JSON.parse(data);
-// };
+// router.post(
+//     '/talker',
+//     (_req, res) => { 
+//     const tok = crypto.randomBytes(8).toString('hex');
+//     console.log(tok);
+//     res.status(200).json({ token: tok });
+//     },
+// );
+
+const talkerWriter = async () => {
+    const data = await fs.writeFile('./talker.json', 'utf-8');
+    return JSON.parse(data);
+};
 
 // router.get('talker', async (req, res) => {
 //     const data = await talkerCaller();
@@ -38,13 +53,12 @@ router.post(
 //     res.status(HTTP_OK_STATUS).send(result);
 // });
 
-// router.put('talker/:id', async (req, res) => {
-//     const { id } = req.params;
-//     // const { name, age, talk: { watchedAt }, talk: { rate } } = req.body;
-//     const data = await talkerCaller();
-//     console.log(data);
-//     const result = data.find((dat) => dat.id === Number(id));
-//     console.log(result);
-//     res.status(200).json({ result });
-// });
+router.post('/talker', isValidToken, isValidPassword,
+ isValidName, isValidAge, isValidTalkWatchedAt, isValidTalkRate, 
+    async (req, res) => {
+    const { name, age, talk: { watchedAt }, talk: { rate } } = req.body;
+    const data = await talkerWriter();
+    data.push({ name, age, watchedAt, rate });
+    res.status(200).json(data);
+});
   module.exports = router;
