@@ -96,7 +96,7 @@ const toWachedAt = (req, res, next) => {
 const toRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
 
-  if (!(/^[1-5]\d*$/).test(rate)) {
+  if (rate < 1 || rate > 5) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   if (!rate || rate === '') {
