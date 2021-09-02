@@ -12,6 +12,9 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.listen(PORT, () => {
-  console.log('Online');
-});
+const { login, talker } = require('./Routes');
+
+app.listen(PORT, () => { console.log('Online'); });
+
+app.use('/login', login);
+app.use('/talker', talker);
