@@ -32,9 +32,9 @@ app.get('/talker', async (_req, res, next) => {
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const file = JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
-  const fileFilter = file.filter((item) => item.id === parseInt(id, 10));
+  const fileFilter = file.find((item) => item.id === Number(id));
 
-  if (fileFilter.length === 0) {
+  if (!fileFilter) {
     return res.status(HTPP_ERROR_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
   }
     res.status(HTTP_OK_STATUS).json(fileFilter);
