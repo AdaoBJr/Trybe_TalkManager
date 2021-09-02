@@ -67,4 +67,15 @@ isValidAge, isValidTalkWatchedAt, isValidTalkRate,
     res.status(200).send(data[result]);
   });
 
+router.delete('/talker/:id', isValidToken,
+async (req, res) => {
+    const { id } = req.params;
+    const data = await talkerCaller();
+    const result = data.findIndex((dat) => dat.id === +id);
+
+    data.splice(result, 1);
+    await talkerWriter(data);
+    res.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;
