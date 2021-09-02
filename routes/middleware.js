@@ -58,7 +58,7 @@ const isValidName = (req, res, next) => {
   }
   
   if (name.length) { 
-  return res.status(401).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
     
   next();
@@ -71,7 +71,7 @@ const isValidAge = (req, res, next) => {
   }
   
   if (Number(age) < 18) { 
-  return res.status(401).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
     
   next();
@@ -82,7 +82,7 @@ const isValidTalkWatchedAt = (req, res, next) => {
   const { talk: { watchedAt, rate } } = req.body;
 
   if (!Number(rate) || !watchedAt) { 
-    return res.status(401)
+    return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
 
@@ -96,12 +96,12 @@ const isValidTalkRate = (req, res, next) => {
   const { talk: { watchedAt, rate } } = req.body;
 
   if (!Number(rate) || !watchedAt) { 
-    return res.status(401)
+    return res.status(400)
     .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
   
   if (!Number(rate) || rate < 5) { 
-  return res.status(401)
+  return res.status(400)
   .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   
