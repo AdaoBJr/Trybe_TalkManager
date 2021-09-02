@@ -1,4 +1,5 @@
 const express = require('express');
+const crypto = require('crypto');
 const fs = require('fs').promises;
 const bodyParser = require('body-parser');
 
@@ -17,24 +18,17 @@ const toWrite = (content) => (
 );
 
 // MIDDLEWARE PARA GERAR TOKEN ALEATÓRIO
-const toToken = () => {
-  let text = '';
-  const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+const toToken = () => crypto.randomBytes(8).toString('hex');
+// const toToken = () => {
+//   let text = '';
+//   const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 
-  for (let i = 0; i < 16; i += 1) {
-    text += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
-  }
+//   for (let i = 0; i < 16; i += 1) {
+//     text += alphabet.charAt(Math.floor(Math.random() * alphabet.length));
+//   }
   
-  return text;
-};
-
-// MIDDLEWARE PARA RETORNAR O TOKEN
-const toGenerateToken = (req, res, next) => {
-  const token = toToken();
-  req.headers.authorization = token;
-  res.status(200).json({ token });
-  next();
-};
+//   return text;
+// };
 
 // MIDDLEWARE PARA VERIFICAR DO TOKEN
 const toAnalizeToken = (req, res, next) => {
@@ -179,7 +173,9 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 // REQUISITO 3
-app.post('/login', toEmail, toPassword, toGenerateToken);
+app.post('/login', toEmail, toPassword, (_req, res) => {
+  res.status(200).json({ token: toToken() });
+});
 
 // REQUISITO 4
 app.post('/talker', toAnalizeToken, toName, toAge, toTalk, toWachedAt, toRate, async (req, res) => {
