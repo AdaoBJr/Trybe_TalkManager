@@ -3,8 +3,17 @@ const rescue = require('express-rescue');
 const bodyParser = require('body-parser');
 
 const { getTalker } = require('./arquivo/getTalker');
-const { generateToken } = require('./token/token');
-const { validateEmail } = require('./token/email');
+const {
+  verificarInfo,
+  generateToken,
+  validateToken,
+  validateName,
+  validateAge,
+  checkTalk,
+  checkDate,
+  checkRate,
+  addNewTalker,
+} = require('./verificar');
 
 const app = express();
 
@@ -35,7 +44,6 @@ app.get(
     if (!falador) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
-
     return res.status(200).json(falador);
   }),
 );
@@ -43,18 +51,16 @@ app.get(
 app.post('/login', (req, res) => {
   const token = { token: generateToken(16) };
   const { email, password } = req.body;
-  if (!email) {
-    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-  }
-  const emailResult = validateEmail(email);
-  if (!emailResult) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
-  if (!password) {
-    return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-  }
-  if (password.length < 6) {
-    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  }
+  verificarInfo(email, password, res);
   return res.status(200).json(token);
 });
+
+app.post('/talker', [
+  validateToken,
+  validateName,
+  validateAge,
+  checkTalk,
+  checkDate,
+  checkRate,
+  addNewTalker,
+]);

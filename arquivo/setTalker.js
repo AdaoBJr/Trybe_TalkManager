@@ -1,18 +1,9 @@
-const fs = require('fs').promises;
 const { getTalker } = require('./getTalker');
 
-const talker = 'talker.json';
-const n = {
-    name: 'Danielle Santos',
-    age: 56,
-    talk: {
-      watchedAt: '22/10/2019',
-      rate: 5,
-    },
-  };
-  async function getT(n1) {
+  async function setTalker(value, res) {
     const content = (await getTalker());
-    return content;
+    content.push(value);
+    return res.status(200).json(value);
 }
 
-console.log(getT(n));
+module.exports = { setTalker };
