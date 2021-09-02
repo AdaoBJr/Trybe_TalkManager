@@ -145,6 +145,7 @@ app.post('/login', toEmail, toPassword, toGenerateToken);
 app.post('/talker', toAnalizeToken, toName, toAge, toTalk, async (req, res) => {
   const data = await toRead();
   const addData = req.body;
+  addData.id = data[data.length - 1].id + 1;
   const newData = [...data, addData];
   await toWrite(newData);
   return res.status(201).json(addData);
