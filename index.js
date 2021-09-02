@@ -18,7 +18,6 @@ const {
   validateTalkWatchedAt,
   validateSearchParams,
   validateSearchQuery,
-  // validateSearch,
 } = require('./middlewares/validations.js');
 const { createToken } = require('./functions/token.js');
 
@@ -45,6 +44,7 @@ app.get(
   validateSearchQuery,
   async (req, res) => {
     const { searchResult } = req;
+
     res.status(200).json(searchResult);
   },
 );
@@ -71,8 +71,8 @@ app.post(
   validateTalkWatchedAt,
   async (req, res) => {
     const { body } = req;
-
     const talker = await setTalkers(body);
+
     res.status(201).json(talker);
   },
 );
@@ -106,5 +106,5 @@ app.delete('/talker/:id', validateToken, async (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log('Online');
+  console.log(`Online on port ${PORT}`);
 });
