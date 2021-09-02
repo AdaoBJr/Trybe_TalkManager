@@ -21,11 +21,33 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// REQUISITO 3
+app.post('/login', validEmail, validPassword, async (req, res) => {
+  res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
+});
+
 // REQUISITO 1
 app.get('/talker', async (req, res) => {
   const talkers = await readContentFile(PATH_FILE) || [];
 
   res.status(200).json(talkers);
+});
+
+// REQUISITO 7
+app.get('/talker/search', validToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await readContentFile(PATH_FILE);
+  if (!q || q === '') {
+    return res.status(200).json(talkers);
+  }
+
+  const result = talkers.filter((i) => i.name.includes(q));
+
+  if (!result || result.length === 0) {
+    return res.status(200).json([]);
+  }
+
+  return res.status(200).json(result);
 });
 
 // REQUISITO 2
@@ -35,15 +57,10 @@ app.get('/talker/:id', async (req, res) => {
   const talker = talkers.find((i) => Number(i.id) === Number(id));
 
   if (talker) {
-    res.status(200).json(talker);
-  } else {
-    res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  }
-});
+    return res.status(200).json(talker);
+  } 
 
-// REQUISITO 3
-app.post('/login', validEmail, validPassword, async (req, res) => {
-  res.status(200).json({ token: crypto.randomBytes(8).toString('hex') });
+  return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
 // REQUISITO 4
@@ -92,8 +109,6 @@ async (req, res) => {
 
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
-
-// REQUISITO 7
 
 app.listen(PORT, () => {
   console.log('Online');
