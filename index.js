@@ -9,6 +9,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
+const HTTP_NOT_OK_STATUS = 400;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -45,13 +46,14 @@ const validaEmail = (req, res, next) => {
   const validateEmail = email.match(/[a-z]+@[a-z]+.com/g);
 
   if (!email) {
-      return res.status(400).json({ message: 'O campo "email" é obrigatório' });
+      return res.status(HTTP_NOT_OK_STATUS).json({ message: 'O campo "email" é obrigatório' });
   }
 
   if (!validateEmail
       ) {
       return res
-          .status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+          .status(HTTP_NOT_OK_STATUS)
+            .json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
 
   next();
@@ -60,11 +62,12 @@ const validaSenha = (req, res, next) => {
   const { password } = req.body;
 
   if (!password) {
-      return res.status(400).json({ message: 'O campo "password" é obrigatório' });
+      return res.status(HTTP_NOT_OK_STATUS).json({ message: 'O campo "password" é obrigatório' });
   }
 
   if (password.length < 6) {
-      return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+      return res.status(HTTP_NOT_OK_STATUS)
+        .json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
 
   next();
