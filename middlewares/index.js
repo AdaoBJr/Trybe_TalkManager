@@ -136,6 +136,7 @@ const validationDateWatchedAt = (req, res, next) => {
   next();
 };
 
+// REQUISITO 5
 const updateTalker = async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
@@ -153,6 +154,21 @@ const updateTalker = async (req, res) => {
   return res.status(HTTP_OK_STATUS).send(data[talkerIndex]);
 };
 
+// REQUISITO 6
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  const data = await readTalkers()
+  .then((talkers) => JSON.parse(talkers));
+  const talkerIndex = data.findIndex((index) => index.id === +id);
+
+  if (talkerIndex === -1) return res.status(HTTP_NOT_FOUND).send();
+  
+  data.splice(talkerIndex, 1);
+  await fs.writeFile('./talker.json', JSON.stringify(data));
+
+  return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   getTalkers,
   getTalkerById,
@@ -166,4 +182,5 @@ module.exports = {
   validationRate,
   validationDateWatchedAt,
   updateTalker,
+  deleteTalker,
 };

@@ -20,6 +20,7 @@ const {
   validationRate,
   validationDateWatchedAt,
   updateTalker,
+  deleteTalker,
 } = require('./middlewares/index'); 
 
 const app = express();
@@ -92,3 +93,7 @@ validationTalk,
 validationRate,
 validationDateWatchedAt,
 updateTalker);
+
+app.delete('/talker/:id',
+validationToken,
+deleteTalker);
