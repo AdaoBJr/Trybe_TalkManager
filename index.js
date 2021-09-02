@@ -32,7 +32,7 @@ const toToken = () => crypto.randomBytes(8).toString('hex');
 
 // MIDDLEWARE PARA VERIFICAR DO TOKEN
 const toAnalizeToken = (req, res, next) => {
-  const { token } = req.headers.authorization;
+  const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
