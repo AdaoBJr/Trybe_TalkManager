@@ -146,10 +146,13 @@ const updateTalker = async (req, res) => {
 
   if (talkerIndex === -1) return res.status(HTTP_NOT_FOUND).send();
 
-  data[talkerIndex] = { id, name, age, talk };
+  data[talkerIndex] = { id: Number(id), name, age, talk };
+
+  await fs.writeFile('./talker.json', JSON.stringify(data));
 
   return res.status(HTTP_OK_STATUS).send(data[talkerIndex]);
 };
+
 module.exports = {
   getTalkers,
   getTalkerById,
