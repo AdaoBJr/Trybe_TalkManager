@@ -110,6 +110,8 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+// app.get('/talker/search?q=searchTerm',
+// })
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await readTalkersList();
@@ -132,7 +134,7 @@ async (req, res) => {
 });
 
 app.put('/talker/:id', 
-// validateToken, 
+validateToken, 
 validateTalker, validateTalkExists, 
 validateTalkerTalk, 
 async (req, res) => {
