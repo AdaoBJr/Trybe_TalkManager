@@ -4,7 +4,6 @@ const crypto = require('crypto');
 
 const {
   getTalkers,
-  filterTalker,
   setTalkers,
   editTalker,
   deleteTalker,
@@ -18,6 +17,7 @@ const {
   validateTalk,
   validateTalkRate,
   validateTalkWatchedAt,
+  validateSearchParams,
   // validateSearch,
 } = require('./middlewares/validations.js');
 
@@ -49,14 +49,9 @@ app.get('/talker/search', validateToken, async (req, res) => {
   res.status(200).json(searchResult);
 });
 
-app.get('/talker/:id', async (req, res) => {
-  const { id } = req.params;
-  const talker = await filterTalker(id);
-  if (!talker) {
-    return res
-      .status(404)
-      .json({ message: 'Pessoa palestrante não encontrada' });
-  }
+app.get('/talker/:id', validateSearchParams, async (req, res) => {
+  const { talker } = req;
+  
   res.status(HTTP_OK_STATUS).json(talker);
 });
 

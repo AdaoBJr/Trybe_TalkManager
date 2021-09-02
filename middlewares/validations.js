@@ -1,3 +1,5 @@
+const { filterTalker } = require('../handleFile.js');
+
 const validateEmail = (req, res, next) => {
   const { email } = req.body;
 
@@ -144,6 +146,19 @@ const validateTalkWatchedAt = (req, res, next) => {
   next();
 };
 
+const validateSearchParams = async (req, res, next) => {
+  const { id } = req.params;
+  const talker = await filterTalker(id);
+  if (!talker) {
+    return res
+      .status(404)
+      .json({ message: 'Pessoa palestrante não encontrada' });
+  }
+
+  req.talker = talker;
+  next();
+};
+
 module.exports = {
   validateEmail,
   validatePassword,
@@ -153,4 +168,5 @@ module.exports = {
   validateTalk,
   validateTalkRate,
   validateTalkWatchedAt,
+  validateSearchParams,
 };
