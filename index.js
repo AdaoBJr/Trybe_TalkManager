@@ -6,6 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
+const HTPP_ERROR_STATUS = 404;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -15,14 +16,14 @@ app.get('/', (_request, response) => {
 
 app.get('/talker', async (_req, res, next) => {
   try {
-    const file = await fs.readFile('./talker.json', 'utf-8');
+    const file = JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
 
     res.status(HTTP_OK_STATUS).json(file);
 
     next();
   } catch (err) {
     next({
-      status: 404,
+      status: HTPP_ERROR_STATUS,
       message: err,
     });
   }
