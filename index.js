@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const randtoken = require('rand-token');
 const fs = require('fs');
 
 const app = express();
@@ -10,6 +11,29 @@ const PORT = '3000';
 
 const talkerData = 'talker.json';
 
+function validatePassword(password) {
+  if (!password || password.trim() === '') return 'O campo "password" é obrigatório';
+  if (password.length < 6) return 'O "password" deve ter pelo menos 6 caracteres';
+  return false;
+}
+
+function validateEmail(email, password) {
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/i;
+  if (!email || email.trim() === '') return 'O campo "email" é obrigatório';
+  if (!email.match(re)) return 'O "email" deve ter o formato "email@email.com"';
+  return validatePassword(password);
+}
+
+function validateData(req, res, next) {
+   const { email, password } = req.body;
+   const message = validateEmail(email, password);
+   if (message) {
+    return res.status(400).json({ message });
+   }
+   
+   next(); 
+}
+
 function readData() {
   try {
     const data = fs.readFileSync(talkerData, 'utf8');
@@ -19,6 +43,10 @@ function readData() {
     process.exit(1);
   }
 }
+
+app.post('/login', validateData, (req, res) => {
+  res.status(HTTP_OK_STATUS).json({ token: randtoken.generate(16) });
+});
 
 app.get('/talker', (req, res) => {
   const talkers = JSON.parse(readData());
