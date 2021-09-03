@@ -87,8 +87,8 @@ isValidToken,
   const objectoAtual = await getTalker();
   const id = objectoAtual.length + 1;
   objectoAtual.push({ name, age, id, talk });
-  fs.writeFile('./talker.json', JSON.stringify(objectoAtual))
-  .then(() => response.status(201).json({ name, age, id, talk }));
+  await fs.writeFile('./talker.json', JSON.stringify(objectoAtual));
+  response.status(201).json({ name, age, id, talk });
 });
 
 // REQUISITO 5
