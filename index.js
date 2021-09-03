@@ -1,10 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs').promises;
-const generation = require('./construction/generation');
-const autenticaLogin = require('./construction/autenticarLogin');
-
-const msgErro = { message: 'Pessoa palestrante não encontrada' };
+const showPalestrantes = require('./construction/showPalestrantes');
+const idPalestrante = require('./construction/idPalestrante');
+/* const newPalestrante = require('./construction/newPalestrante');
+ */const login = require('./construction/login');
+const {
+  autenticaToken,
+  validaNome,
+  validaAge,
+  validaTalk,
+  validaRate,
+  validaDate,
+  addTalker,
+} = require('./construction/addPalestrante');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,45 +22,24 @@ const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
+  response.status(HTTP_OK_STATUS).send('dd');
 });
 
 app.listen(PORT, () => {
   console.log('Online');
 });
 
-async function dataPalestrantes() {
-  const response = await fs.readFile('./talker.json', 'utf8');
-  return JSON.parse(response);
-}
-
-async function palestrantes(_req, res) {
-  const data = await dataPalestrantes();
-  if (data.length === 0) {
-    return res.status(HTTP_OK_STATUS).json([]);
-  }
-  return res.status(HTTP_OK_STATUS).json(data);
-}
-
-app.get('/talker', palestrantes);
-
-async function idPalestrante(req, res) {
-  const { params: { id } } = req;
-  const data = await dataPalestrantes();
-  const aux = data.find((auxa) => auxa.id === +id);
-  if (!aux) {
-    return res.status(404).json(msgErro);
-  }
-  return res.status(HTTP_OK_STATUS).json(aux);
-}
+app.get('/talker', showPalestrantes);
 
 app.get('/talker/:id', idPalestrante);
 
-function login(req, res) {
-  const aux = generation(16);
-  autenticaLogin(req, res);
-
-  return res.status(HTTP_OK_STATUS).json({ token: aux });
-}
-
 app.post('/login', login);
+
+app.post('/talker',
+  autenticaToken,
+  validaNome,
+  validaAge,
+  validaTalk,
+  validaRate,
+  validaDate,
+  addTalker);

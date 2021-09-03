@@ -16,7 +16,7 @@ function confirmePassword(password, res) {
   if (!password) {
     return res.status(400).json(passwordNExiste);
   }
-  if (password.length < 5) {
+  if (password.length <= 5) {
     return res.status(400).json(passwordInvalido);
   }
 }
