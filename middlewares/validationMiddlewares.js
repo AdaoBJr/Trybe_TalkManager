@@ -28,14 +28,14 @@ const validateRate = (talk) => {
     return false;
   }
 
-  if (Number.isInteger(+talk.rate) && (talk.rate < 1 || talk.rate > 5)) {
+  if (Number.isInteger(talk.rate) && (talk.rate < 1 || talk.rate > 5)) {
     return false;
   }
 
   return true;
 };
 
-const validateTalk = (talk) => (talk && talk.rate && talk.watchedAt);
+const validateTalk = (talk) => (talk && (talk.rate || talk.rate === 0) && talk.watchedAt);
 
 const checkToken = (req, res, next) => {
   const token = req.headers.authorization;
