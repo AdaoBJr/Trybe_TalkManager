@@ -32,41 +32,29 @@ const PORT = '3000';
   return JSON.parse(resConvert);
 };
 
-// const writeTalker = async (people) => {
-//   const objectoAtual = await getTalker(),
-
-//   const resConvert = await fs.writeFile('./talker.json',);
-//   return JSON.parse(people);
-// };
-
-//  REQUISITO 1
-
 app.get('/talker', async (_request, response) => {
-  const talker = await getTalker();
-  console.log('entrei');
+const talker = await getTalker();
   return response.status(HTTP_OK_STATUS).send(talker);
 });
 
 // REQUISITO 2
 
 app.get('/talker/:id', rescue(async (_request, response) => {
-  const { id } = _request.params;
-  const talker = await getTalker();
-  const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id));
-  if (!responseForUse) {
-    return response.status(404).send({
+const { id } = _request.params;
+const talker = await getTalker();
+const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id));
+    if (!responseForUse) {
+      return response.status(404).send({
       message: 'Pessoa palestrante não encontrada',
     });
   }
-    return response.status(HTTP_OK_STATUS).send(responseForUse);
+      return response.status(HTTP_OK_STATUS).send(responseForUse);
 }));
 
 // REQUISITO 3
 
 app.post('/login', authLogin, (_request, response) => {
-  const token = crypto.randomBytes(8).toString('hex');
-  // const token = '7mqaVRXJSp886CGr'; 
-
+const token = crypto.randomBytes(8).toString('hex');
   return response.status(HTTP_OK_STATUS).json({
     token,
   });
@@ -76,38 +64,38 @@ app.post('/login', authLogin, (_request, response) => {
 
 app.post('/talker', 
 isValidToken, 
-    isValidName,
-     isValidAge,
-     isValidTalk,
-      isValidDate, 
-      isValidRate, 
-      isValidWatchAndDate,
-       async (request, response) => {
-  const { name, age, talk } = request.body;
-  const objectoAtual = await getTalker();
-  const id = objectoAtual.length + 1;
-  objectoAtual.push({ name, age, id, talk });
-  await fs.writeFile('./talker.json', JSON.stringify(objectoAtual));
-  response.status(201).json({ name, age, id, talk });
+isValidName,
+isValidAge,
+isValidTalk,
+isValidDate, 
+isValidRate, 
+isValidWatchAndDate,
+async (request, response) => {
+const { name, age, talk } = request.body;
+const objectoAtual = await getTalker();
+const id = objectoAtual.length + 1;
+objectoAtual.push({ name, age, id, talk });
+await fs.writeFile('./talker.json', JSON.stringify(objectoAtual));
+  return response.status(201).json({ name, age, id, talk });
 });
 
 // REQUISITO 5
 
 app.put('/talker/:id', 
 isValidToken, 
-    isValidName,
-     isValidAge,
-     isValidTalk,
-      isValidDate, 
-      isValidRate, 
-      isValidWatchAndDate,
-       async (request, response) => {
- const talkers = await getTalker();
-  const { id } = request.params;
-  const { name, age, talk } = request.body;
-  const indexOfTalker = talkers.findIndex((talker) => talker.id === Number(id));
-  talkers[indexOfTalker] = { id: Number(id), name, age, talk };
-  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+isValidName,
+isValidAge,
+isValidTalk,
+isValidDate, 
+isValidRate, 
+isValidWatchAndDate,
+async (request, response) => {
+const talkers = await getTalker();
+const { id } = request.params;
+const { name, age, talk } = request.body;
+const indexOfTalker = talkers.findIndex((talker) => talker.id === Number(id));
+talkers[indexOfTalker] = { id: Number(id), name, age, talk };
+await fs.writeFile('./talker.json', JSON.stringify(talkers));
   return response.status(200).send(talkers[indexOfTalker]);
 });
 
