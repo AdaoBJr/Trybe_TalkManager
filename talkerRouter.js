@@ -20,6 +20,18 @@ router.get('/', async (_req, res) => {
   res.status(200).send(talkerList);
 });
 
+router.get('/search', validateToken, async (req, res) => {
+  const { searchTerm } = req.query;
+  const talkers = await getTalkers();
+  const filteredTalkers = talkers.filter((r) => r.name.includes(searchTerm));
+
+  if (!searchTerm) return res.status(200).json(talkers);
+
+  if (!filteredTalkers) return res.status(200).json([]);
+
+  res.status(200).json(filteredTalkers);
+});
+
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await getTalkerById(id);
