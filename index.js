@@ -3,7 +3,15 @@ const crypto = require('crypto');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const fsp = require('fs').promises;
-const { validEmail, validPassword } = require('./middlewares/validate');
+const { validEmail, validPassword } = require('./middlewares/validateEmailPassword');
+const { 
+  validToken,
+  validName,
+  validAge,
+  validRate,
+  validTalk,
+  validWatchedAt,
+} = require('./middlewares/validadeTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -41,6 +49,19 @@ app.get('/talker', (_req, res) => {
 app.post('/login', validEmail, validPassword, (_req, res) => {
   const cryptoToken = crypto.randomBytes(8).toString('hex');
   return res.status(HTTP_OK_STATUS).json({ token: `${cryptoToken}` });
+});
+
+app.post('/talker', validToken, validName, validAge,
+  validTalk, validRate, validWatchedAt, (req, res) => {
+  const newTalker = fs.readFileSync('talker.json', 'utf8');
+  const newTalkerJSON = JSON.parse(newTalker);
+  const { name, age, talk } = req.body;
+  const id = 5;
+  const newObj = ({ id, name, age, talk });
+  newTalkerJSON.push(newObj);
+  // writeFileSync "escreve" o novo obj no arquivo json / stringfy para "stringar" o arquivo json
+  fs.writeFileSync('talker.json', JSON.stringify(newTalkerJSON));
+  return res.status(201).json({ id, name, age, talk });
 });
 
 app.use((err, _req, res, _next) => res.status(500).json({ error: `Erro: ${err.message}` }));
