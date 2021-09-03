@@ -21,6 +21,7 @@ const {
   validationDateWatchedAt,
   updateTalker,
   deleteTalker,
+  searchTalker,
 } = require('./middlewares/index'); 
 
 const app = express();
@@ -37,6 +38,8 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+app.get('/talker/search', validationToken, searchTalker);
 
 app.get('/talker/:id', getTalkerById);
 

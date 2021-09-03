@@ -169,6 +169,17 @@ const deleteTalker = async (req, res) => {
   return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+// REQUISITO 7
+const searchTalker = async (req, res) => {
+  const { talker } = req.query;
+  const data = await readTalkers()
+  .then((talkers) => JSON.parse(talkers));
+  if (!talker) return res.status(HTTP_OK_STATUS).json(data);
+  const filteredTalkers = data.filter((talk) => talk.talker === talker);
+
+  return res.status(HTTP_OK_STATUS).json([filteredTalkers]);
+};
+
 module.exports = {
   getTalkers,
   getTalkerById,
@@ -183,4 +194,5 @@ module.exports = {
   validationDateWatchedAt,
   updateTalker,
   deleteTalker,
+  searchTalker,
 };
