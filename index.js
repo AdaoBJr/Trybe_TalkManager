@@ -14,11 +14,6 @@ const {
   isValidRate,
   isValidWatchAndDate,
   isValidTalk, 
-  // isValidWatchOrRate, 
-  // isValidWatchAndAte, 
-  // isValidWatchAndDate, 
-  // isValidRate,
-  // isValidDate 
 } = require('./middleware/talker.js');
 
 const app = express();
@@ -94,6 +89,26 @@ isValidToken,
   objectoAtual.push({ name, age, id, talk });
   fs.writeFile('./talker.json', JSON.stringify(objectoAtual))
   .then(() => response.status(201).json({ name, age, id, talk }));
+});
+
+// REQUISITO 5
+
+app.put('/talker/:id', 
+isValidToken, 
+    isValidName,
+     isValidAge,
+     isValidTalk,
+      isValidDate, 
+      isValidRate, 
+      isValidWatchAndDate,
+       async (request, response) => {
+ const talkers = await getTalker();
+  const { id } = request.params;
+  const { name, age, talk } = request.body;
+  const indexOfTalker = talkers.findIndex((talker) => talker.id === Number(id));
+  talkers[indexOfTalker] = { id: Number(id), name, age, talk };
+  await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return response.status(200).send(talkers[indexOfTalker]);
 });
 
 app.listen(PORT, () => {
