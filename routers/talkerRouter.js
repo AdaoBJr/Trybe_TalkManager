@@ -19,6 +19,20 @@ const {
 const router = express.Router();
 router.use(bodyParser.json());
 
+router.get(
+  '/search',
+  checkToken,
+  async (req, res) => {
+    const { q } = req.query.q;
+    
+    const talkersList = await readFile();
+    const talker = talkersList.filter((item) => item.name.includes(q));
+    
+    if (!q) return res.status(200).json(talkersList);
+    res.status(200).json(talker);
+  },
+);
+
 router.get('/', async (req, res) => {
   const allTalkers = await getAllTalkers();
   if (allTalkers) return res.status(200).send(allTalkers);
