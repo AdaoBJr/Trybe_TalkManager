@@ -70,13 +70,8 @@ Você vai desenvolver uma API de um CRUD (**C**reate, **R**ead, **U**pdate e **D
 ## Desenvolvimento
 
 ### Data de Entrega
-<<<<<<< HEAD
-O projeto tem duração de: `2 dias`
-O projeto tem até a seguinte data: `05/07/2021 - 14:00h`. Para ser entregue a avaliação final.
-=======
 
 O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a avaliação final.
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
 ---
 
@@ -86,15 +81,9 @@ O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a a
 
 1. Clone o repositório
 
-<<<<<<< HEAD
-- `git clone https://github.com/betrybe/sd-09-project-talker-manager.git`.
-- Entre na pasta do repositório que você acabou de clonar:
-  - `cd sd-09-project-talker-manager`
-=======
 - `git clone git@github.com:tryber/sd-010-b-project-talker-manager.git`.
 - Entre na pasta do repositório que você acabou de clonar:
   - `cd sd-010-b-project-talker-manager`
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
 2. Instale as dependências [**Caso existam**]
 
@@ -108,11 +97,7 @@ O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a a
   - Exemplo: `git checkout master`
 - Agora crie uma branch à qual você vai submeter os `commits` do seu projeto
   - Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
-<<<<<<< HEAD
-  - Exemplo: `git checkout -b joaozinho-sd-09-project-talker-manager`
-=======
   - Exemplo: `git checkout -b joaozinho-sd-010-b-project-talker-manager`
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
 4. Adicione as mudanças ao _stage_ do Git e faça um `commit`
 
@@ -129,29 +114,17 @@ O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a a
 
 5. Adicione a sua branch com o novo `commit` ao repositório remoto
 
-<<<<<<< HEAD
-- Usando o exemplo anterior: `git push -u origin joaozinho-sd-09-project-talker-manager`
-
-6. Crie um novo `Pull Request` _(PR)_
-
-- Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-09-project-talker-manager/pulls)
-=======
 - Usando o exemplo anterior: `git push -u origin joaozinho-sd-010-b-project-talker-manager`
 
 6. Crie um novo `Pull Request` _(PR)_
 
 - Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-010-b-project-talker-manager/pulls)
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 - Clique no botão verde _"New pull request"_
 - Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
 - Clique no botão verde _"Create pull request"_
 - Adicione uma descrição para o _Pull Request_ e clique no botão verde _"Create pull request"_
 - **Não se preocupe em preencher mais nada por enquanto!**
-<<<<<<< HEAD
-- Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-09-project-talker-manager/pulls) e confira que o seu _Pull Request_ está criado
-=======
 - Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-010-b-project-talker-manager/pulls) e confira que o seu _Pull Request_ está criado
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
 ## Durante o desenvolvimento
 
@@ -176,11 +149,7 @@ Para sinalizar que o seu projeto está pronto para o _"Code Review"_ dos seus co
 
   - No menu à direita, clique no _link_ **"Assignees"** e escolha **o seu usuário**;
 
-<<<<<<< HEAD
-  - No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-09`.
-=======
   - No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-010-b`.
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
 Caso tenha alguma dúvida, [aqui tem um video explicativo](https://vimeo.com/362189205).
 
@@ -297,11 +266,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 
 - O endpoint deve ser capaz de retornar um token aleatório de 16 caracteres que deverá ser utilizado nas demais requisições.
 
-<<<<<<< HEAD
-  - O endpoint deverá o retornar o token gerado, da seguinte forma:
-=======
   - O endpoint deverá retornar um código de `status 200` com o token gerado, com o seguinte corpo:
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
   ```json
   {
@@ -314,11 +279,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
   ```json
   {
     "email": "email@email.com",
-<<<<<<< HEAD
-    "password": 123456
-=======
     "password": "123456"
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
   }
   ```
 
@@ -377,11 +338,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
   }
   ```
 
-<<<<<<< HEAD
-- A requisição deve ter o token de autenticação nos headers, no campo `authorization`.
-=======
 - A requisição deve ter o token de autenticação nos headers.
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
   - Caso o token não seja encontrado retorne um código de `status 401`, com o seguinte corpo:
 
@@ -500,11 +457,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
   }
   ```
   
-<<<<<<< HEAD
-- A requisição deve ter o token de autenticação nos headers, no campo `authorization`.
-=======
 - A requisição deve ter o token de autenticação nos headers.
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
   - Caso o token não seja encontrado retorne um código de `status 401`, com o seguinte corpo:
 
@@ -608,11 +561,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 
 #### Os seguintes pontos serão avaliados:
 
-<<<<<<< HEAD
-- A requisição deve ter o token de autenticação nos headers, no campo `authorization`.
-=======
 - A requisição deve ter o token de autenticação nos headers.
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
   - Caso o token não seja encontrado retorne um código de `status 401`, com o seguinte corpo:
 
@@ -661,11 +610,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
   ];
   ```
 
-<<<<<<< HEAD
-- A requisição deve ter o token de autenticação nos headers, no campo `authorization`.
-=======
 - A requisição deve ter o token de autenticação nos headers.
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
   - Caso o token não seja encontrado retorne um código de `status 401`, com o seguinte corpo:
 
@@ -695,11 +640,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 
 Ao finalizar e submeter o projeto, não se esqueça de avaliar sua experiência preenchendo o formulário. Leva menos de 3 minutos!
 
-<<<<<<< HEAD
-Link: [FORMULÁRIO DE AVALIAÇÃO DE PROJETO](https://be-trybe.typeform.com/to/ZTeR4IbH)
-=======
 Link: [FORMULÁRIO DE AVALIAÇÃO DE PROJETO](https://bit.ly/3ta7hA0)
->>>>>>> 38d5816886aee2fb7b727dd4941fdeaa02d46ca9
 
 O avaliador automático não necessariamente avalia seu projeto na ordem em que os requisitos aparecem no readme. Isso acontece para deixar o processo de avaliação mais rápido. Então, não se assuste se isso acontecer, ok?
 
