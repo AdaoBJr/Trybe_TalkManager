@@ -43,12 +43,12 @@ app.get('/talker/:id', async (req, res) => {
 // REQUISITO 3
 const validaEmail = (req, res, next) => {
   const { email } = req.body;
-  const validateEmail = email.match(/[a-z]+@[a-z]+.com/g);
-
+  
   if (!email) {
-      return res.status(HTTP_NOT_OK_STATUS).json({ message: 'O campo "email" é obrigatório' });
+    return res.status(HTTP_NOT_OK_STATUS).json({ message: 'O campo "email" é obrigatório' });
   }
 
+  const validateEmail = email.match(/[a-z]+@[a-z]+.com/g);
   if (!validateEmail
       ) {
       return res
@@ -79,9 +79,9 @@ app.post('/login', validaEmail,
     return res.status(200).json({ token: tolken });
   });
 
-app.use((err, _req, res, _next) => {
-  res.status(500).json({ message: `Opa! Deu ruim: ${err.message}` });
-});
+// app.use((err, _req, res, _next) => {
+//   res.status(500).json({ message: `Opa! Deu ruim: ${err.message}` });
+// });
 
 app.listen(PORT, () => {
   console.log('Online');
