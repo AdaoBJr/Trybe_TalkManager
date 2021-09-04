@@ -28,8 +28,8 @@ const loginFunc = (req, res) => {
     });
   }
   
-const token = crypto.randomBytes(16).toString('hex');
-return res.status(200).json(token);
+const token = crypto.randomBytes(8).toString('hex');
+return res.status(200).json({ token });
 };
 
 module.exports = {
