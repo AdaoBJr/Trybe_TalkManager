@@ -1,4 +1,4 @@
-const { readFile, writFile } = require('fs/promises');
+const { readFile, writFile } = require('fs').promises;
 
 const ENCODING = 'utf8';
 
