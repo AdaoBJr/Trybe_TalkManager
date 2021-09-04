@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { randomBytes } = require('crypto'); // token
 const primeiroGet = require('./routers/rota66');
+// const loguin = require('./routers/roraLoguin');
 
 const token = randomBytes(8).toString('hex'); // token
 
@@ -15,7 +16,7 @@ const HTTP_ERROR_LOGUIN = 400;
 const emailRegex = RegExp(/[a-z0-9]+@[a-z0-9]+\.[a-z0-9]{2,3}(\.[a-z0-9]+)?$/);
 const MinPassword = 6;
 
-app.use('/talker', primeiroGet);
+// app.use('/loguin', loguin);
 
 app.post('/loguin', (req, res) => {
  const { email, password } = req.body; 
@@ -37,6 +38,8 @@ app.post('/loguin', (req, res) => {
  }
   res.status(HTTP_OK_STATUS).send({ token });
 });
+
+app.use('/talker', primeiroGet);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
