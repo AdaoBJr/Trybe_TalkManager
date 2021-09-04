@@ -7,7 +7,7 @@
     "test": "jest --runInBand",
     "dev": "nodemon index.js --ignore talker.json",
     "restore": "cp tests/seed.json talker.json",
-    "start": "node index.js",
+    "start": "nodemon index.js --ignore talker.json",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json ."
   },
   "keywords": [],
@@ -17,7 +17,8 @@
     "body-parser": "1.19.0",
     "crypto-js": "4.0.0",
     "express": "4.17.1",
-    "express-rescue": "1.1.30"
+    "express-rescue": "1.1.30",
+    "sucrase": "^3.20.1"
   },
   "devDependencies": {
     "eslint": "6.8.0",
