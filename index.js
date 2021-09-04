@@ -18,7 +18,7 @@ const MinPassword = 6;
 
 // app.use('/loguin', loguin);
 
-app.post('/loguin', (req, res) => {
+app.post('/login', (req, res) => {
  const { email, password } = req.body; 
  if (!email) {
   return res.status(HTTP_ERROR_LOGUIN).send({ message: 'O campo "email" é obrigatório' });
