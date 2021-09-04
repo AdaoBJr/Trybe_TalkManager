@@ -1,3 +1,3 @@
-const getTalkers = require('./getTalkers');
+const getAllTalkers = require('./getAllTalkers');
 
-module.exports = getTalkers;
+module.exports = getAllTalkers;
