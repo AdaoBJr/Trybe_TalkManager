@@ -79,6 +79,18 @@ validTalk, validRate, validWatchedAt, async (req, res) => {
   return res.status(200).json(upTalkerJSON[talkerIndex]);
 });
 
+app.delete('/talker/:id', validToken, async (req, res) => {
+  const { id } = req.params;
+  const delTalker = await fsp.readFile(json, 'utf-8');
+  const delTalkerJSON = await JSON.parse(delTalker);
+  const findTalker = delTalkerJSON.find((e) => e.id === Number(id)); // objeto
+  const talkerIndex = delTalkerJSON.indexOf(findTalker, 0);
+  if (talkerIndex === -1) return res.status(404).send({ message: 'Pessoa não encontrada' });
+  delTalkerJSON.splice(talkerIndex, 1);
+  await fsp.writeFile(json, JSON.stringify(delTalkerJSON));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.use((err, _req, res, _next) => res.status(500).json({ error: `Erro: ${err.message}` }));
 
 app.listen(PORT, () => {
