@@ -1,6 +1,6 @@
 import express from 'express';
 import bodyParser from 'body-parser';
-import { getAllTalkers, getTalkersById } from './src/middlewares';
+import { getAllTalkers, getTalkersById, checkLogin } from './src/middlewares';
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,6 +15,8 @@ app.get('/', (_request, response) => {
 
 app.get('/talker/:id', getTalkersById);
 app.get('/talker', getAllTalkers);
+
+app.post('/login', checkLogin);
 
 app.listen(PORT, () => {
   console.log(`Online na porta ${PORT}`);
