@@ -9,6 +9,7 @@ const checkRate = require('./checkRate');
 const checkTalk = require('./checkTalk');
 const { editTalker } = require('./editTalker');
 const deleteId = require('./deleteId');
+const { filtroName } = require('./filtroName');
 
 module.exports = {
   verificarInfo,
@@ -22,4 +23,5 @@ module.exports = {
   checkTalk,
   editTalker,
   deleteId,
+  filtroName,
 };
