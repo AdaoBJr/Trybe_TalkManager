@@ -12,10 +12,9 @@ const writeTalker = async (params) => {
   return data;
 };
 
-const getTalkerById = async (id) => {
-  const talkerList = await readTalker();
-  const talkerId = talkerList.find((t) => t.id === Number(id)); 
-  return talkerId;
+const getTalkerById = (id, listTalkers) => {
+  const talkerFind = listTalkers.find((talker) => talker.id === +id);
+  return talkerFind;
 };
 
 const validateName = (req, res, next) => {
@@ -72,7 +71,7 @@ const validateDate = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
 
-  if (!rate) {
+  if (rate === undefined || rate === '') {
     return res.status(400)
       .json({ 
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
@@ -114,21 +113,46 @@ const addTalker = async (req, res, _next) => {
   return res.status(201).json(newTalker);
 };
 
-const findTalkerById = async (req, res, _next) => {
-  const { id } = req.params;
+// const findTalkerById = (id, talkerList) => {
+//   const talkerFound = talkerList.find((talker) => talker.id === +id);
+
+//   return talkerFound;
+// };
+
+// const editTalker = async (req, res) => {
+//   const { name, age, talk } = req.body;
+  
+//   let talkerList = await readTalker();
+//   const { id } = req.params;
+//   talkerList = talkerList.filter((talker) => talker.id !== +id);
+  
+//   talkerList.push({ id: +id, name, age, talk });
+
+//   await writeTalker(talkerList); 
+//   return res.status(200).json({ id: +id, name, age, talk });
+// };
+
+const editTalker = async (req, res) => {
   const { name, age, talk } = req.body;
+  let talkerList = await readTalker();
+  const { id } = req.params;
+  talkerList = talkerList.filter((talker) => talker.id !== +id);
+  talkerList.push({ id: +id, name, age, talk });
 
-  const talkerList = await readTalker();
-  const talkerId = talkerList.findIndex((r) => r.id === id);
+  await writeTalker(talkerList);  
+  return res.status(200).json({ id: +id, name, age, talk });
+};
 
-  if (talkerId === -1) {
-    res.status(400).json({ message: 'ID de palestrante não encontrado' });
-  } else {
-    talkerList[talkerId] = { name, age, talk };
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
 
-    await writeTalker(talkerList); 
-    return res.status(200).json(talkerList[id]);
-  }
+  let talkerList = await readTalker();  
+  talkerList = talkerList.filter((talker) => talker.id !== Number(id));
+
+  talkerList = talkerList.filter((talker) => talker.id !== Number(id));
+
+  await writeTalker(talkerList);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
 module.exports = {
@@ -141,5 +165,6 @@ module.exports = {
   validateRate,
   validateToken,
   addTalker,
-  findTalkerById,
+  editTalker,
+  deleteTalker,
 };

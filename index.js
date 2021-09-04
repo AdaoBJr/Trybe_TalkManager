@@ -11,7 +11,8 @@ const {
   validateRate,
   validateToken,
   addTalker,
-  findTalkerById,
+  editTalker,
+  deleteTalker,
 } = require('./middlewares/talkerMiddleware');
 
 const {
@@ -35,7 +36,8 @@ app.get('/', (_request, response) => {
 
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const data = await getTalkerById(id);
+  const talkerList = await readTalker();
+  const data = await getTalkerById(id, talkerList);
   if (data) return res.status(HTTP_OK_STATUS).send(data);
   return res.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
 });
@@ -78,8 +80,10 @@ app.put(
   validateTalk,
   validateDate,
   validateRate,
-  findTalkerById,
+  editTalker,
 );
+
+app.delete('/talker/:id', validateToken, deleteTalker);
 
 app.listen(PORT, () => {
   console.log('Online');
