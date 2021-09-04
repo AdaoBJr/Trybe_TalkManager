@@ -73,7 +73,7 @@ const validateAge = (age) => {
 
 // VALIDAÇÃO DO CAMPO TALK
 const validateTalk = (talk) => {
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return {
       status: 400,
       msg: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' };
