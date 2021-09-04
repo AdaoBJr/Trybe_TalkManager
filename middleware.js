@@ -1,5 +1,5 @@
 const validatePassword = (req, res, next) => {
-  const { password } = req.headers;
+  const { password } = req.body;
   
   const PASSWORD_LENGTH = 6;
 
@@ -13,14 +13,14 @@ const validatePassword = (req, res, next) => {
 };
 
 const validateEmail = (req, res, next) => {
-  const { email } = req.headers;
+  const { email } = req.body;
 
   const emailTester = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/i;
 
   if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
 
   if (emailTester.test(email) === false) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@"email.com' });
+    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
   }
   next();
 };
