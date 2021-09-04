@@ -1,4 +1,4 @@
-const fs = require('fs');
+import fs from 'fs';
 
 const getAllTalkers = (_req, res) => {
   const talkers = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
@@ -7,4 +7,4 @@ const getAllTalkers = (_req, res) => {
   if (talkers.length === 0) { return res.status(200).json([]); }
 };
 
-module.exports = getAllTalkers;
+export default getAllTalkers;

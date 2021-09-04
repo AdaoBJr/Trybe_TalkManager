@@ -1,3 +1,3 @@
-const getAllTalkers = require('./getAllTalkers');
+import getAllTalkers from './getAllTalkers';
 
-module.exports = getAllTalkers;
+export default getAllTalkers;
