@@ -15,6 +15,7 @@ const {
   checkRate,
   addNewTalker,
   editTalker,
+  deleteId,
 } = require('./verificar');
 
 const app = express();
@@ -75,4 +76,9 @@ app.put('/talker/:id', [
   checkDate,
   checkRate,
   editTalker,
+]);
+
+app.delete('/talker/:id', [
+  validateToken,
+  deleteId,
 ]);

@@ -8,6 +8,7 @@ const checkDate = require('./checkDate');
 const checkRate = require('./checkRate');
 const checkTalk = require('./checkTalk');
 const { editTalker } = require('./editTalker');
+const deleteId = require('./deleteId');
 
 module.exports = {
   verificarInfo,
@@ -20,4 +21,5 @@ module.exports = {
   checkRate,
   checkTalk,
   editTalker,
+  deleteId,
 };
