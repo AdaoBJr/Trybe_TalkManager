@@ -46,8 +46,7 @@ app.post(
   validatePassword,
   (req, res) => {
     const token = crypto.randomBytes(8).toString('hex');
-
-    res.status(200).json({ token });
+    return res.status(200).json({ token });
   },
 );
 
