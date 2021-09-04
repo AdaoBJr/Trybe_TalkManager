@@ -1,6 +1,7 @@
 const express = require('express');
 const rescue = require('express-rescue');
 const bodyParser = require('body-parser');
+// npm run restore
 
 const { getTalker } = require('./arquivo/getTalker');
 const {
@@ -13,6 +14,7 @@ const {
   checkDate,
   checkRate,
   addNewTalker,
+  editTalker,
 } = require('./verificar');
 
 const app = express();
@@ -63,4 +65,14 @@ app.post('/talker', [
   checkDate,
   checkRate,
   addNewTalker,
+]);
+
+app.put('/talker/:id', [
+  validateToken,
+  validateName,
+  validateAge,
+  checkTalk,
+  checkDate,
+  checkRate,
+  editTalker,
 ]);
