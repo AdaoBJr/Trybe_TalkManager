@@ -128,4 +128,16 @@ router.put(
   },
 );
 
+router.delete(
+  '/:id',
+  tokenValidator,
+  async (req, res) => {
+    const { id } = req.params;
+    const talkersList = await getTalkerList();
+    const talkerRemoved = talkersList.filter((t) => t.id !== Number(id));
+    await updateTalkersList(talkerRemoved);
+    res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  },
+);
+
 module.exports = router;
