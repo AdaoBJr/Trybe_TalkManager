@@ -4,6 +4,7 @@ const router = express.Router();
 const fs = require('fs').promises;
 
 const HTTP_OK_STATUS = 200;
+const HTTP_OK_POST = 201;
 const HTTP_ERROR_VALUE = 400;
 const HTTP_ERROR_TOKEN = 401;
 const HTTP_ERROR_STATUS = 404;
@@ -46,7 +47,7 @@ function AgeCheck(age, res) {
   if (!age) { 
     return res.status(HTTP_ERROR_VALUE).send({ message: 'O campo "age" é obrigatório' });
   }
-  if (age.length < 18) {
+  if (age < 18) {
     return res.status(HTTP_ERROR_VALUE)
       .send({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
@@ -84,6 +85,12 @@ router.post('/', async (req, res) => {
   NameCheck(name, res);
   AgeCheck(age, res);
   TalkCheck(talk, res);
+  const oldData = JSON.parse(await fs.readFile('talker.json', 'utf-8'));
+  const newId = 1 + oldData.length;
+  const newData = { id: newId, name, age, talk };
+  const newItem = JSON.stringify([...oldData, newData]);
+  await fs.writeFile('talker.json', newItem);
+  return res.status(HTTP_OK_POST).send(newData);
 });
 
 module.exports = router;
