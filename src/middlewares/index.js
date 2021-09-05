@@ -115,7 +115,7 @@ export const searchTalker = (req, res) => {
 
   if (!talker) { return res.status(200).json(talkers); }
 
-  const filteredTalker = talkers.filter((person) => person.name !== talker);
+  const filteredTalker = talkers.filter((person) => person.name === talker);
 
   if (!filteredTalker.length) { return res.status(200).json({ message: [] }); }
   if (filteredTalker.length) { return res.status(200).json(filteredTalker); }
