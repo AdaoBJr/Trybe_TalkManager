@@ -88,8 +88,8 @@ router.post('/', async (req, res) => {
   const oldData = JSON.parse(await fs.readFile('talker.json', 'utf-8'));
   const newId = 1 + oldData.length;
   const newData = { id: newId, name, age, talk };
-  const newItem = JSON.stringify([...oldData, newData]);
-  await fs.writeFile('talker.json', newItem);
+  // const newItem = JSON.stringify([...oldData, newData]);
+  // await fs.writeFile('talker.json', newItem);
   return res.status(HTTP_OK_POST).send(newData);
 });
 
