@@ -1,7 +1,8 @@
 import express from 'express';
 import bodyParser from 'body-parser';
 import {
-  getAllTalkers, getTalkersById, checkLogin, createTalker, updateTalker } from './src/middlewares';
+  getAllTalkers, getTalkersById, checkLogin,
+  createTalker, updateTalker, deleteTalker } from './src/middlewares';
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,6 +19,7 @@ app.get('/talker/:id', getTalkersById);
 app.get('/talker', getAllTalkers);
 app.post('/talker', createTalker);
 app.put('/talker/:id', updateTalker);
+app.delete('/talker/:id', deleteTalker);
 
 app.post('/login', checkLogin);
 

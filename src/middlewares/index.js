@@ -85,3 +85,20 @@ export const updateTalker = (req, res) => {
 };
 
 // --------------------------------------------------------------------------------------------
+
+// REQUISITO 6 -- UPDATE TALKER
+export const deleteTalker = (req, res) => {
+  const { id } = req.params;
+  const { authorization } = req.headers;
+  const validToken = validateToken(authorization);
+
+  if (!validToken.Ok) { return res.status(validToken.status).json({ message: validToken.msg }); }
+
+  const talkers = JSON.parse(fs.readFileSync(dataFile, 'utf-8'));
+  const updatedTalkerId = talkers.filter((talker) => talker.id !== +id);
+  talkers.push(updatedTalkerId);
+  fs.writeFileSync(dataFile, JSON.stringify(updatedTalkerId));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
+// --------------------------------------------------------------------------------------------
