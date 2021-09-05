@@ -4,7 +4,14 @@ const {
   getAllTalkers, 
   getTalkerById,
   login,
-  validateParams } = require('./middlewere');
+  validateParams,
+  validateToken,
+  validateName,
+  validateAge,
+  validateDate,
+  validateRate,
+  validateTalk,
+  createTalker } = require('./middlewere');
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,6 +29,16 @@ app.get('/talker', getAllTalkers);
 app.get('/talker/:id', getTalkerById);
 
 app.post('/login', login, validateParams);
+
+app.use(validateToken);
+
+app.post('/talker', 
+  validateName, 
+  validateAge,
+  validateTalk,
+  validateDate, 
+  validateRate,  
+  createTalker);
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -1,7 +1,13 @@
-const criateToken = () => {
-  const token = '7mqaVRXJSp886CGr';
+// Função para generateToken de: https://www.ti-enxame.com/pt/javascript/crie-um-token-aleatorio-em-javascript-com-base-nos-detalhes-do-usuario/941136694/
+
+function generateToken(n) {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  let token = '';
+  for (let i = 0; i < n; i += 1) {
+      token += chars[Math.floor(Math.random() * chars.length)];
+  }
   return token;
-};
+}
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
@@ -19,8 +25,9 @@ const login = (req, res, next) => {
 };
 
 const validateParams = (req, res, _next) => {
-  const token = criateToken();
+  const token = generateToken(16);
   const { email, password } = req.body;
+  // Regex de Fernanda Porto
   const validateEmail = /\S+@\S+\.\S+/;
     
   if (!validateEmail.test(email)) {
