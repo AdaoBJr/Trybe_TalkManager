@@ -10,7 +10,12 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 // requisito 1
-app.get('/talker', (_request, response) => response.status(200).json(arrayTalker));
+app.get('/talker', (_request, response) => {
+  if (!arrayTalker) {
+    return response.status(200).json([]);
+  }
+  return response.status(200).json(arrayTalker);
+});
 
 // requisito 2
 app.get('/talker/:id', (request, response) => {
@@ -49,7 +54,7 @@ app.post('/login',
   (request, response, next) => {
     const { email, password } = request.body;
 
-    if (email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i)) {
+    if (!(email.includes('@') && email.includes('.com'))) {
       return response.status(400).json({
         message: 'O "email" deve ter o formato "email@email.com"',
       });
