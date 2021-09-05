@@ -86,7 +86,7 @@ export const updateTalker = (req, res) => {
 
 // --------------------------------------------------------------------------------------------
 
-// REQUISITO 6 -- UPDATE TALKER
+// REQUISITO 6 -- DELETE TALKER
 export const deleteTalker = (req, res) => {
   const { id } = req.params;
   const { authorization } = req.headers;
