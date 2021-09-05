@@ -2,7 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import {
   getAllTalkers, getTalkersById, checkLogin,
-  createTalker, updateTalker, deleteTalker } from './src/middlewares';
+  createTalker, updateTalker, deleteTalker, searchTalker } from './src/middlewares';
 
 const app = express();
 app.use(bodyParser.json());
@@ -15,6 +15,7 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/talker/search', searchTalker);
 app.get('/talker/:id', getTalkersById);
 app.get('/talker', getAllTalkers);
 app.post('/talker', createTalker);

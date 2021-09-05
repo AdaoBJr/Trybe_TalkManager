@@ -102,3 +102,23 @@ export const deleteTalker = (req, res) => {
 };
 
 // --------------------------------------------------------------------------------------------
+
+// REQUISITO 7 -- SEARCH TALKER
+export const searchTalker = (req, res) => {
+  const { talker } = req.query;
+  const { authorization } = req.headers;
+  const validToken = validateToken(authorization);
+
+  if (!validToken.Ok) { return res.status(validToken.status).json({ message: validToken.msg }); }
+
+  const talkers = JSON.parse(fs.readFileSync(dataFile, 'utf-8'));
+
+  if (!talker) { return res.status(200).json(talkers); }
+
+  const filteredTalker = talkers.filter((person) => person.name !== talker);
+
+  if (!filteredTalker.length) { return res.status(200).json({ message: [] }); }
+  if (filteredTalker.length) { return res.status(200).json(filteredTalker); }
+};
+
+// --------------------------------------------------------------------------------------------
