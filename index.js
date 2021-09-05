@@ -40,7 +40,7 @@ app.get('/talker', (_request, response) => response.status(HTTP_OK_STATUS).json(
 // requisito 2
 app.get('/talker/:id', (request, response) => {
   const { id } = request.params;
-  const newArray = arrayTalker.find((req) => req.id === parseInt(id));
+  const newArray = arrayTalker.find((req) => req.id === parseInt(id, 10));
 
   if (!newArray) {
     return response.status(404).json({
