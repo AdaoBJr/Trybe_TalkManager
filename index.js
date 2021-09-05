@@ -1,5 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const crypto = require('crypto');
+const arrayTalker = require('./talker.json');
 
 const app = express();
 app.use(bodyParser.json());
@@ -7,35 +9,8 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const arrayTalker = [
-  {
-    name: 'Henrique Albuquerque',
-    age: 62,
-    id: 1,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Heloísa Albuquerque',
-    age: 67,
-    id: 2,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Ricardo Xavier Filho',
-    age: 33,
-    id: 3,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-  {
-    name: 'Marcos Costa',
-    age: 24,
-    id: 4,
-    talk: { watchedAt: '23/10/2020', rate: 5 },
-  },
-];
-
 // requisito 1
-app.get('/talker', (_request, response) => response.status(HTTP_OK_STATUS).json(arrayTalker));
+app.get('/talker', (_request, response) => response.status(200).json(arrayTalker));
 
 // requisito 2
 app.get('/talker/:id', (request, response) => {
@@ -50,6 +25,49 @@ app.get('/talker/:id', (request, response) => {
 
   return response.status(200).json(newArray);
 });
+
+// requisito 3
+
+app.post('/login', 
+  (request, response, next) => {
+    const { email, password } = request.body;
+
+    if (!email) {
+      return response.status(400).json({
+        message: 'O campo "email" é obrigatório',
+      });
+    }
+
+    if (!password) {
+      return response.status(400).json({
+        message: 'O campo "password" é obrigatório',
+      });
+    }
+
+    next();
+  },
+  (request, response, next) => {
+    const { email, password } = request.body;
+
+    if (email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i)) {
+      return response.status(400).json({
+        message: 'O "email" deve ter o formato "email@email.com"',
+      });
+    }
+
+    if (password.length !== 6) {
+      return response.status(400).json({
+        message: 'O "password" deve ter pelo menos 6 caracteres',
+      });
+    }
+
+    next();
+  },
+  (_request, response) => {
+    const token = crypto.randomBytes(16).toString('hex');
+    
+      response.status(200).json({ token });
+    });
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
