@@ -1,4 +1,4 @@
-const { readFile, writFile } = require('fs').promises;
+const { readFile, writeFile } = require('fs').promises;
 
 const ENCODING = 'utf8';
 
@@ -14,11 +14,11 @@ async function handleFileReading(filePath, encoding = ENCODING) {
   }
 }
 
-async function handleFileWriting(filePath, newContent) {
+async function handleFileWriting(filePath, newContent, encoding = ENCODING) {
   try {
     const stringifyContent = JSON.stringify(newContent);
 
-    await writFile(filePath, stringifyContent);
+    await writeFile(filePath, stringifyContent, encoding);
   } catch ({ message }) {
     console.error(`Erro ao escrever o arquivo: ${message}`);
   }
