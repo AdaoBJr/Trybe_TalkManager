@@ -121,7 +121,7 @@ router.put(
   async (req, res) => {
     const { id } = req.params;
     const talkersList = await getTalkerList();
-    const talkerIndex = talkersList.findIndex((t) => t.id !== Number(id));
+    const talkerIndex = talkersList.findIndex((t) => t.id === Number(id));
     talkersList[talkerIndex] = { ...req.body, id: Number(id) };
     await updateTalkersList(talkersList);
     res.status(HTTP_OK_STATUS).json(talkersList[talkerIndex]);
