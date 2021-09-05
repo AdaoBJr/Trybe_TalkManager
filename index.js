@@ -4,7 +4,11 @@ const bodyParser = require('body-parser');
 const authenticationMiddleware = require('./middlewares/authenticationMiddleware.js');
 const searchMiddleware = require('./middlewares/searchMiddleware.js');
 
-const { searchById, updateContentById } = require('./services/contentHandlers.js');
+const {
+  searchById,
+  updateContentById,
+  deleteContentById,
+} = require('./services/contentHandlers.js');
 const {
   handleSignupInfo,
   emailValidator,
@@ -120,6 +124,24 @@ app.put('/talker/:id', async (request, response) => {
   await handleFileWriting(filePaths.talker, newContent);
 
   return response.status(HTTP_OK_STATUS).json(updatedTalker);
+});
+
+// TODO: REQUISTO 6.
+app.delete('/talker/:id', async (request, response) => {
+  const { id } = request.params;
+
+  try {
+    const currentFileContent = await handleFileReading(filePaths.talker);
+    const deletionResults = deleteContentById(currentFileContent, id);
+    const newContent = deletionResults.content;
+    const successMessage = deletionResults.message;
+
+    await handleFileWriting(filePaths.talker, newContent);
+
+    return response.status(HTTP_OK_STATUS).json({ message: successMessage });
+  } catch ({ message }) {
+    console.error(`Erro: ${message}`);
+  }
 });
 
 app.listen(PORT, () => {

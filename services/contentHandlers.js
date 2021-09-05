@@ -24,4 +24,32 @@ function updateContentById(database, targetId) {
   return updatedContent;
 }
 
-module.exports = { searchById, searchByName, updateContentById };
+function checkContentExistence(database, targetId) {
+  const stringToNumber = Number(targetId);
+  const result = database.some(({ id }) => Number(id) === stringToNumber);
+
+  return result;
+}
+
+function deleteContentById(database, targetId) {
+  const checkContent = checkContentExistence(database, targetId);
+
+  if (!checkContent) {
+    const deletedResult = {
+      content: database,
+      message: `O id ${targetId} não existe no banco de dados`,
+    };
+
+    return deletedResult;
+  }
+
+  const deleteContentFromId = updateContentById(database, targetId);
+  const deletedResult = {
+    content: deleteContentFromId,
+    message: 'Pessoa palestrante deletada com sucesso',
+  };
+
+  return deletedResult;
+}
+
+module.exports = { searchById, searchByName, updateContentById, deleteContentById };
