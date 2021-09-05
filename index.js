@@ -11,7 +11,7 @@ const PORT = '3000';
 
 // requisito 1
 app.get('/talker', (_request, response) => {
-  if (!arrayTalker) {
+  if (arrayTalker.length === 0) {
     return response.status(200).json([]);
   }
   return response.status(200).json(arrayTalker);
