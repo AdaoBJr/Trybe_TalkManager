@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const primeiroGet = require('./routers/rotatalker');
+const primeiroGet = require('./routers/rotaTalker');
 const login = require('./routers/rotaLogin');
 
 const app = express();
