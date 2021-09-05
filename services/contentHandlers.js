@@ -16,4 +16,12 @@ function searchByName(database, targetName) {
   return filteredResults;
 }
 
-module.exports = { searchById, searchByName };
+function updateContentById(database, targetId) {
+  const stringToNumber = Number(targetId);
+
+  const updatedContent = database.filter(({ id }) => Number(id) !== stringToNumber);
+
+  return updatedContent;
+}
+
+module.exports = { searchById, searchByName, updateContentById };
