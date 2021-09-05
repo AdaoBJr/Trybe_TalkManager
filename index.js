@@ -36,6 +36,9 @@ app.get('/talker/:id', (request, response) => {
 app.post('/login', 
   (request, response, next) => {
     const { email, password } = request.body;
+    const token = crypto.randomBytes(16).toString('hex');
+    
+      response.status(200).json({ token });
 
     if (!email) {
       return response.status(400).json({
@@ -66,13 +69,10 @@ app.post('/login',
       });
     }
 
-    next();
-  },
-  (_request, response) => {
     const token = crypto.randomBytes(16).toString('hex');
     
-      response.status(200).json({ token });
-    });
+    return response.status(200).json({ token });
+  });
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
