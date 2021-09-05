@@ -1,7 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const authenticationMiddleware = require('./middlewares/authentication-middleware.js');
+const authenticationMiddleware = require('./middlewares/authenticationMiddleware.js');
+const searchMiddleware = require('./middlewares/searchMiddleware.js');
 
 const { searchById } = require('./services/contentHandlers.js');
 const {
@@ -41,6 +42,9 @@ app.get('/talker', async (_request, response) => {
   return response.status(HTTP_OK_STATUS).json([]);
 });
 
+// TODO: REQUISITO 7.
+app.get('/talker/search', authenticationMiddleware, searchMiddleware);
+
 // TODO: REQUISITO 2.
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
@@ -77,15 +81,16 @@ app.post('/login', async (request, response) => {
   return response.status(HTTP_OK_STATUS).json({ token: getToken.token });
 });
 
-// TODO: REQUISITO 4.
 app.use(authenticationMiddleware);
 
+// TODO: REQUISITO 4.
 app.post('/talker', async (request, response) => {
   const { name, age, talk } = request.body;
 
   const currentFileContent = await handleFileReading(filePaths.talker);
+  const id = currentFileContent.length + 1;
 
-  const validatedTalkerData = handleRegistration(name, age, talk);
+  const validatedTalkerData = handleRegistration(name, age, talk, id);
 
   if (typeof validatedTalkerData === 'string') {
     return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });

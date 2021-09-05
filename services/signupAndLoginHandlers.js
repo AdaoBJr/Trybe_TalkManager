@@ -1,7 +1,6 @@
 const { randomBytes } = require('crypto');
 
 const MIN_PASSWORD_LENGTH = 6;
-const id = 5;
 
 const errorMessages = {
   empty: {
@@ -182,11 +181,11 @@ function handleRegistrationValidations(targetName, targetAge, talkObject) {
   return allValidatedStatus;
 }
 
-function registrationFinalObject(targetName, targetAge, talkObject) {
+function registrationFinalObject(targetName, targetAge, talkObject, id) {
   const newTalker = {
     name: targetName,
     age: Number(targetAge),
-    id,
+    id: Number(id),
     talk: {
       // eslint-disable-next-line radix
       rate: parseInt(talkObject.rate, 10),
@@ -197,12 +196,12 @@ function registrationFinalObject(targetName, targetAge, talkObject) {
   return newTalker;
 }
 
-function handleRegistration(targetName, targetAge, talkObject) {
+function handleRegistration(targetName, targetAge, talkObject, id) {
   const { empty } = errorMessages;
 
   if (!talkObject) return empty.talk;
 
-  const talker = registrationFinalObject(targetName, targetAge, talkObject);
+  const talker = registrationFinalObject(targetName, targetAge, talkObject, id);
   const validationsResult = handleRegistrationValidations(targetName, targetAge, talkObject);
 
   if (typeof validationsResult === 'string') {

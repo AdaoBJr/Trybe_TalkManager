@@ -6,4 +6,14 @@ function searchById(database, targetId) {
   return findResult;
 }
 
-module.exports = { searchById };
+function searchByName(database, targetName) {
+  const formatString = String(targetName).toLowerCase();
+
+  const filteredResults = database.filter(({ name }) => name.toLowerCase().includes(formatString));
+
+  // console.log('Resultados filtrados:\n', filteredResults, targetName);
+
+  return filteredResults;
+}
+
+module.exports = { searchById, searchByName };
