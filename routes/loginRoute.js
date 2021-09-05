@@ -14,10 +14,10 @@ const isValidEmail = (req, res, next) => {
   const fieldEmail = res.status(400).send({ message: 'O campo "email" é obrigatório' });
   const invalidEmail = res.status(400)
     .send({ message: 'O "email" deve ter o formato "email@email.com"' });
-  
+
   if (!email) return fieldEmail;
   if (!emailRegex) return invalidEmail;
-  
+
   next();
 };
 
@@ -27,10 +27,10 @@ const isValidPassword = (req, res, next) => {
   const fieldPassword = res.status(400).send({ message: 'O campo "password" é obrigatório' });
   const invalidPassword = res.status(400)
     .send({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  
+
   if (!password) return fieldPassword;
   if (!passowrdRegex) return invalidPassword;
-  
+
   next();
 };
 
