@@ -133,19 +133,20 @@ function ageValidator(targetAge) {
 // * Função que valida se um número recebido via string é um integral positivo ou não. Desenvolvida com base no conteúdo do link abaixo:
 // ? 'https://stackoverflow.com/questions/10834796/validate-that-a-string-is-a-positive-integer'
 function isPositiveInteger(targetNumber) {
-  const ZERO = 0;
   const MAX_VALUE = 5;
   const MIN_VALUE = 1;
+  const result = true;
 
-  // eslint-disable-next-line no-bitwise
-  const validatedNumber = targetNumber >>> ZERO === parseFloat(targetNumber);
-  const stringToNumber = Number(targetNumber);
+  // * A validação abaixo comentada não é aceita pelo Linter.
+  // const validatedNumber = targetNumber >>> ZERO === parseFloat(targetNumber);
+
+  const stringToNumber = parseInt(targetNumber, 10);
 
   if (stringToNumber > MAX_VALUE || stringToNumber < MIN_VALUE) {
     return false;
   }
 
-  return validatedNumber;
+  return result;
 }
 
 function talkInfoValidator(talkObject) {
@@ -188,7 +189,7 @@ function registrationFinalObject(targetName, targetAge, talkObject) {
     id,
     talk: {
       // eslint-disable-next-line radix
-      rate: parseInt(talkObject.rate),
+      rate: parseInt(talkObject.rate, 10),
       watchedAt: talkObject.watchedAt,
     },
   };
