@@ -89,14 +89,14 @@ function TalkCheck(talk, res) {
 router.put('/:id', async (req, res) => {
   TokenCheck(req, res);
   const { id } = req.params;
-  const oldData = JSON.parse(await DBString);
-  const index = oldData.findIndex((data) => data.id === +id);
+  const DB = await OldDB();
+  const index = DB.findIndex((data) => data.id === +id);
   const { name, age, talk } = req.body;
   NameCheck(name, res);
   AgeCheck(age, res);
   TalkCheck(talk, res);
 //   oldData[index] = { id: +id, name, age, talk };
-//   await fs.writeFile('./talker.json', JSON.stringify(oldData));
+//   await fs.writeFile('./talker.json', JSON.stringify(DB));
 //   return res.status(HTTP_OK_STATUS).send({ id: +id, name, age, talk });
   return res.status(index).send(name, age, talk);
 });
