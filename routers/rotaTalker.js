@@ -5,10 +5,10 @@ const fs = require('fs').promises;
 
 const HTTP_OK_STATUS = 200;
 // const HTTP_OK_POST = 201;
-// const HTTP_ERROR_VALUE = 400;
-// const HTTP_ERROR_TOKEN = 401;
+const HTTP_ERROR_VALUE = 400;
+const HTTP_ERROR_TOKEN = 401;
 const HTTP_ERROR_STATUS = 404;
-// const TOKEN_LENGTH = 16;
+const TOKEN_LENGTH = 16;
 const DBString = fs.readFile('talker.json', 'utf-8');
 
 router.get('/', async (req, res) => res.status(HTTP_OK_STATUS)
