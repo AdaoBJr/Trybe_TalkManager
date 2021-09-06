@@ -6,9 +6,9 @@ const fs = require('fs').promises;
 const HTTP_OK_STATUS = 200;
 // const HTTP_OK_POST = 201;
 // const HTTP_ERROR_VALUE = 400;
-// const HTTP_ERROR_TOKEN = 401;
+const HTTP_ERROR_TOKEN = 401;
 const HTTP_ERROR_STATUS = 404;
-// const TOKEN_LENGTH = 16;
+const TOKEN_LENGTH = 16;
 const DBString = fs.readFile('talker.json', 'utf-8');
 
 router.get('/', async (req, res) => res.status(HTTP_OK_STATUS)
@@ -24,15 +24,15 @@ router.get('/:id', async (req, res) => {
   return res.status(HTTP_OK_STATUS).send(DB.find((item) => item.id === +id));
 });
 
-// function TokenCheck(req, res) {
-//   const { authorization } = req.headers;
-//   if (!authorization) {
-//   return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token não encontrado' });
-// }
-// if (authorization.length !== TOKEN_LENGTH) {
-//   return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token inválido' });
-// }
-// }
+function TokenCheck(req, res) {
+  const { authorization } = req.headers;
+  if (!authorization) {
+    return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token não encontrado' });
+  }
+  if (authorization.length !== TOKEN_LENGTH) {
+    return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token inválido' });
+  }
+}
 
 // function NameCheck(name, res) {
 //   if (!name) { 
@@ -80,24 +80,24 @@ router.get('/:id', async (req, res) => {
 //   }
 // } 
 
-// router.put('/:id', async (req, res) => {
-//   TokenCheck(req, res);
-//   const { id } = req.params;
-//   const oldData = JSON.parse(await DBString);
-//   const index = oldData.findIndex((data) => data.id === +id);
-//   const { name, age, talk } = req.body;
+router.put('/:id', async (req, res) => {
+  TokenCheck(req, res);
+  const { id } = req.params;
+  const oldData = JSON.parse(await DBString);
+  const index = oldData.findIndex((data) => data.id === +id);
+  const { name, age, talk } = req.body;
 //   NameCheck(name, res);
 //   AgeCheck(age, res);
 //   TalkCheck(talk, res);
 //   oldData[index] = { id: +id, name, age, talk };
 //   await fs.writeFile('./talker.json', JSON.stringify(oldData));
 //   return res.status(HTTP_OK_STATUS).send({ id: +id, name, age, talk });
-//   return res.status(index).send({ message: 'Rodei' });
-// });
+  return res.status(index).send(name, age, talk);
+});
 
 router.post('/', async (req, res) => {
   const { name, age, talk } = req.body;
-  // TokenCheck(req, res);
+  TokenCheck(req, res);
   // NameCheck(name, res);
   // AgeCheck(age, res);
   // TalkCheck(talk, res);
