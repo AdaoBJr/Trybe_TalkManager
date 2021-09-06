@@ -6,6 +6,7 @@ const talkerRoute = express.Router();
 const filePath = join('talker.json');
 
 const HTTP_OK_STATUS = 200;
+const HTTP_CREATED_STATUS = 201;
 const HTTP_ERROR_NOT_FOUND = 404;
 
 const getTalkers = () => {
@@ -34,5 +35,17 @@ talkerRoute.get('/:id', (req, res) => {
 
   return result;
 }); // Filtrando por Id de usuário
+
+const saveTalker = (talkers) => {
+  fs.writeFileSync(filePath, JSON.stringify(talkers, null, '\t'));
+};
+
+talkerRoute.post('/', (req, res) => {
+  const talkers = getTalkers();
+  talkers.push(req.body);
+  saveTalker(talkers);
+
+  return res.status(HTTP_CREATED_STATUS).send(talkers);
+}); // Adicionando usuários
 
 module.exports = talkerRoute;
