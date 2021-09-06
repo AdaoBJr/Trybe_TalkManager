@@ -1,10 +1,10 @@
 const express = require('express');
 
 // MIDDLEWARES
-const postLogin = require('../middlewares/login');
+const { setLogin } = require('../middlewares/setLogin');
 
 const route = express.Router();
 
-route.post('/', postLogin);
+route.post('/', setLogin);
 
 module.exports = route;
