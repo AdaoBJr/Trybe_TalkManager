@@ -99,15 +99,15 @@ router.post('/', async (req, res) => {
   const { name, age, talk } = req.body;
   // TokenCheck(req, res);
   // NameCheck(name, res);
-  AgeCheck(age, res);
+  // AgeCheck(age, res);
   // TalkCheck(talk, res);
-//   const oldData = JSON.parse(await DBString);
-//   const newId = 1 + oldData.length;
-//   const newData = { id: newId, name, age, talk };
-//   oldData.push(newData);
-//   await fs.writeFile('./talker.json', JSON.stringify(oldData));
-//   return res.status(HTTP_OK_POST).send(newData);
- res.status(HTTP_OK_POST).send(name, age, talk);
+  const oldData = JSON.parse(await DBString);
+  const newId = 1 + oldData.length;
+  const newData = { id: newId, name, age, talk };
+  oldData.push(newData);
+  await fs.writeFile('./talker.json', JSON.stringify(oldData));
+  return res.status(HTTP_OK_POST).send(newData);
+//  res.status(HTTP_OK_POST).send(name, age, talk);
 });
 
 module.exports = router;
