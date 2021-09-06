@@ -13,7 +13,7 @@ const {
   verifyFieldsTalk,
   verifyDate,
   verifyRate,
-} = require('./requirements/functionsAndValidations');
+} = require('./requirements/validations');
 
 router.get('/talker', async (_req, res) => {
   const talkers = await getAllTalkers();
@@ -67,6 +67,23 @@ verifyRate, async (req, res) => {
   palestrantes.push(novoPalestrante);
   criarNovoPalestrante(palestrantes);
   return res.status(201).json(novoPalestrante);
+});
+
+router.put('/talker/:id',
+verifyToken,
+verifyname,
+verifyAge,
+verifyFieldsTalk,
+verifyDate,
+verifyRate, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const editTalker = await getAllTalkers();
+  const talkerIndex = editTalker.findIndex((talker) => talker.id === parseInt(id, 10));
+    if (talkerIndex === -1) return res.status(400).json({ message: 'Talker not found!' });
+    editTalker[talkerIndex] = { ...editTalker[talkerIndex], name, age, talk: { watchedAt, rate } };
+    criarNovoPalestrante(editTalker);
+   res.status(200).json(editTalker[talkerIndex]);
 });
 
 module.exports = router;
