@@ -164,7 +164,7 @@ talkerRoute.put('/:id',
     return talker;
   }));
 
-  return res.status(HTTP_OK_STATUS).send(talkers.id);
+  return res.status(HTTP_OK_STATUS).json(talkers);
 }); // Atualizando Palestrante
 
 talkerRoute.delete('/:id', async (req, res) => {
