@@ -84,6 +84,16 @@ const addTalker = async (req, res) => {
   console.log('cheguei aqui');
   return res.status(201).json(newPalester);
 };
+const editTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const response = await fs.readFile('./talker.json', 'utf-8');
+  const convert = JSON.parse(response);
+  const aux = convert.filter((curr) => curr.id !== +id);
+  aux.push({ id: +id, name, age, talk: { watchedAt, rate } });
+  await fs.writeFile('./taker.json', JSON.stringify(aux));
+  return res.status(200).json({ id: +id, name, age, talk: { watchedAt, rate } });
+};
 module.exports = {
   autenticaToken,
   validaNome,
@@ -92,4 +102,5 @@ module.exports = {
   validaRate,
   validaDate,
   addTalker,
+  editTalker,
 };

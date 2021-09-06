@@ -2,8 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const showPalestrantes = require('./construction/showPalestrantes');
 const idPalestrante = require('./construction/idPalestrante');
-/* const newPalestrante = require('./construction/newPalestrante');
- */const login = require('./construction/login');
+const login = require('./construction/login');
 const { confirmeEmail, confirmePassword } = require('./construction/autenticarLogin');
 
 const {
@@ -14,6 +13,7 @@ const {
   validaRate,
   validaDate,
   addTalker,
+  editTalker,
 } = require('./construction/addPalestrante');
 
 const app = express();
@@ -45,3 +45,12 @@ app.post('/talker',
   validaRate,
   validaDate,
   addTalker);
+
+app.put('/talker/:id',
+  autenticaToken,
+  validaNome,
+  validaAge,
+  validaTalk,
+  validaRate,
+  validaDate,
+  editTalker);
