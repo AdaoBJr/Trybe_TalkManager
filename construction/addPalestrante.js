@@ -1,6 +1,7 @@
 const fs = require('fs').promises;
 
 const auxDelete = { message: 'Pessoa palestrante deletada com sucesso' };
+const auxArquivo = './talker.json';
 
 const autenticaToken = (req, res, next) => {
   const { authorization } = req.headers;
@@ -74,7 +75,7 @@ const validaDate = (req, res, next) => {
 };
 const addTalker = async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
-  const response = await fs.readFile('./talker.json', 'utf-8');
+  const response = await fs.readFile(auxArquivo, 'utf-8');
   const convert = JSON.parse(response);
   const newPalester = {
     id: convert.length + 1,
@@ -82,14 +83,14 @@ const addTalker = async (req, res) => {
     age,
     talk: { watchedAt, rate } };
   convert.push(newPalester);
-  await fs.writeFile('./talker.json', JSON.stringify(convert));
+  await fs.writeFile(auxArquivo, JSON.stringify(convert));
   console.log('cheguei aqui');
   return res.status(201).json(newPalester);
 };
 const editTalker = async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-  const response = await fs.readFile('./talker.json', 'utf-8');
+  const response = await fs.readFile(auxArquivo, 'utf-8');
   const convert = JSON.parse(response);
   const aux = convert.filter((curr) => curr.id !== +id);
   aux.push({ id: +id, name, age, talk });
@@ -98,12 +99,28 @@ const editTalker = async (req, res) => {
 };
 const excludedTalker = async (req, res) => {
   const { id } = req.params;
-  const response = await fs.readFile('./talker.json', 'utf-8');
+  const response = await fs.readFile(auxArquivo, 'utf-8');
   const convert = JSON.parse(response);
   const aux = convert.filter((curr) => curr.id !== +id);
   console.log(aux);
   await fs.writeFile('./taker.json', JSON.stringify(aux));
   return res.status(200).json(auxDelete);
+};
+const search = async (req, res) => {
+  const { q } = req.query;
+  console.log(q);
+  const response = await fs.readFile(auxArquivo, 'utf-8');
+  const convert = JSON.parse(response);
+  const aux = convert.filter((curr) => curr.name.includes(q));
+  if (aux) {
+    return res.status(200).json(aux);
+  }
+  if (!q) {
+    return res.status(200).json(convert);
+  }
+  if (!aux) {
+    return res.status(200).json([]);
+  }
 };
 module.exports = {
   autenticaToken,
@@ -115,4 +132,5 @@ module.exports = {
   addTalker,
   editTalker,
   excludedTalker,
+  search,
 };

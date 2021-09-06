@@ -15,6 +15,7 @@ const {
   addTalker,
   editTalker,
   excludedTalker,
+  search,
 } = require('./construction/addPalestrante');
 
 const app = express();
@@ -31,6 +32,8 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+app.get('/talker/search', autenticaToken, search);
 
 app.get('/talker', showPalestrantes);
 
