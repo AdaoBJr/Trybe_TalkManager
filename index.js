@@ -55,7 +55,7 @@ const validAge = (request, response, next) => {
     });
   }
 
-  if (typeof age !== 'number' && age < 18) {
+  if (typeof age !== 'number' || age < 18) {
     return response.status(400).json({
       message: 'A pessoa palestrante deve ser maior de idade',
     });
@@ -91,8 +91,8 @@ const validTalkKeys = (request, response, next) => {
       message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
     });
   }
-  console.log(talk.rate);
-  if (typeof talk.rate !== 'number' && (talk.rate > 5 || talk.rate < 1)) {
+  
+  if (typeof talk.rate !== 'number' || talk.rate > 5 || talk.rate < 1) {
     return response.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5',
     });
@@ -118,6 +118,23 @@ app.put('/talker/:id', validToken, validName, validAge, validTalk, validTalkKeys
 
     response.status(201).json(talker[talkerIndex]);
   });
+
+// requisito 6
+
+app.delete('/talker/:id', validToken,
+
+async (request, response) => {
+  const arrayTalker = await runRead();
+  const talker = JSON.parse(arrayTalker);
+  const { id } = request.params;
+  const talkerIndex = talker.findIndex((item) => item.id === parseInt(id, 10));
+
+  talker.splice(talkerIndex, 1);
+
+  await fs.writeFile('./talker.json', JSON.stringify(talker));
+
+  return response.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
 
 // requisito 2
 
