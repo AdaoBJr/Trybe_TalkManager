@@ -108,8 +108,8 @@ const validateToken = (req, res, next) => {
   next();
 };
 
-talkerRoute.get('/', (_req, res) => {
-  const talkers = getTalkers();
+talkerRoute.get('/', async (_req, res) => {
+  const talkers = await getTalkers();
   return res.status(HTTP_OK_STATUS).send(talkers);
 }); // Pegando Palestrante
 
@@ -126,7 +126,15 @@ talkerRoute.get('/:id', async (req, res) => {
 
 talkerRoute.post('/', async (req, res) => {
     const talkers = await getTalkers();
-    talkers.push(req.body);
+    const { name, age, talk } = req.body;
+    const newTalker = {
+      name,
+      age,
+      id: talkers.length + 1,
+      talk: { ...talk },
+    };
+    
+    talkers.push(newTalker);
     saveTalker(talkers);
 
     return res.status(HTTP_CREATED_STATUS).json(talkers);
@@ -139,8 +147,8 @@ talkerRoute.put('/:id',
   validateTalk,
   validateDate,
   validateRate,
-  (req, res) => {
-  const talkers = getTalkers();
+  async (req, res) => {
+  const talkers = await getTalkers();
   saveTalker(talkers.map((talker) => {
     if (talker.id === req.params.id) {
       return { ...talker, ...req.body };
@@ -148,7 +156,7 @@ talkerRoute.put('/:id',
     return talker;
   }));
 
-  return res.status(HTTP_CREATED_STATUS).send(talkers);
+  return res.status(HTTP_OK_STATUS).send(talkers);
 }); // Atualizando Palestrantes
 
 module.exports = talkerRoute;
