@@ -73,7 +73,7 @@ const validTalk = (request, response, next) => {
     });
   }
 
-  if (!(talk.watchedAt && talk.rate)) {
+  if (!(talk.watchedAt && talk.rate) && talk.rate !== 0) {
     return response.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -116,7 +116,7 @@ app.put('/talker/:id', validToken, validName, validAge, validTalk, validTalkKeys
 
     await fs.writeFile('./talker.json', JSON.stringify(talker));
 
-    response.status(201).json(talker[talkerIndex]);
+    response.status(200).json(talker[talkerIndex]);
   });
 
 // requisito 6
