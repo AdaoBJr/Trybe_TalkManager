@@ -81,7 +81,7 @@ const validateRate = (req, res, next) => {
 };
 
 const validateTalk = (req, res, next) => {
-  const { talk, talk: { rate }, talk: { watchedAt } } = req.body;
+  const { talk, talk: { rate, watchedAt } } = req.body;
 
   if (!talk || !watchedAt || !rate) {
     return res.status(HTTP_BAD_REQUEST)
@@ -133,7 +133,14 @@ talkerRoute.post('/',
   validateRate,
   (req, res) => {
     const talkers = getTalkers();
-    talkers.push(req.body);
+    const { name, age, talk } = req.body;
+    const newTalker = {
+      name,
+      age,
+      id: talkers.length + 1,
+      talk: { ...talk },
+    };
+    talkers.push(newTalker);
     saveTalker(talkers);
 
     return res.status(HTTP_CREATED_STATUS).json(talkers);
