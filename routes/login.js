@@ -1,9 +1,9 @@
 const express = require('express');
 
-const route = express.Router();
-
 // MIDDLEWARES
 const postLogin = require('../middlewares/login');
+
+const route = express.Router();
 
 route.post('/', postLogin);
 
