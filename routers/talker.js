@@ -1,8 +1,8 @@
 const talker = require('express').Router();
-const fs = require('fs');
-const obj = require('../talker.json');
+const { findAll } = require('../middlewares/index');
 
-talker.get(
-  '/talker',
-  (_req, res) => res.status(200).json(fs.readFile(obj)),
-); 
+talker.get('/', findAll);
+
+module.exports = {
+  talker,
+};
