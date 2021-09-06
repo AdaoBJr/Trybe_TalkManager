@@ -1,8 +1,8 @@
 const talker = require('express').Router();
-const { findAll } = require('../middlewares/index');
+const { findAll, findOne } = require('../middlewares/index');
 
 talker.get('/', findAll);
 
-module.exports = {
-  talker,
-};
+talker.get('/:id', findOne);
+
+module.exports = talker;
