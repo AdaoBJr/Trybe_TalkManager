@@ -2,7 +2,15 @@ const fs = require('fs').promises;
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const { validateEmail, validatePassword } = require('./middleware');
+const talkRoutes = require('./talkRoutes');
+
+const { validateEmail,
+  validatePassword,
+  validateToken,
+  validateName,
+  validateAge,
+  validateRate,
+  validateDate } = require('./middleware');
 
 const app = express();
 app.use(bodyParser.json());
@@ -14,7 +22,8 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-const getTalkers = () => fs.readFile('./talker.json', 'utf-8').then((res) => JSON.parse(res));
+const getTalkers = () => fs.readFile('./talker.json', 'utf-8')
+  .then((res) => JSON.parse(res));
 
 app.get('/talker/:id', async (req, res) => {
   const talkerList = await getTalkers();
@@ -44,11 +53,16 @@ app.post(
   '/login',
   validateEmail,
   validatePassword,
-  (req, res) => {
+  async (req, res) => {
     const token = crypto.randomBytes(8).toString('hex');
+    await fs.writeFile('./tokens.json', `{ "token": "${token}"}`);   
     return res.status(200).json({ token });
   },
 );
+
+app.use(validateToken, validateName, validateAge, validateRate, validateDate);
+
+app.use('/talker', talkRoutes);
 
 app.listen(PORT, () => {
   console.log(`Online na porta: ${PORT}`);
