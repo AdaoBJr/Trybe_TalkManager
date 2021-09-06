@@ -1,5 +1,7 @@
 const fs = require('fs').promises;
 
+const auxDelete = { message: 'Pessoa palestrante deletada com sucesso' };
+
 const autenticaToken = (req, res, next) => {
   const { authorization } = req.headers;
   console.log(authorization);
@@ -94,6 +96,15 @@ const editTalker = async (req, res) => {
   await fs.writeFile('./taker.json', JSON.stringify(aux));
   return res.status(200).json({ id: +id, name, age, talk: { watchedAt, rate } });
 };
+const excludedTalker = async (req, res) => {
+  const { id } = req.params;
+  const response = await fs.readFile('./talker.json', 'utf-8');
+  const convert = JSON.parse(response);
+  const aux = convert.filter((curr) => curr.id !== +id);
+  console.log(aux);
+  await fs.writeFile('./taker.json', JSON.stringify(aux));
+  return res.status(200).json(auxDelete);
+};
 module.exports = {
   autenticaToken,
   validaNome,
@@ -103,4 +114,5 @@ module.exports = {
   validaDate,
   addTalker,
   editTalker,
+  excludedTalker,
 };

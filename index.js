@@ -14,6 +14,7 @@ const {
   validaDate,
   addTalker,
   editTalker,
+  excludedTalker,
 } = require('./construction/addPalestrante');
 
 const app = express();
@@ -54,3 +55,7 @@ app.put('/talker/:id',
   validaRate,
   validaDate,
   editTalker);
+
+app.delete('/talker/:id',
+  autenticaToken,
+  excludedTalker);
