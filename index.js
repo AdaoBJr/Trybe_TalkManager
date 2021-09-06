@@ -12,9 +12,9 @@ const PORT = '3000';
 // requisito 2
 app.get('/talker/:id', async (request, response) => {
   const arrayTalker = await fs.readFile('./talker.json', 'utf-8');
-  console.log(arrayTalker);
+  const talker = JSON.parse(arrayTalker);
   const { id } = request.params;
-  const newArray = arrayTalker.find((req) => req.id === parseInt(id, 10));
+  const newArray = talker.find((req) => req.id === parseInt(id, 10));
   
   if (!newArray) {
     return response.status(404).json({
@@ -26,11 +26,13 @@ app.get('/talker/:id', async (request, response) => {
 });
 
 // requisito 1
-app.get('/talker', (_request, response) => {
+app.get('/talker', async (_request, response) => {
+  const arrayTalker = await fs.readFile('./talker.json', 'utf-8');
+  const talker = JSON.parse(arrayTalker);
   if (arrayTalker.length === 0) {
     return response.status(200).json([]);
   }
-  return response.status(200).json(arrayTalker);
+  return response.status(200).json(talker);
 });
 
 // requisito 3
@@ -53,7 +55,7 @@ app.post('/login',
 
     next();
   },
-  (request, response) => {
+  (request, response, next) => {
     const { email, password } = request.body;
 
     if (!(email.includes('@') && email.includes('.com'))) {
@@ -62,12 +64,15 @@ app.post('/login',
       });
     }
 
-    if (password.length !== 6) {
+    if (password.length < 6) {
       return response.status(400).json({
         message: 'O "password" deve ter pelo menos 6 caracteres',
       });
     }
 
+    next();
+  },
+  (_request, response) => {
     const token = crypto.randomBytes(16).toString('hex');
     
     return response.status(200).json({ token });
