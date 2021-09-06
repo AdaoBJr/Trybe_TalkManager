@@ -86,4 +86,13 @@ verifyRate, async (req, res) => {
    res.status(200).json(editTalker[talkerIndex]);
 });
 
+router.delete('/talker/:id',
+verifyToken, async (req, res) => {
+const { id } = req.params;
+const talker = await getAllTalkers();
+const deleteTalker = talker.findIndex((t) => t.id === parseInt(id, 10));
+talker.splice(deleteTalker, 1);
+res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;
