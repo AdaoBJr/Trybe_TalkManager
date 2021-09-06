@@ -24,15 +24,15 @@ router.get('/:id', async (req, res) => {
   return res.status(HTTP_OK_STATUS).send(DB.find((item) => item.id === +id));
 });
 
-function TokenCheck(req, res) {
-  const { authorization } = req.headers;
-  if (!authorization) {
-    return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token não encontrado' });
-  }
-  if (authorization.length !== TOKEN_LENGTH) {
-    return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token inválido' });
-  }
-}
+// function TokenCheck(req, res) {
+//   const { authorization } = req.headers;
+//   if (!authorization) {
+//     return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token não encontrado' });
+//   }
+//   if (authorization.length !== TOKEN_LENGTH) {
+//     return res.status(HTTP_ERROR_TOKEN).send({ message: 'Token inválido' });
+//   }
+// }
 
 // function NameCheck(name, res) {
 //   if (!name) { 
@@ -81,7 +81,7 @@ function TokenCheck(req, res) {
 // } 
 
 router.put('/:id', async (req, res) => {
-  TokenCheck(req, res);
+  // TokenCheck(req, res);
   const { id } = req.params;
   const oldData = JSON.parse(await DBString);
   const index = oldData.findIndex((data) => data.id === +id);
@@ -97,7 +97,7 @@ router.put('/:id', async (req, res) => {
 
 router.post('/', async (req, res) => {
   const { name, age, talk } = req.body;
-  TokenCheck(req, res);
+  // TokenCheck(req, res);
   // NameCheck(name, res);
   // AgeCheck(age, res);
   // TalkCheck(talk, res);
