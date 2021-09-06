@@ -36,9 +36,6 @@ app.get('/talker/:id', (request, response) => {
 app.post('/login', 
   (request, response, next) => {
     const { email, password } = request.body;
-    const token = crypto.randomBytes(16).toString('hex');
-    
-      response.status(200).json({ token });
 
     if (!email) {
       return response.status(400).json({
@@ -54,7 +51,7 @@ app.post('/login',
 
     next();
   },
-  (request, response, next) => {
+  (request, response) => {
     const { email, password } = request.body;
 
     if (!(email.includes('@') && email.includes('.com'))) {
