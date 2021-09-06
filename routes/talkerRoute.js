@@ -1,4 +1,4 @@
-const fs = require('fs').promises;
+const fs = require('fs');
 const express = require('express');
 const { join } = require('path');
 
@@ -113,8 +113,8 @@ talkerRoute.get('/', (_req, res) => {
   return res.status(HTTP_OK_STATUS).send(talkers);
 }); // Pegando Palestrante
 
-talkerRoute.get('/:id', (req, res) => {
-  const talkers = getTalkers();
+talkerRoute.get('/:id', async (req, res) => {
+  const talkers = await getTalkers();
   const filterID = talkers.find((talk) => talk.id === Number(req.params.id));
 
   const result = !filterID
@@ -124,15 +124,8 @@ talkerRoute.get('/:id', (req, res) => {
   return result;
 }); // Filtrando por Id de Palestrante
 
-talkerRoute.post('/',
-  validateToken,
-  validateName,
-  validateAge,
-  validateTalk,
-  validateDate,
-  validateRate,
-  (req, res) => {
-    const talkers = getTalkers();
+talkerRoute.post('/', async (req, res) => {
+    const talkers = await getTalkers();
     talkers.push(req.body);
     saveTalker(talkers);
 
