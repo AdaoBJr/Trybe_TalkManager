@@ -1,6 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
 const fs = require('fs').promises;
 
 const app = express();
@@ -101,6 +100,19 @@ const validTalkKeys = (request, response, next) => {
   next();
 };
 
+// requisito 7
+
+app.get('/talker/search', validToken,
+async (request, response) => {
+  const { q } = request.query;
+  const arrayTalker = await runRead();
+  const talker = JSON.parse(arrayTalker);
+
+  const talkerFiltered = talker.find((item) => item.name.includes(q));
+
+  response.status(200).json(talkerFiltered);
+});
+
 // requisito 5
 
 app.put('/talker/:id', validToken, validName, validAge, validTalk, validTalkKeys,
@@ -154,6 +166,7 @@ app.get('/talker/:id', async (request, response) => {
 });
 
 // requisito 1
+
 app.get('/talker', async (_request, response) => {
   const arrayTalker = await runRead();
   const talker = JSON.parse(arrayTalker);
@@ -162,49 +175,6 @@ app.get('/talker', async (_request, response) => {
   }
   return response.status(200).json(talker);
 });
-
-// requisito 3
-
-app.post('/login', 
-  (request, response, next) => {
-    const { email } = request.body;
-
-    if (!email) {
-      return response.status(400).json({
-        message: 'O campo "email" é obrigatório',
-      });
-    }
-
-    if (!(email.includes('@') && email.includes('.com'))) {
-      return response.status(400).json({
-        message: 'O "email" deve ter o formato "email@email.com"',
-      });
-    }
-
-    next();
-  },
-  (request, response, next) => {
-    const { password } = request.body;
-
-    if (!password) {
-      return response.status(400).json({
-        message: 'O campo "password" é obrigatório',
-      });
-    }
-
-    if (password.length < 6) {
-      return response.status(400).json({
-        message: 'O "password" deve ter pelo menos 6 caracteres',
-      });
-    }
-
-    next();
-  },
-  (_request, response) => {
-    const token = crypto.randomBytes(8).toString('hex');
-    
-    return response.status(200).json({ token });
-  });
 
 // requisito 4
 
@@ -229,6 +199,12 @@ app.post('/talker', validToken, validName, validAge, validTalk, validTalkKeys,
 
     response.status(201).json(newTalker);
   });
+
+// requisito 3
+
+const routerLogin = require('./login');
+
+app.use('/', routerLogin);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
