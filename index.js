@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const fs = require('fs');
 
 const app = express();
@@ -41,9 +41,9 @@ app.get('/talker/:id', (req, res) => {
   res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-app.post('/login', () => {
-  const token = crypto.randomBytes(8).toString('hex');
-});
+// app.post('/login', () => {
+//   const token = crypto.randomBytes(8).toString('hex');
+// });
 
 app.listen(PORT, () => {
   console.log('Online');
