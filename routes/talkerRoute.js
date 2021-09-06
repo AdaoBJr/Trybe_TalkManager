@@ -73,7 +73,7 @@ const validateName = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
   const numberRate = Number(rate);
-  if (!Number.isInteger(numberRate) && numberRate >= 1 && numberRate <= 5) {
+  if (!Number.isInteger(numberRate) || numberRate <= 0 || numberRate > 5) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -81,9 +81,9 @@ const validateRate = (req, res, next) => {
 };
 
 const validateTalk = (req, res, next) => {
-  const { talk, rate, talk: { watchedAt } } = req.body;
+  const { talk, talk: { watchedAt } } = req.body;
 
-  if (talk === undefined || !rate || !watchedAt) {
+  if (talk === undefined || !watchedAt) {
     return res.status(HTTP_BAD_REQUEST)
       .json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
@@ -140,14 +140,14 @@ talkerRoute.post('/', [
     return res.status(HTTP_CREATED_STATUS).json(talkers);
   }); // Adicionando usuários
 
-talkerRoute.put('/:id',
+talkerRoute.put('/:id', [
   validateToken,
   validateName,
   validateAge,
   validateTalk,
   validateDate,
   validateRate,
-  (req, res) => {
+], (req, res) => {
   const talkers = getTalkers();
   saveTalker(talkers.map((talker) => {
     if (talker.id === req.params.id) {
