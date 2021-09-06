@@ -34,8 +34,7 @@ const isValidPassword = (req, res, next) => {
   next();
 };
 
-loginRoute.post('/', isValidEmail, isValidPassword, (_req, res) => {
-  return res.status(HTTP_OK_STATUS).json({ token: generatorToken() });
-}); // Validando e-mail e password e gerando token
+loginRoute.post('/', isValidEmail, isValidPassword, (_req, res) => res.status(HTTP_OK_STATUS)
+  .json({ token: generatorToken() })); // Validando e-mail e password e gerando token
 
 module.exports = loginRoute;
