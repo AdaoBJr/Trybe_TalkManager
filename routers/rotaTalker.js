@@ -9,10 +9,10 @@ const HTTP_ERROR_VALUE = 400;
 const HTTP_ERROR_TOKEN = 401;
 const HTTP_ERROR_STATUS = 404;
 const TOKEN_LENGTH = 16;
-const DBString = 'talker.json';
+const DBString = fs.readFile('talker.json', 'utf-8');
 
 router.get('/', async (req, res) => res.status(HTTP_OK_STATUS)
-  .send(JSON.parse(await fs.readFile(DBString, 'utf-8'))));
+  .send(JSON.parse(await fs.readFile('talker.json', 'utf-8'))));
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
@@ -83,30 +83,31 @@ function TalkCheck(talk, res) {
 router.put('/:id', async (req, res) => {
   TokenCheck(req, res);
   const { id } = req.params;
-  const oldData = JSON.parse(await fs.readFile(DBString, 'utf-8'));
+  const oldData = JSON.parse(await DBString);
   const index = oldData.findIndex((data) => data.id === +id);
   const { name, age, talk } = req.body;
   NameCheck(name, res);
   AgeCheck(age, res);
   TalkCheck(talk, res);
-  oldData[index] = { id: +id, name, age, talk };
+//   oldData[index] = { id: +id, name, age, talk };
 //   await fs.writeFile('./talker.json', JSON.stringify(oldData));
 //   return res.status(HTTP_OK_STATUS).send({ id: +id, name, age, talk });
-  return res.status(oldData[index]).send({ message: 'Rodei' });
+  return res.status(index).send({ message: 'Rodei' });
 });
 
-// router.post('/', async (req, res) => {
-//   const { name, age, talk } = req.body;
-//   TokenCheck(req, res);
-//   NameCheck(name, res);
-//   AgeCheck(age, res);
-//   TalkCheck(talk, res);
-//   const oldData = JSON.parse(await fs.readFile(DBString, 'utf-8'));
+router.post('/', async (req, res) => {
+  const { name, age, talk } = req.body;
+  TokenCheck(req, res);
+  NameCheck(name, res);
+  AgeCheck(age, res);
+  TalkCheck(talk, res);
+//   const oldData = JSON.parse(await DBString);
 //   const newId = 1 + oldData.length;
 //   const newData = { id: newId, name, age, talk };
 //   oldData.push(newData);
 //   await fs.writeFile('./talker.json', JSON.stringify(oldData));
 //   return res.status(HTTP_OK_POST).send(newData);
-// });
+return res.status(HTTP_OK_STATUS).send({ message: 'Rodei' });
+});
 
 module.exports = router;
