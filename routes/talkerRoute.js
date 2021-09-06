@@ -8,6 +8,7 @@ const filePath = join('talker.json');
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
 const HTTP_BAD_REQUEST = 400;
+const HTTP_UNAUTHORIZED = 401;
 const HTTP_ERROR_NOT_FOUND = 404;
 
 const getTalkers = () => {
@@ -76,7 +77,7 @@ const validateRate = (req, res, next) => {
 
   if (!Number.isInteger(rate) && rate >= 1 && rate <= 5) {
     return res.status(HTTP_BAD_REQUEST)
-      .json({ message: 'O campo "rate" deve ser um inteiro de 1 a 5' });
+      .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
@@ -97,12 +98,12 @@ const validateToken = (req, res, next) => {
   const DEFAULT_LENGTH = 16;
 
   if (!authorization) {
-    return res.status(HTTP_BAD_REQUEST)
+    return res.status(HTTP_UNAUTHORIZED)
       .json({ message: 'Token não encontrado' });
   }
 
   if (authorization.length < DEFAULT_LENGTH) {
-    return res.status(HTTP_BAD_REQUEST)
+    return res.status(HTTP_UNAUTHORIZED)
       .json({ message: 'Token inválido' });
   }
 
