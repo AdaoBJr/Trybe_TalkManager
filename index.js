@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const arrayTalker = require('./talker.json');
+const fs = require('fs').promises;
 
 const app = express();
 app.use(bodyParser.json());
@@ -9,26 +9,28 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
+// requisito 2
+app.get('/talker/:id', async (request, response) => {
+  const arrayTalker = await fs.readFile('./talker.json', 'utf-8');
+  console.log(arrayTalker);
+  const { id } = request.params;
+  const newArray = arrayTalker.find((req) => req.id === parseInt(id, 10));
+  
+  if (!newArray) {
+    return response.status(404).json({
+      message: 'Pessoa palestrante não encontrada',
+    });
+  }
+  
+  return response.status(200).json(newArray);
+});
+
 // requisito 1
 app.get('/talker', (_request, response) => {
   if (arrayTalker.length === 0) {
     return response.status(200).json([]);
   }
   return response.status(200).json(arrayTalker);
-});
-
-// requisito 2
-app.get('/talker/:id', (request, response) => {
-  const { id } = request.params;
-  const newArray = arrayTalker.find((req) => req.id === parseInt(id, 10));
-
-  if (!newArray) {
-    return response.status(404).json({
-      message: 'Pessoa palestrante não encontrada',
-    });
-  }
-
-  return response.status(200).json(newArray);
 });
 
 // requisito 3
@@ -70,6 +72,8 @@ app.post('/login',
     
     return response.status(200).json({ token });
   });
+
+// requisito 4
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
