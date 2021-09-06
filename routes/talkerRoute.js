@@ -29,13 +29,13 @@ const saveTalker = (talkers) => {
 const validateAge = (req, res, next) => {
   const { age } = req.body;
   const DEFAULT_AGE = 18;
-
-  if (!age) {
+  const numberAge = Number(age);
+  if (!numberAge) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "age" é obrigatório' });
   }
 
-  if (Number(age) < DEFAULT_AGE) {
+  if (numberAge < DEFAULT_AGE) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ mesage: 'A pessoa palestrante deve ser maior de idade' });
   }
@@ -44,7 +44,7 @@ const validateAge = (req, res, next) => {
 
 const validateDate = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
-  const dateRegex = /[0-9]{2}\/[0-9]{2}\/[0-9]{4}/g;
+  const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
 
   if (!dateRegex.test(watchedAt)) {
     return res.status(HTTP_BAD_REQUEST)
@@ -73,7 +73,7 @@ const validateName = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
   const numberRate = Number(rate);
-  if (!Number.isInteger(numberRate) || numberRate <= 0 || numberRate > 5) {
+  if (numberRate < 1 || numberRate > 5) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -81,9 +81,9 @@ const validateRate = (req, res, next) => {
 };
 
 const validateTalk = (req, res, next) => {
-  const { talk, talk: { watchedAt } } = req.body;
+  const { talk, rate, talk: { watchedAt } } = req.body;
 
-  if (talk === undefined || !watchedAt) {
+  if (!talk || !watchedAt || !rate) {
     return res.status(HTTP_BAD_REQUEST)
       .json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
@@ -102,8 +102,7 @@ const validateToken = (req, res, next) => {
   }
 
   if (authorization.length !== DEFAULT_LENGTH) {
-    return res.status(HTTP_UNAUTHORIZED)
-      .json({ message: 'Token inválido' });
+    return res.status(HTTP_UNAUTHORIZED).json({ message: 'Token inválido' }); 
   }
 
   next();
@@ -112,7 +111,7 @@ const validateToken = (req, res, next) => {
 talkerRoute.get('/', (_req, res) => {
   const talkers = getTalkers();
   return res.status(HTTP_OK_STATUS).send(talkers);
-}); // Pegando usuários
+}); // Pegando Palestrante
 
 talkerRoute.get('/:id', (req, res) => {
   const talkers = getTalkers();
@@ -123,22 +122,30 @@ talkerRoute.get('/:id', (req, res) => {
     : res.status(HTTP_OK_STATUS).send(filterID);
 
   return result;
-}); // Filtrando por Id de usuário
+}); // Filtrando por Id de Palestrante
 
-talkerRoute.post('/', [
+talkerRoute.post('/',
   validateToken,
   validateName,
   validateAge,
   validateTalk,
   validateDate,
   validateRate,
-], (req, res) => {
+  (req, res) => {
     const talkers = getTalkers();
-    talkers.push(req.body);
+    const { name, age, talk } = req.body;
+    const newTalker = {
+      name,
+      age,
+      id: talkers.length + 1,
+      talk: { ...talk },
+    };
+
+    talkers.push(newTalker);
     saveTalker(talkers);
 
     return res.status(HTTP_CREATED_STATUS).json(talkers);
-  }); // Adicionando usuários
+  }); // Adicionando Palestrantes
 
 talkerRoute.put('/:id', [
   validateToken,
@@ -157,6 +164,6 @@ talkerRoute.put('/:id', [
   }));
 
   return res.status(HTTP_CREATED_STATUS).send(talkers);
-}); // Atualizando usuários
+}); // Atualizando Palestrantes
 
 module.exports = talkerRoute;
