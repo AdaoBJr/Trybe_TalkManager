@@ -103,7 +103,7 @@ const validToken = (request, response, next) => {
     const arrayTalker = await runRead();
     const talker = JSON.parse(arrayTalker);
   
-    const talkerFiltered = talker.find((item) => item.name.includes(q));
+    const talkerFiltered = talker.filter((item) => item.name.includes(q));
   
     response.status(200).json(talkerFiltered);
   });
