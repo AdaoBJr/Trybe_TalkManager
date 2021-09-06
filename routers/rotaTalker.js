@@ -111,8 +111,8 @@ router.post('/', async (req, res) => {
   const newId = 1 + DB.length;
   const newData = { id: newId, name, age, talk };
   DB.push(newData);
-  await fs.writeFile('./talker.json', JSON.stringify(DB));
-  return res.status(HTTP_OK_POST).send(newData);
+  // await fs.writeFile('./talker.json', JSON.stringify(DB));
+  // return res.status(HTTP_OK_POST).send(newData);
 });
 
 module.exports = router;
