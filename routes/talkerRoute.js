@@ -141,9 +141,8 @@ talkerRoute.post('/',
     return res.status(HTTP_CREATED_STATUS).json(talkers);
   }); // Adicionando usuários
 
-talkerRoute.post('/', (req, res) => {
+talkerRoute.put('/:id', (req, res) => {
   const talkers = getTalkers();
-  saveTalker(talkers);
   saveTalker(talkers.map((talker) => {
     if (talker.id === req.params.id) {
       return { ...talker, ...req.body };
