@@ -87,8 +87,7 @@ const validateTalk = (req, res, next) => {
   if (!talk || typeof rate !== 'number' || !watchedAt) {
     return res.status(HTTP_BAD_REQUEST)
       .json({
-        message: `O campo "talk"
-      é obrigatório e "watchedAt" e "rate" não podem ser vazios` });
+        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
   next();
 };
