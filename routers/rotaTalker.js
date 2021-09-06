@@ -113,6 +113,7 @@ router.post('/', async (req, res) => {
   DB.push(newData);
   // await fs.writeFile('./talker.json', JSON.stringify(DB));
   // return res.status(HTTP_OK_POST).send(newData);
+  return res.status(HTTP_OK_POST).send(name, age, talk);
 });
 
 module.exports = router;
