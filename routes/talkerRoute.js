@@ -1,7 +1,12 @@
 const fs = require('fs');
+const express = require('express');
 const { join } = require('path');
 
+const talkerRoute = express.Router();
 const filePath = join('talker.json');
+
+const HTTP_OK_STATUS = 200;
+const HTTP_ERROR_NOT_FOUND = 404;
 
 const getTalkers = () => {
   const data = fs.existsSync(filePath)
@@ -14,25 +19,20 @@ const getTalkers = () => {
   }
 };
 
-const getRequisition = (req, res) => {
+talkerRoute.get('/', (_req, res) => {
   const talkers = getTalkers();
-  return res.status(200).send(talkers);
-};
+  return res.status(HTTP_OK_STATUS).send(talkers);
+}); // Pegando usuários
 
-const getRequisitionID = (req, res) => {
+talkerRoute.get('/:id', (req, res) => {
   const talkers = getTalkers();
   const filterID = talkers.find((talk) => talk.id === Number(req.params.id));
 
   const result = !filterID
-    ? res.status(404).send({ message: 'Pessoa palestrante não encontrada' })
-    : res.status(200).send(filterID);
+    ? res.status(HTTP_ERROR_NOT_FOUND).send({ message: 'Pessoa palestrante não encontrada' })
+    : res.status(HTTP_OK_STATUS).send(filterID);
 
   return result;
-};
-
-const talkerRoute = (app) => {
-  app.route('/talker').get(getRequisition); // Pegando usuários
-  app.route('/talker/:id?').get(getRequisitionID); // Filtrando por Id de usuário
-};
+}); // Filtrando por Id de usuário
 
 module.exports = talkerRoute;
