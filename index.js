@@ -2,7 +2,7 @@ const fs = require('fs').promises;
 const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
-const talkRoutes = require('./talkRoutes');
+// const talkRoutes = require('./talkRoutes');
 
 const { validateEmail,
   validatePassword,
@@ -62,7 +62,23 @@ app.post(
 
 app.use(validateToken, validateName, validateAge, validateRate, validateDate);
 
-app.use('/talker', talkRoutes);
+app.post('/talker', async (req, res) => {
+  const talkerList = await getTalkers();
+  const id = talkerList.length + 1;
+  const { name, age, talk } = req.body;
+  const newTalker = {
+    id,
+    name,
+    age,
+    talk };
+
+  talkerList.push(newTalker);
+  const addTalker = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
+
+  addTalker(talkerList);
+  console.log();
+  return res.status(201).json(newTalker);
+});
 
 app.listen(PORT, () => {
   console.log(`Online na porta: ${PORT}`);
