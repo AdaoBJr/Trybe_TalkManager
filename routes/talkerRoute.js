@@ -35,11 +35,10 @@ const validateAge = (req, res, next) => {
       .json({ message: 'O campo "age" é obrigatório' });
   }
 
-  if (age < DEFAULT_AGE) {
+  if (Number(age) < DEFAULT_AGE) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ mesage: 'A pessoa palestrante deve ser maior de idade' });
   }
-
   next();
 };
 
@@ -68,14 +67,13 @@ const validateName = (req, res, next) => {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "name" deve ter pelo menos 3 caracteres' });
   }
-
   next();
 };
 
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
-
-  if (!Number.isInteger(rate) && rate >= 1 && rate <= 5) {
+  const numberRate = Number(rate);
+  if (!Number.isInteger(numberRate) && numberRate >= 1 && numberRate <= 5) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -85,11 +83,12 @@ const validateRate = (req, res, next) => {
 const validateTalk = (req, res, next) => {
   const { talk, rate, talk: { watchedAt } } = req.body;
 
-  if (!talk || typeof rate !== 'number' || !watchedAt) {
+  if (talk === undefined || !rate || !watchedAt) {
     return res.status(HTTP_BAD_REQUEST)
       .json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
+
   next();
 };
 
@@ -102,7 +101,7 @@ const validateToken = (req, res, next) => {
       .json({ message: 'Token não encontrado' });
   }
 
-  if (authorization.length < DEFAULT_LENGTH) {
+  if (authorization.length !== DEFAULT_LENGTH) {
     return res.status(HTTP_UNAUTHORIZED)
       .json({ message: 'Token inválido' });
   }
@@ -126,14 +125,14 @@ talkerRoute.get('/:id', (req, res) => {
   return result;
 }); // Filtrando por Id de usuário
 
-talkerRoute.post('/',
+talkerRoute.post('/', [
   validateToken,
   validateName,
   validateAge,
   validateTalk,
   validateDate,
   validateRate,
-  (req, res) => {
+], (req, res) => {
     const talkers = getTalkers();
     talkers.push(req.body);
     saveTalker(talkers);
