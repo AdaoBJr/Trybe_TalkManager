@@ -68,7 +68,7 @@ const validateRate = (req, res, next) => {
 };
 
 const validateDate = (req, res, next) => {
-  const DATE_FORM = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+  const DATE_FORM = /(\d{1,2})\/(\d{1,2})\/(\d{4})/;
   const { talk: watchedAt } = req.body;
 
   if (DATE_FORM.test(watchedAt)) {
@@ -88,8 +88,7 @@ const validateToken = async (req, res, next) => {
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
-
-  if (TOKEN_FORM.test(token)) {
+  if (!TOKEN_FORM.test(token.token)) {
     return res.status(401).json({ message: 'Token inválido' });
   }
 
