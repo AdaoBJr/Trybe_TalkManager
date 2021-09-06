@@ -3,7 +3,7 @@ const express = require('express');
 const route = express.Router();
 
 // MIDDLEWARES
-const postLogin = require('../middlewares/postLogin');
+const postLogin = require('../middlewares/login');
 
 route.post('/', postLogin);
 
