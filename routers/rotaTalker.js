@@ -99,7 +99,7 @@ router.post('/', async (req, res) => {
   const { name, age, talk } = req.body;
   // TokenCheck(req, res);
   // NameCheck(name, res);
-  // AgeCheck(age, res);
+  AgeCheck(age, res);
   // TalkCheck(talk, res);
 //   const oldData = JSON.parse(await DBString);
 //   const newId = 1 + oldData.length;
