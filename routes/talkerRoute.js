@@ -133,7 +133,7 @@ talkerRoute.post('/',
   validateRate,
   (req, res) => {
     const talkers = getTalkers();
-    talkers.push(talkers);
+    talkers.push(req.body);
     saveTalker(talkers);
 
     return res.status(HTTP_CREATED_STATUS).json(talkers);
