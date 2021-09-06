@@ -12,6 +12,7 @@ const validateAge = require('./authentications/validateAge');
 const validateWatchedAt = require('./authentications/validateWatchedAt');
 const validateRate = require('./authentications/validateRate');
 const validateTalk = require('./authentications/validateTalk');
+const editTalker = require('./middlewares/editTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -39,6 +40,17 @@ app.post(
   validateRate,
   validateWatchedAt,
   addTalker,
+);
+
+app.put(
+  '/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  editTalker,
 );
 
 app.listen(PORT, () => {
