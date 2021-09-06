@@ -158,6 +158,13 @@ talkerRoute.put('/:id',
   }));
 
   return res.status(HTTP_OK_STATUS).send(talkers);
-}); // Atualizando Palestrantes
+}); // Atualizando Palestrante
+
+talkerRoute.delete('/:id', async (req, res) => {
+  const talkers = await getTalkers();
+  saveTalker(talkers.filter((talker) => talker.id !== req.params.id));
+
+  return res.status(HTTP_OK_STATUS).send('OK! Palestrante Deletado');
+}); // Deletando Palestrante
 
 module.exports = talkerRoute;
