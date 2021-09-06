@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 const express = require('express');
 const { join } = require('path');
 
@@ -81,7 +81,7 @@ const validateRate = (req, res, next) => {
 };
 
 const validateTalk = (req, res, next) => {
-  const { talk, rate, talk: { watchedAt } } = req.body;
+  const { talk, talk: { rate }, talk: { watchedAt } } = req.body;
 
   if (!talk || !watchedAt || !rate) {
     return res.status(HTTP_BAD_REQUEST)
