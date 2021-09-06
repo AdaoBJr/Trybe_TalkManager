@@ -92,7 +92,7 @@ const editTalker = async (req, res) => {
   let convert = JSON.parse(response);
   convert = convert.filter((curr) => curr.id !== +id);
   convert.push({ id: +id, name, age, talk });
-  await fs.writeFile('./taker.json', JSON.stringify({ id: +id, name, age, talk }));
+  await fs.writeFile(auxArquivo, JSON.stringify(convert));
   const auxObj = { id: +id, name, age, talk };
   return res.status(200).json(auxObj);
 };
@@ -101,7 +101,7 @@ const excludedTalker = async (req, res) => {
   const response = await fs.readFile(auxArquivo, 'utf-8');
   const convert = JSON.parse(response);
   const aux = convert.filter((curr) => curr.id !== +id);
-  await fs.writeFile('./taker.json', JSON.stringify(aux));
+  await fs.writeFile(auxArquivo, JSON.stringify(aux));
   return res.status(200).json(auxDelete);
 };
 const search = async (req, res) => {
