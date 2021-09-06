@@ -164,14 +164,14 @@ talkerRoute.put('/:id',
     return talker;
   }));
 
-  return res.status(HTTP_OK_STATUS).send(talkers);
+  return res.status(HTTP_OK_STATUS).send(talkers.id);
 }); // Atualizando Palestrante
 
 talkerRoute.delete('/:id', async (req, res) => {
   const talkers = await getTalkers();
   saveTalker(talkers.filter((talker) => talker.id !== req.params.id));
 
-  return res.status(HTTP_OK_STATUS).send('OK! Palestrante Deletado');
+  return res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
 }); // Deletando Palestrante
 
 module.exports = talkerRoute;
