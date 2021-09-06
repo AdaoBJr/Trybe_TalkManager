@@ -124,7 +124,14 @@ talkerRoute.get('/:id', async (req, res) => {
   return result;
 }); // Filtrando por Id de Palestrante
 
-talkerRoute.post('/', async (req, res) => {
+talkerRoute.post('/', 
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  async (req, res) => {
     const talkers = await getTalkers();
     const { name, age, talk } = req.body;
     const { id } = req.params;
