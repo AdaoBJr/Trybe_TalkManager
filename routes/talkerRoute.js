@@ -73,7 +73,7 @@ const validateName = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
   const numberRate = Number(rate);
-  if (numberRate < 1 || numberRate > 5) {
+  if (!Number.isInteger(numberRate) || numberRate < 1 || numberRate > 5) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -133,27 +133,20 @@ talkerRoute.post('/',
   validateRate,
   (req, res) => {
     const talkers = getTalkers();
-    const { name, age, talk } = req.body;
-    const newTalker = {
-      name,
-      age,
-      id: talkers.length + 1,
-      talk: { ...talk },
-    };
-    talkers.push(newTalker);
+    talkers.push(talkers);
     saveTalker(talkers);
 
     return res.status(HTTP_CREATED_STATUS).json(talkers);
   }); // Adicionando Palestrantes
 
-talkerRoute.put('/:id', [
+talkerRoute.put('/:id',
   validateToken,
   validateName,
   validateAge,
   validateTalk,
   validateDate,
   validateRate,
-], (req, res) => {
+  (req, res) => {
   const talkers = getTalkers();
   saveTalker(talkers.map((talker) => {
     if (talker.id === req.params.id) {
