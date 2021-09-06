@@ -52,6 +52,7 @@ const responseForUse = talker.find((AllTalkers) => AllTalkers.id === Number(id))
 }));
 
 // REQUISITO 3
+// Ajuda de jonathan
 
 app.post('/login', authLogin, (_request, response) => {
 const token = crypto.randomBytes(8).toString('hex');
@@ -61,6 +62,7 @@ const token = crypto.randomBytes(8).toString('hex');
 });
 
 // REQUISITO 4
+// Ajuda de Carlos Margato
 
 app.post('/talker', 
 isValidToken, 
@@ -97,6 +99,19 @@ const indexOfTalker = talkers.findIndex((talker) => talker.id === Number(id));
 talkers[indexOfTalker] = { id: Number(id), name, age, talk };
 await fs.writeFile('./talker.json', JSON.stringify(talkers));
   return response.status(200).send(talkers[indexOfTalker]);
+});
+
+// REQUISITO 6 caracteres'
+app.delete('/talker/:id', 
+isValidToken, 
+async (request, response) => {
+const talkers = await getTalker();
+const { id } = request.params;
+// const { name, age, talk } = request.body;
+const indexOfTalker = talkers.findIndex((talker) => talker.id === Number(id));
+talkers.splice(indexOfTalker, 1);
+await fs.writeFile('./talker.json', JSON.stringify(talkers));
+  return response.status(200).send({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {
