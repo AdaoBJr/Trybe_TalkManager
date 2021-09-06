@@ -92,7 +92,7 @@ const editTalker = async (req, res) => {
   let convert = JSON.parse(response);
   convert = convert.filter((curr) => curr.id !== +id);
   convert.push({ id: +id, name, age, talk });
-  await fs.writeFile('./taker.json', JSON.stringify(convert));
+  await fs.writeFile('./taker.json', JSON.stringify({ id: +id, name, age, talk }));
   const auxObj = { id: +id, name, age, talk };
   return res.status(200).json(auxObj);
 };
