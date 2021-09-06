@@ -88,13 +88,13 @@ const addTalker = async (req, res) => {
 };
 const editTalker = async (req, res) => {
   const { id } = req.params;
-  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const { name, age, talk } = req.body;
   const response = await fs.readFile('./talker.json', 'utf-8');
   const convert = JSON.parse(response);
   const aux = convert.filter((curr) => curr.id !== +id);
-  aux.push({ id: +id, name, age, talk: { watchedAt, rate } });
+  aux.push({ id: +id, name, age, talk });
   await fs.writeFile('./taker.json', JSON.stringify(aux));
-  return res.status(200).json({ id: +id, name, age, talk: { watchedAt, rate } });
+  return res.status(200).json({ id: +id, name, age, talk });
 };
 const excludedTalker = async (req, res) => {
   const { id } = req.params;
