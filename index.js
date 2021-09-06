@@ -1,14 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const talkerRoute = require('./routes/talkerRoute');
-// const loginRoute = require('./routes/loginRoute');
+const loginRoute = require('./routes/loginRoute');
 
 const app = express();
 app.use(bodyParser.json());
 
 // MEU CÓDIGO
 app.use('/talker', talkerRoute);
-// app.use('/login', loginRoute);
+app.use('/login', loginRoute);
 // *******************************************************
 
 const HTTP_OK_STATUS = 200;
