@@ -5,7 +5,6 @@ const auxArquivo = './talker.json';
 
 const autenticaToken = (req, res, next) => {
   const { authorization } = req.headers;
-  console.log(authorization);
   if (!authorization) {
     return res.status(401).json({ message: 'Token não encontrado' });
   }
@@ -84,31 +83,29 @@ const addTalker = async (req, res) => {
     talk: { watchedAt, rate } };
   convert.push(newPalester);
   await fs.writeFile(auxArquivo, JSON.stringify(convert));
-  console.log('cheguei aqui');
   return res.status(201).json(newPalester);
 };
 const editTalker = async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const response = await fs.readFile(auxArquivo, 'utf-8');
-  const convert = JSON.parse(response);
-  const aux = convert.filter((curr) => curr.id !== +id);
-  aux.push({ id: +id, name, age, talk });
-  await fs.writeFile('./taker.json', JSON.stringify(aux));
-  return res.status(200).json({ id: +id, name, age, talk });
+  let convert = JSON.parse(response);
+  convert = convert.filter((curr) => curr.id !== +id);
+  convert.push({ id: +id, name, age, talk });
+  await fs.writeFile('./taker.json', JSON.stringify(convert));
+  const auxObj = { id: +id, name, age, talk };
+  return res.status(200).json(auxObj);
 };
 const excludedTalker = async (req, res) => {
   const { id } = req.params;
   const response = await fs.readFile(auxArquivo, 'utf-8');
   const convert = JSON.parse(response);
   const aux = convert.filter((curr) => curr.id !== +id);
-  console.log(aux);
   await fs.writeFile('./taker.json', JSON.stringify(aux));
   return res.status(200).json(auxDelete);
 };
 const search = async (req, res) => {
   const { q } = req.query;
-  console.log(q);
   const response = await fs.readFile(auxArquivo, 'utf-8');
   const convert = JSON.parse(response);
   const aux = convert.filter((curr) => curr.name.includes(q));
