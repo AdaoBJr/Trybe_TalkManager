@@ -127,12 +127,12 @@ talkerRoute.get('/:id', (req, res) => {
 }); // Filtrando por Id de usuário
 
 talkerRoute.post('/',
-  validateAge,
-  validateDate,
-  validateName,
-  validateRate,
-  validateTalk,
   validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
   (req, res) => {
     const talkers = getTalkers();
     talkers.push(req.body);
@@ -141,7 +141,14 @@ talkerRoute.post('/',
     return res.status(HTTP_CREATED_STATUS).json(talkers);
   }); // Adicionando usuários
 
-talkerRoute.put('/:id', (req, res) => {
+talkerRoute.put('/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  (req, res) => {
   const talkers = getTalkers();
   saveTalker(talkers.map((talker) => {
     if (talker.id === req.params.id) {
