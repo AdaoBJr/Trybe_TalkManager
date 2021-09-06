@@ -127,17 +127,17 @@ talkerRoute.get('/:id', async (req, res) => {
 talkerRoute.post('/', async (req, res) => {
     const talkers = await getTalkers();
     const { name, age, talk } = req.body;
-    const newTalker = {
-      name,
-      age,
-      id: talkers.length + 1,
-      talk: { ...talk },
-    };
-    
+    const newTalker = [{
+        age,
+        name,
+        id: talkers.length + 1,
+        talk: { ...talk },
+    }];
+
     talkers.push(newTalker);
     saveTalker(talkers);
 
-    return res.status(HTTP_CREATED_STATUS).json(talkers);
+    return res.status(HTTP_CREATED_STATUS).json(newTalker);
   }); // Adicionando Palestrantes
 
 talkerRoute.put('/:id',
