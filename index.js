@@ -80,6 +80,12 @@ app.post('/login',
 
 // requisito 4
 
+// app.post('/talker', (request, response, next) => {
+//   const token = request.headers;
+//   const newTalker = request.body;
+
+// });
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
