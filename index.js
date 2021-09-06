@@ -13,6 +13,7 @@ const {
   readAndPushNewTalker,
   editTalker,
   deleteTalker,
+  search,
 } = require('./midlewares');
 
 const app = express();
@@ -27,6 +28,8 @@ app.get('/', (_request, response) => {
 });
 
 app.get('/talker', readAllTalkers);
+
+app.get('/talker/search', validateToken, search);
 
 app.get('/talker/:id', readTalkerById);
 
@@ -51,8 +54,6 @@ app.put('/talker/:id',
   editTalker);
 
 app.delete('/talker/:id', deleteTalker);
-
-// app.get('/talker/search?q=searchTerm', (req, res, next) => {});
 
 app.listen(PORT, () => {
   console.log('Online');

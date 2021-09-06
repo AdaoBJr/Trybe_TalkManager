@@ -4,6 +4,7 @@ const validateUser = require('./validateUser');
 const validateToken = require('./validadeToken');
 const editTalker = require('./editTalker');
 const deleteTalker = require('./deleteTalker');
+const search = require('./search');
 const { 
   validateName,
   validateAge, 
@@ -26,4 +27,5 @@ module.exports = {
   readAndPushNewTalker,
   editTalker,
   deleteTalker,
+  search,
 };
