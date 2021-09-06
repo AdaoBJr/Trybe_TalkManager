@@ -23,6 +23,15 @@ router.get('/talker', async (_req, res) => {
     return res.status(200).json(talkers);
 });
 
+router.get('/talker/search',
+verifyToken, async (req, res) => {
+const { name } = req.body;
+const talker = await getAllTalkers();
+if (!name)res.status(200).json(talker);
+const filterTalkers = talker.filter((t) => t.name.includes(name));
+res.status(200).json(filterTalkers);
+});
+
 router.get('/talker/:id', async (req, res) => {
   const talkers = await getAllTalkers();
   const { id } = req.params;
