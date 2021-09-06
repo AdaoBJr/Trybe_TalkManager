@@ -1,14 +1,16 @@
 const getAllTalkers = require('./getAllTalkers');
 const getTalkerById = require('./getTalkerById');
 const { login, validateParams } = require('./login');
-const validateToken = require('./validadeToken');
 const { 
   validateName, 
-  validateAge, 
-  validateDate, 
-  validateRate,
-  validateTalk, 
-  createTalker } = require('./createTalker');
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate, 
+  validateToken,
+} = require('./validations');
+const createTalker = require('./createTalker');
+const editTalker = require('./editTalker');
 
 module.exports = {
   getAllTalkers,
@@ -18,8 +20,9 @@ module.exports = {
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
   validateDate,
   validateRate,
-  validateTalk,
   createTalker,
+  editTalker,
 };

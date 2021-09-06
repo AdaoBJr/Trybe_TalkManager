@@ -8,10 +8,11 @@ const {
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
   validateDate,
   validateRate,
-  validateTalk,
-  createTalker } = require('./middlewere');
+  createTalker,
+  editTalker } = require('./middlewere');
 
 const app = express();
 app.use(bodyParser.json());
@@ -39,6 +40,14 @@ app.post('/talker',
   validateDate, 
   validateRate,  
   createTalker);
+
+app.put('/talker/:id', 
+  validateName, 
+  validateAge,
+  validateTalk,
+  validateDate, 
+  validateRate,
+  editTalker);
 
 app.listen(PORT, () => {
   console.log('Online');
