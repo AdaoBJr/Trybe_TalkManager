@@ -4,6 +4,8 @@ const showPalestrantes = require('./construction/showPalestrantes');
 const idPalestrante = require('./construction/idPalestrante');
 /* const newPalestrante = require('./construction/newPalestrante');
  */const login = require('./construction/login');
+const { confirmeEmail, confirmePassword } = require('./construction/autenticarLogin');
+
 const {
   autenticaToken,
   validaNome,
@@ -33,7 +35,7 @@ app.get('/talker', showPalestrantes);
 
 app.get('/talker/:id', idPalestrante);
 
-app.post('/login', login);
+app.post('/login', confirmeEmail, confirmePassword, login);
 
 app.post('/talker',
   autenticaToken,
