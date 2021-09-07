@@ -1,4 +1,4 @@
-const regexEmail = require('./utils');
+const regexEmail = require('./regexEmail');
 
 function validateEmail(email) {
   if (email === '' || !email) return 'empty';

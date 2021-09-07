@@ -1,12 +1,16 @@
 const crypto = require('crypto');
 const handleReadFile = require('../helpers/handleReadFile');
+const handleWriteFile = require('../helpers/handleWriteFile');
 const validateEmail = require('../helpers/validateEmail');
 const validatePassword = require('../helpers/validatePassword');
 
 const HTTP_OK_STATUS = 200;
+const HTTP_CREATED = 201;
 const HTTP_BAD_REQUEST = 400;
+// const HTTP_UNAUTHORIZED = 401;
 const HTTP_NOT_FOUND = 404;
 
+// --------------------------------------------------------
 // 1º Requisito:
 
 const getTalkers = (_req, res) => {
@@ -60,8 +64,28 @@ const getToken = (req, res, _next) => {
   return res.status(HTTP_OK_STATUS).json({ token });
 };
 
+// --------------------------------------------------------
+// 4º Requisito:
+
+const postTalker = (req, res) => {
+  handleReadFile()
+  .then((talkers) => JSON.parse(talkers))
+  .then((talkers) => {
+    const newTalker = {
+      ...req.body,
+      id: talkers.length + 1,
+    };
+    talkers.push(newTalker);
+    handleWriteFile(talkers)
+    .then(() => res.status(HTTP_CREATED).json({ ...newTalker }))
+    .catch((err) => res.status(HTTP_BAD_REQUEST).json(err));
+  })
+  .catch((err) => res.status(HTTP_BAD_REQUEST).json(err));
+};
+
 module.exports = {
   getTalkers,
   getTalkerByID,
   getToken,
+  postTalker,
 };

@@ -4,7 +4,9 @@ const {
   getTalkers,
   getTalkerByID,
   getToken,
+  postTalker,
 } = require('./middlewares/index');
+const validateToken = require('./middlewares/validateToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -20,6 +22,11 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+// --------------------------------------------------------
+// 4º Requisito:
+
+app.post('/talker', validateToken, postTalker);
 
 // --------------------------------------------------------
 // 3º Requisito:
