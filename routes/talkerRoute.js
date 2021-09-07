@@ -16,7 +16,7 @@ const talkerRoute = express.Router();
 
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
-// const HTTP_UNAUTHORIZED = 401;
+const HTTP_UNAUTHORIZED = 401;
 const HTTP_ERROR_NOT_FOUND = 404;
 
 talkerRoute.get('/', async (_req, res) => {
@@ -35,29 +35,38 @@ talkerRoute.get('/:id', async (req, res) => {
   return result;
 }); // Filtrando por Id de Palestrante
 
-// talkerRoute.get('/search', validateToken, async (req, res) => {
-//   const { busca } = req.query;
-//   // if (busca === '') {
-//   //   return res.status()
-//   // }
-//   const talkers = await getTalkers();
-//   const filterID = talkers.filter((talk) => talk.name.includes(busca));
+talkerRoute.use(validateToken);
+
+talkerRoute.get('/search', async (req, res) => {
+  const { busca } = req.query;
+
+  const talkers = await getTalkers();
+  const filterID = talkers.filter((talk) => talk.name === busca);
   
-//   const result = !filterID
-//     ? res.status(HTTP_UNAUTHORIZED).json(talkers)
-//     : res.status(HTTP_OK_STATUS).json(filterID);
+  const result = !filterID
+    ? res.status(HTTP_UNAUTHORIZED).json(talkers)
+    : res.status(HTTP_OK_STATUS).json(filterID);
 
-//   return result;
-// }); // Filtrando por name do Palestrante
+  return result;
+}); // Filtrando por name do Palestrante
 
-talkerRoute.post('/',
-  validateToken,
+talkerRoute.delete('/:id', async (req, res) => {
+  const talkers = await getTalkers();
+  const { id } = req.params;
+  saveTalker(talkers.filter((talker) => talker.id !== Number(id)));
+
+  return res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
+}); // Deletando Palestrante
+
+talkerRoute.use(
   validateName,
   validateAge,
   validateTalk,
   validateDate,
   validateRate,
-  async (req, res) => {
+);
+
+talkerRoute.post('/', async (req, res) => {
     const talkers = await getTalkers();
     const { name, age, talk } = req.body;
     const newTalker = { id: talkers.length + 1, name, age, talk };
@@ -66,18 +75,12 @@ talkerRoute.post('/',
 
     return res.status(HTTP_CREATED_STATUS).json(newTalker);
   }); // Adicionando Palestrantes
-talkerRoute.put('/:id',
-  validateToken,
-  validateName,
-  validateAge,
-  validateTalk,
-  validateDate,
-  validateRate,
-  async (req, res) => {
+
+talkerRoute.put('/:id', async (req, res) => {
     const talkers = await getTalkers();
     const { id } = req.params;
     const { name, age, talk } = req.body;
-    const result = { id: +id, name, age, talk };
+    const result = { id: Number(id), name, age, talk };
     
     saveTalker(talkers.map((talker) => {
       if (talker.id === Number(id)) {
@@ -88,13 +91,5 @@ talkerRoute.put('/:id',
 
     return res.status(HTTP_OK_STATUS).json(result);
   }); // Atualizando Palestrante
-
-talkerRoute.delete('/:id', validateToken, async (req, res) => {
-  const talkers = await getTalkers();
-  const { id } = req.params;
-  saveTalker(talkers.filter((talker) => talker.id !== Number(id)));
-
-  return res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
-}); // Deletando Palestrante
 
 module.exports = talkerRoute;

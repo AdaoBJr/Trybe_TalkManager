@@ -50,7 +50,8 @@ const validateName = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
   const numberRate = Number(rate);
-  if (!Number.isInteger(numberRate) || numberRate < 1 || numberRate > 5) {
+
+  if (numberRate < 1 || numberRate > 5) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -60,7 +61,7 @@ const validateRate = (req, res, next) => {
 const validateTalk = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res.status(HTTP_BAD_REQUEST)
       .json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
