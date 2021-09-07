@@ -15,14 +15,6 @@ const {
   verifyRate,
 } = require('./requirements/validations');
 
-router.get('/talker', async (_req, res) => {
-  const talkers = await getAllTalkers();
-  if (!talkers) {
-    return res.status(200).json([]);
-  }
-    return res.status(200).json(talkers);
-});
-
 router.get('/talker/search',
 verifyToken, async (req, res) => {
 const { name } = req.body;
@@ -40,6 +32,14 @@ router.get('/talker/:id', async (req, res) => {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
     return res.status(200).json(getId);
+});
+
+router.get('/talker', async (_req, res) => {
+  const talkers = await getAllTalkers();
+  if (!talkers) {
+    return res.status(200).json([]);
+  }
+    return res.status(200).json(talkers);
 });
 
 router.post('/talker',
