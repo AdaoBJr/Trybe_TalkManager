@@ -59,12 +59,14 @@ const findOne = (id, listTalkers) => {
     if (!talk) {
       return res
        .status(400)
-       .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+       .json({ message:
+         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
     if (!talk.watchedAt && talk.watchedAt !== 0) {
       return res
        .status(400)
-       .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+       .json({ message:
+         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
     next();
   };
@@ -73,7 +75,8 @@ const findOne = (id, listTalkers) => {
     if (!rate && rate !== 0) {
       return res
        .status(400)
-       .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+       .json({ message:
+         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
     if (rate < 1 || rate > 5) {
       return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
