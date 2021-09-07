@@ -132,21 +132,19 @@ talkerRoute.post('/',
   validateDate,
   validateRate,
   async (req, res) => {
-    const { name, age, talk } = req.body;
     const talkers = await getTalkers();
-    const talkersJson = JSON.parse(talkers);
-    const lastId = talkersJson.length;
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
 
     const newTalker = {
-        id: lastId + 1,
+        id,
         name,
         age,
         talk: { ...talk },
     };
 
-    talkersJson.push(newTalker);
-    const talkerJsonString = JSON.stringify(talkersJson);
-    saveTalker(talkerJsonString);
+    talkers.push(newTalker);
+    saveTalker(talkers);
 
     return res.status(HTTP_CREATED_STATUS).json(newTalker);
   }); // Adicionando Palestrantes
