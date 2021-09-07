@@ -38,12 +38,15 @@ app.get('/talker/:id', async (req, res) => {
 
 app.post('/login', loginFunc);
 
-app.post('/talker', validateToken, validateParams, (req, res) => {
+app.post('/talker', validateToken, validateParams, async (req, res) => {
   const { name, age, talk } = req.body;
-  return res.status(201).json({
-    id: 1,
+  const data = await readTalkerFunc();
+  const newTalker = {
+    id: data.length + 1,
     name,
     age,
     talk,
-  });
+  };
+  data.push(newTalker);
+  return res.status(201).json(newTalker);
 });
