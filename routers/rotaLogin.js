@@ -1,6 +1,6 @@
 const express = require('express');
 const { randomBytes } = require('crypto');
-const { passwordCheks, emailCheks } = require('../middleware/validations');
+const { passwordCheks, emailCheks } = require('../middleware/validationLogin');
 
 const login = express.Router();
 

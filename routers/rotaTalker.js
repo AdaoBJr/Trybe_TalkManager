@@ -3,6 +3,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 const { tokenCheks } = require('../middleware/validationToken');
+const { ageCheck, nameCheck, talkCheck, infoTalkCheck } = require('../middleware/validationFile');
 
 const HTTP_OK_STATUS = 200;
 const HTTP_OK_POST = 201;
@@ -25,7 +26,7 @@ router.get('/:id', async (req, res) => {
   return res.status(HTTP_OK_STATUS).send(DB.find((item) => item.id === +id));
 });
 
-router.post('/', tokenCheks, async (req, res) => {
+router.post('/', tokenCheks, ageCheck, nameCheck, talkCheck, infoTalkCheck, async (req, res) => {
   const { name, age, talk } = req.body;
   const DB = await OldDB();
   const newId = 1 + DB[DB.length - 1].id;
