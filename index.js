@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs/promises');
 const randToken = require('rand-token');
 
 const app = express();
@@ -9,32 +9,104 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-function readFile() {
-  let objData;
-  const stringData = fs.readFileSync('talker.json', 'utf-8');
-  if (stringData) {
-    objData = JSON.parse(stringData);
+async function writeFile(req, res, next) {
+  const { file } = req;
+  const data = fs.readFile('./talker.json');
+  const newFile = [...file, JSON.parse(data)];
+  try {
+    fs.writeFile('./talker.json', newFile);
+    res.status(201).send('Ok');
+    next();
+  } catch (err) {
+    console.error(err);
+    next(err);
   }
-  return objData;
 }
+
+async function readFile(req, _res, next) {
+  try {
+    const stringData = await fs.readFile('./talker.json');
+    req.file = JSON.parse(stringData);
+    next();
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
+}
+
+const validRate = (rate) => (!!(rate >= 1 && rate <= 5));
+
+const validToken = (req, res, next) => {
+  const token = req.headers.authorization;
+  if (!token) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+  if (token.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
+  }
+  next();
+};
+
+const validNameAge = (req, res, next) => {
+  const { name, age } = req.body;
+
+  if (!name) {
+    return res.status(400).json({ message: 'O campo "name" é obrigatório' });
+  } if (name.length < 3) {
+    return res.status(400).json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
+  }
+
+  if (age < 18) {
+    return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
+  }
+  if (!age) {
+    return res.status(400).json({ message: 'O campo "age" é obrigatório' });
+  }
+
+  next();
+};
+
+const validTalk = (req, res, next) => {
+  const { talk } = req.body;
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+  next();
+};
+
+const validWatchedAtRate = (req, res, next) => {
+  const { talk: { watchedAt, rate } } = req.body;
+  if (validRate(rate) === false) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  if (!watchedAt || !rate) {
+    return res.status(400).json(
+      { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
+    );
+  }
+  const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[/](0?[1-9]|1[012])[/]\d{4}$/;
+  if (dateRegex.test(watchedAt) === false) {
+    return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+  }
+  next();
+};
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.get('/talker', (_req, res) => {
-  const objData = readFile();
-  if (objData.length < 1) {
-    return res.status(HTTP_OK_STATUS).json([]);
-  }
-  return res.status(HTTP_OK_STATUS).json(objData); 
+app.get('/talker', readFile, (req, res) => {
+  const { file } = req;
+  return res.status(HTTP_OK_STATUS).json(file); 
 });
 
-app.get('/talker/:id', (req, res) => {
+app.get('/talker/:id', readFile, (req, res) => {
   const { id } = req.params;
-  const data = readFile();
-  const filterPeople = data.filter((people) => people.id === parseFloat(id));
+  const { file } = req;
+  const filterPeople = file.filter((people) => people.id === parseFloat(id));
     if (filterPeople.length > 0) { 
       return res.status(HTTP_OK_STATUS).json(...filterPeople); 
     }
@@ -55,6 +127,19 @@ app.post('/login', (req, res) => {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
   return res.status(HTTP_OK_STATUS).json({ token });
+});
+
+app.post('/talker', validToken, validNameAge, validTalk, validWatchedAtRate, readFile, writeFile,
+  (req, res) => {
+  const { file } = req;
+  const data = fs.readFile('./talker.json');
+  console.log(JSON.parse(data));
+  const newData = file[file.length - 1];
+  res.status(201).json(newData);
+});
+
+app.use((err, _req, res, _next) => {
+  res.status(500).send(err);
 });
 
 app.listen(PORT, () => {
