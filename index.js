@@ -7,6 +7,9 @@ const {
   postTalker,
 } = require('./middlewares/index');
 const validateToken = require('./middlewares/validateToken');
+const validateName = require('./middlewares/validateName');
+const validateAge = require('./middlewares/validateAge');
+const validateTalk = require('./middlewares/validateTalk');
 
 const app = express();
 app.use(bodyParser.json());
@@ -26,7 +29,7 @@ app.listen(PORT, () => {
 // --------------------------------------------------------
 // 4º Requisito:
 
-app.post('/talker', validateToken, postTalker);
+app.post('/talker', validateToken, validateName, validateAge, validateTalk, postTalker);
 
 // --------------------------------------------------------
 // 3º Requisito:
