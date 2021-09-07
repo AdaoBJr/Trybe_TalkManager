@@ -9,6 +9,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+let token;
 
 const talkerData = 'talker.json';
 
@@ -69,7 +70,7 @@ function validateName(name, age, talk) {
 }
 
 function validateToken(req, res, next) {
-  const { token } = req.headers;
+  // const { token } = req;
   const { name, age, talk } = req.body;
   if (!token) return res.status(401).json({ message: 'Token não encontrado' });
   if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
@@ -92,9 +93,9 @@ function readData() {
 }
 
 app.post('/login', validateData, (req, res) => {
-  const token = randtoken.generate(16);
+  token = randtoken.generate(16);
   res.status(HTTP_OK_STATUS).json({ token });
-  req.headers.token = token;
+  // req.token = token;
 });
 
 app.get('/talker', (req, res) => {
