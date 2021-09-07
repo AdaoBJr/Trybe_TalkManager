@@ -2,7 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
 const crypto = require('crypto');
-const { validatedEmail, validatedPassword } = require('./middlewares/validations');
+const {
+  validatedEmail,
+  validatedPassword,
+  validatedToken,
+  validatedName,
+  validatedAge,
+  validatedTalk,
+  validatedWatchedAt,
+  validatedRate,
+} = require('./middlewares/validations');
 
 const talkerData = './talker.json';
 
@@ -46,6 +55,18 @@ app.get('/talker/:id', (req, res) => {
 app.post('/login', validatedEmail, validatedPassword, (_req, res) => {
   const token = crypto.randomBytes(8).toString('hex');
   res.status(HTTP_OK_STATUS).json({ token: `${token}` });
+});
+
+app.post('/talker', validatedToken, validatedName, validatedAge,
+  validatedTalk, validatedRate, validatedWatchedAt, (req, res) => {
+  const talkers = fs.readFile('talker.json', 'utf8');
+  const talkersJson = JSON.parse(talkers);
+  const { name, age, talk } = req.body;
+  const id = 5;
+  const newTalker = ({ id, name, age, talk });
+  talkersJson.push(newTalker);
+  fs.writeFile('talker.json', JSON.stringify(talkersJson));
+  return res.status(201).json({ id, name, age, talk });
 });
 
 app.use((error, _req, res, _next) => {
