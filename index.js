@@ -15,6 +15,8 @@ const {
 } = require('./middlewares/validations');
 
 const talkerData = './talker.json';
+const talkerDotJSON = 'talker.json';
+// variável criada pra corrigir repetição do termo pra se adequar ao ESLint
 
 const app = express();
 app.use(bodyParser.json());
@@ -22,7 +24,6 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-// não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
@@ -60,13 +61,13 @@ app.post('/login', validatedEmail, validatedPassword, (_req, res) => {
 
 app.post('/talker', validatedToken, validatedName, validatedAge,
   validatedTalk, validatedRate, validatedWatchedAt, (req, res) => {
-  const talkers = fs.readFileSync('talker.json', 'utf8');
+  const talkers = fs.readFileSync(talkerDotJSON, 'utf8');
   const talkersJson = JSON.parse(talkers);
   const { name, age, talk } = req.body;
   const id = 5;
   const newTalker = ({ id, name, age, talk });
   talkersJson.push(newTalker);
-  fs.writeFileSync('talker.json', JSON.stringify(talkersJson));
+  fs.writeFileSync(talkerDotJSON, JSON.stringify(talkersJson));
   return res.status(201).json({ id, name, age, talk });
 });
 
@@ -74,14 +75,25 @@ app.put('/talker/:id', validatedToken, validatedName, validatedAge,
 validatedTalk, validatedRate, validatedWatchedAt, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
-  const updateTalker = await fsp.readFile('talker.json', 'utf8');
+  const updateTalker = await fsp.readFile(talkerDotJSON, 'utf8');
   const updateTalkerJson = await JSON.parse(updateTalker);
   const findTalker = updateTalkerJson.find((talker) => talker.id === Number(id));
   const talkerIndex = updateTalkerJson.indexOf(findTalker, 0);
-  console.log(talkerIndex);
   updateTalkerJson[talkerIndex] = { ...updateTalkerJson[talkerIndex], name, age, talk };
-  await fsp.writeFile('talker.json', JSON.stringify(updateTalkerJson));
+  await fsp.writeFile(talkerDotJSON, JSON.stringify(updateTalkerJson));
   return res.status(200).json(updateTalkerJson[talkerIndex]);
+});
+
+app.delete('/talker/:id', validatedToken, async (req, res) => {
+  const { id } = req.params;
+  const deleteTalker = await fsp.readFile(talkerDotJSON, 'utf-8');
+  const deleteTalkerJson = await JSON.parse(deleteTalker);
+  const findTalker = deleteTalkerJson.find((talker) => talker.id === Number(id));
+  const talkerIndex = deleteTalkerJson.indexOf(findTalker, 0);
+  if (talkerIndex === -1) return res.status(404).send({ message: 'Pessoa não encontrada' });
+  deleteTalkerJson.splice(talkerIndex, 1);
+  await fsp.writeFile(talkerDotJSON, JSON.stringify(deleteTalkerJson));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.use((error, _req, res, _next) => {
