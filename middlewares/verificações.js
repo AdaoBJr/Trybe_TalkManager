@@ -10,7 +10,7 @@ const verificaToken = (req, res, next) => {
 };
 
 const verificaNome = (req, res, next) => {
-  const { name } = req.headers;
+  const { name } = req.body;
   if (!name) {
     return res.status(400).json({ message: 'O campo "name" é obrigatório' });
   }
@@ -21,7 +21,7 @@ const verificaNome = (req, res, next) => {
 };
 
 const verificaIdade = (req, res, next) => {
-  const { age } = req.headers;
+  const { age } = req.body;
   if (!age) {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
