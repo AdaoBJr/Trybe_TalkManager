@@ -5,6 +5,14 @@ const getFileObject = () =>
 
 const read = (id) => getFileObject().find((item) => item.id === id);
 
+const create = (data) => {
+  const fileObject = getFileObject();
+  const id = Math.max(...fileObject.map((item) => item.id)) + 1;
+  fileObject.push({ ...data, id });
+  fs.writeFileSync('./talker.json', JSON.stringify(fileObject));
+  return ({ ...data, id });
+};
+
 const deleteTalker = (id) => {
   const fileObject = getFileObject();
   const index = fileObject.findIndex((item) => item.id === id);
@@ -16,4 +24,5 @@ module.exports = {
   getFileObject,
   read,
   deleteTalker,
+  create,
 };
