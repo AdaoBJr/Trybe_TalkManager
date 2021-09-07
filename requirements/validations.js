@@ -5,7 +5,7 @@ async function getAllTalkers() {
     .then((fileContent) => JSON.parse(fileContent));
 }
 
-function criarNovoPalestrante(novoPalestrante) {
+async function criarNovoPalestrante(novoPalestrante) {
   return fs.writeFile('./talker.json', JSON.stringify(novoPalestrante));
 }
 
