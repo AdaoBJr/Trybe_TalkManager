@@ -4,40 +4,35 @@ const findOne = (id, listTalkers) => {
   };
   
   const fs = require('fs').promises;
-  const { promisify } = require('util');
-  const { gerarToken } = require('../helpers');
-  
-  const token = gerarToken();
+  // const { gerarToken } = require('../helpers');
   
   const validarEmail = (email) => {
     const obrigatorio = { message: 'O campo "email" é obrigatório' };
     const formato = { message: 'O "email" deve ter o formato "email@email.com"' };
-  
+    
     if (!email) return obrigatorio; 
     const validEmail = email.includes('@') && email.includes('.com');
     if (!validEmail) return formato;
     return 'ok';
   };
-  
   const validarSenha = (password) => {
     const obrigatorio = { message: 'O campo "password" é obrigatório' };
     const minimo = { message: 'O "password" deve ter pelo menos 6 caracteres' };
-  
     if (!password) return obrigatorio;  
     if (password.length < 6) return minimo;
     return 'ok';
   };
   
   const validaToken = (req, res, next) => {
-    const { authorization } = req.headers;
-    if (!authorization) {
-      res.status(401).json({ message: 'Token não encontrado' });
-    } else if (authorization !== token) {
-      res.status(401).json({ message: 'Token inválido' });
+    const token = req.headers.authorization;
+    if (!token) {
+      return res.status(401).json({ message: 'Token não encontrado' });
+    } 
+    if (token.length && token.length !== 16) {
+      return res.status(401).json({ message: 'Token inválido' });
     } 
     next();
   };
-  
   const validaNome = (req, res, next) => {
     const { name } = req.body;
     if (!name) {
@@ -48,7 +43,6 @@ const findOne = (id, listTalkers) => {
     }
     next();
   };
-  
   const validaAge = (req, res, next) => {
     const { age } = req.body;
     if (!age) {
@@ -60,38 +54,32 @@ const findOne = (id, listTalkers) => {
     }
     next();
   };
-  
   const validaTalk = (req, res, next) => {
     const { talk } = req.body;
     if (!talk) {
       return res
        .status(400)
-       .json({ message: 
-        'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+       .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
     if (!talk.watchedAt && talk.watchedAt !== 0) {
       return res
        .status(400)
-       .json({ message: 
-        'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+       .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
     next();
   };
-  
   const validaRate = (req, res, next) => {
     const { rate } = req.body.talk;
     if (!rate && rate !== 0) {
       return res
        .status(400)
-       .json({ message: 
-        'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+       .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
     if (rate < 1 || rate > 5) {
       return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
     next();
   };
-  
   const validaDate = (req, res, next) => {
     const { talk } = req.body;
     const regexDate = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g;
@@ -102,16 +90,13 @@ const findOne = (id, listTalkers) => {
     }
     next();
   };
-  
   function readFile() {
     const talkers = fs.readFile('./talker.json', 'utf-8');
     return talkers.then((data) => JSON.parse(data));
   }
-  
   function writeFileTalker(newTalker) {
     return fs.writeFile('./talker.json', JSON.stringify(newTalker));
   }
-  
   const addTalker = async (req, res) => {
     const { name, age, talk } = req.body;
     const talkersList = await readFile();
@@ -128,15 +113,13 @@ const findOne = (id, listTalkers) => {
   };
   
   const editTalker = async (req, res) => {
-    fs.readFile('./talker.json', 'utf-8', promisify((err, content) => {
-      const { body } = req;
-      const { id } = req.params;
-      let allTalkers = JSON.parse(content);
-      allTalkers = allTalkers.filter((talker) => talker.id !== id);
-      const novaListaTalker = [...allTalkers, body];
-      fs.writeFileSync('./talker.json', JSON.stringify(novaListaTalker));
-      res.status(201).json(body);
-    }));
+    const { name, age, talk } = req.body;
+    let talkersList = await readFile();
+    const { id } = req.params;  
+    talkersList = talkersList.filter((talker) => talker.id !== +id);
+    talkersList.push({ id: +id, name, age, talk });
+    await writeFileTalker(talkersList);  
+    return res.status(201).json(req.body);
   };
   
   module.exports = {
