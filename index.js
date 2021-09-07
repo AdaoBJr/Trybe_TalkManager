@@ -8,8 +8,16 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const { getAllTalkers, getTalker } = require('./readFile.js');
-const { emailValidation, passwordValidation } = require('./authMiddleware');
+const { getAllTalkers, getTalker, postTalker } = require('./readFile.js');
+const { emailValidation,
+        passwordValidation,
+        tokenValidation,
+        nameValidation,
+        ageValidation,
+        talkValidation,
+        watchedAtValidation,
+        rateValidation,
+      } = require('./authMiddleware');
 
 // não remova esse endpoint, e para o avaliador funcionar;
 app.get('/', (_request, response) => {
@@ -21,6 +29,21 @@ app.get('/talker', async (_request, response) => {
       response.status(HTTP_OK_STATUS).json(talkers);
 });
 
+app.post(
+  '/talker',
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
+  async (request, response) => {
+    const { body } = request;
+    const talker = await postTalker(body);
+    response.status(201).json(talker);
+},
+);
+
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
   const talker = await getTalker(id);
@@ -29,8 +52,7 @@ app.get('/talker/:id', async (request, response) => {
 });
 
 app.post('/login', emailValidation, passwordValidation, async (request, response) => {
-  const token = randomBytes(8).toString('hex');
-  response.status(HTTP_OK_STATUS).json({ token });
+  response.status(HTTP_OK_STATUS).json({ token: randomBytes(8).toString('hex') });
 });
 
 app.listen(PORT, () => {
