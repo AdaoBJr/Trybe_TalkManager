@@ -5,7 +5,7 @@ const addTalker = (req, res) => {
   const talker = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
   const newTalker = { id: talker.length + 1, name, age, talk };
   talker.push(newTalker);
-  fs.writeFileSync('talk.json', JSON.stringify(talker));
+  fs.writeFileSync('talker.json', JSON.stringify(talker));
   return res.status(201).json(newTalker);
 };
 module.exports = addTalker;
