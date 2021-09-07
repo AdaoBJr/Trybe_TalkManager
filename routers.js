@@ -100,6 +100,7 @@ verifyToken, async (req, res) => {
 const { id } = req.params;
 const talker = await getAllTalkers();
 const deleteTalker = talker.findIndex((t) => t.id === parseInt(id, 10));
+if (deleteTalker === -1) return res.status(404).json({ message: 'Talker not found!' });
 talker.splice(deleteTalker, 1);
 res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
