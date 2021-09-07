@@ -33,7 +33,7 @@ const emailValid = (req, res, next) => {
   const regex = /\S+@\S+\.\S+/;
 
   if (!email) {
-    return res.status(HTPP_ERROR_STATUS).json({ message: 'O campo "email" é obrigatório' });
+    return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   if (!regex.test(email)) {
     return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
