@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const talker = require('./routers/rotaTalker');
-// const login = require('./routers/rotaLogin');
+const login = require('./routers/rotaLogin');
 
 const app = express();
 app.use(bodyParser.json());
@@ -13,7 +13,7 @@ app.get('/', (_request, response) => {
 });
 
 app.use('/talker', talker);
-// app.use('/login', login);
+app.use('/login', login);
 
 app.listen(PORT, () => {
   console.log('Online');

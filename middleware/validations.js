@@ -26,7 +26,7 @@ const emailCheks = (req, res, next) => {
   next();
 };
 
-module.export = {
+module.exports = {
   loginCheks,
   emailCheks,
 };
