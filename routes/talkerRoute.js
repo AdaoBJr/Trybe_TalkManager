@@ -71,7 +71,7 @@ talkerRoute.put('/:id',
   const { name, age, talk } = req.body;
   const { id } = req.params;
   saveTalker(talkers.map((talker) => {
-    if (talker.id === req.params.id) {
+    if (talker.id === Number(id)) {
       return { ...talker, ...req.body };
     }
     return talker;
