@@ -87,7 +87,8 @@ talkerRoute.put('/:id',
 
 talkerRoute.delete('/:id', validateToken, async (req, res) => {
   const talkers = await getTalkers();
-  saveTalker(talkers.filter((talker) => talker.id !== req.params.id));
+  const { id } = req.params;
+  saveTalker(talkers.filter((talker) => talker.id !== Number(id)));
 
   return res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
 }); // Deletando Palestrante
