@@ -2,7 +2,7 @@ const findOne = (id, listTalkers) => {
     const talkerFind = listTalkers.find((talker) => talker.id === +id);
     return talkerFind;
   };
-  
+
   const fs = require('fs').promises;
   // const { gerarToken } = require('../helpers');
   
@@ -15,6 +15,7 @@ const findOne = (id, listTalkers) => {
     if (!validEmail) return formato;
     return 'ok';
   };
+  
   const validarSenha = (password) => {
     const obrigatorio = { message: 'O campo "password" é obrigatório' };
     const minimo = { message: 'O "password" deve ter pelo menos 6 caracteres' };
@@ -33,6 +34,7 @@ const findOne = (id, listTalkers) => {
     } 
     next();
   };
+  
   const validaNome = (req, res, next) => {
     const { name } = req.body;
     if (!name) {
@@ -43,6 +45,7 @@ const findOne = (id, listTalkers) => {
     }
     next();
   };
+  
   const validaAge = (req, res, next) => {
     const { age } = req.body;
     if (!age) {
@@ -54,6 +57,7 @@ const findOne = (id, listTalkers) => {
     }
     next();
   };
+  
   const validaTalk = (req, res, next) => {
     const { talk } = req.body;
     if (!talk) {
@@ -62,6 +66,7 @@ const findOne = (id, listTalkers) => {
        .json({ message:
          'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
     }
+  
     if (!talk.watchedAt && talk.watchedAt !== 0) {
       return res
        .status(400)
@@ -114,15 +119,16 @@ const findOne = (id, listTalkers) => {
     await writeFileTalker(talkersList);
     return res.status(201).json(newTalker);
   };
-  
+
   const editTalker = async (req, res) => {
     const { name, age, talk } = req.body;
     let talkersList = await readFile();
     const { id } = req.params;  
     talkersList = talkersList.filter((talker) => talker.id !== +id);
     talkersList.push({ id: +id, name, age, talk });
+  
     await writeFileTalker(talkersList);  
-    return res.status(201).json(req.body);
+    return res.status(200).json({ id: +id, name, age, talk });
   };
   
   module.exports = {
