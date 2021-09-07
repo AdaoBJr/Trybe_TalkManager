@@ -30,6 +30,7 @@ const talkCheck = (req, res, next) => {
     return res.status(HTTP_ERROR_VALUE)
     .send({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
   }
+  if (talk.rate === 0) { next(); }
   if (!talk.watchedAt || !talk.rate) {
     return res.status(HTTP_ERROR_VALUE)   
   .send({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
@@ -39,15 +40,15 @@ const talkCheck = (req, res, next) => {
 
 const infoTalkCheck = (req, res, next) => {
   const { watchedAt, rate } = req.body.talk;
-  const dataRegex = RegExp(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/);
-  if (!dataRegex.test(watchedAt)) {
-    return res.status(HTTP_ERROR_VALUE)
-      .send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
-  }
   const rateNumber = [1, 2, 3, 4, 5];
   if (!rateNumber.includes(rate)) {
     return res.status(HTTP_ERROR_VALUE)
       .send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
+  const dataRegex = RegExp(/^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/);
+  if (!dataRegex.test(watchedAt)) {
+    return res.status(HTTP_ERROR_VALUE)
+      .send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
   next();
 };

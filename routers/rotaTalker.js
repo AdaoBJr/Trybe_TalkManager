@@ -36,4 +36,14 @@ router.post('/', tokenCheks, ageCheck, nameCheck, talkCheck, infoTalkCheck, asyn
   return res.status(HTTP_OK_POST).send(newData);
 });
 
+router.put('/:id', tokenCheks, ageCheck, nameCheck, talkCheck, infoTalkCheck, async (req, res) => {
+  const { id } = req.params;
+  const DB = await OldDB();
+  const index = DB.findIndex((data) => data.id === +id);
+  const { name, age, talk } = req.body;
+  DB[index] = { id: +id, name, age, talk };
+  await fs.writeFile('./talker.json', JSON.stringify(DB));
+  return res.status(HTTP_OK_STATUS).send({ id: +id, name, age, talk });
+});
+
 module.exports = router;
