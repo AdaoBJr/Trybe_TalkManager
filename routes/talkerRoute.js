@@ -16,6 +16,7 @@ const talkerRoute = express.Router();
 
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED_STATUS = 201;
+// const HTTP_UNAUTHORIZED = 401;
 const HTTP_ERROR_NOT_FOUND = 404;
 
 talkerRoute.get('/', async (_req, res) => {
@@ -33,6 +34,21 @@ talkerRoute.get('/:id', async (req, res) => {
 
   return result;
 }); // Filtrando por Id de Palestrante
+
+// talkerRoute.get('/search', validateToken, async (req, res) => {
+//   const { busca } = req.query;
+//   // if (busca === '') {
+//   //   return res.status()
+//   // }
+//   const talkers = await getTalkers();
+//   const filterID = talkers.filter((talk) => talk.name.includes(busca));
+  
+//   const result = !filterID
+//     ? res.status(HTTP_UNAUTHORIZED).json(talkers)
+//     : res.status(HTTP_OK_STATUS).json(filterID);
+
+//   return result;
+// }); // Filtrando por name do Palestrante
 
 talkerRoute.post('/',
   validateToken,
@@ -60,16 +76,15 @@ talkerRoute.put('/:id',
   async (req, res) => {
     const talkers = await getTalkers();
     const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const result = { id: +id, name, age, talk };
+    
     saveTalker(talkers.map((talker) => {
       if (talker.id === Number(id)) {
         return { ...talker, ...req.body };
       }
       return talker;
     }));
-
-    const result = {
-      ...req.body,
-    };
 
     return res.status(HTTP_OK_STATUS).json(result);
   }); // Atualizando Palestrante
