@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getTalker } = require('./middlewares');
+const { getTalker, getTalkerId } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -18,3 +18,4 @@ app.listen(PORT, () => {
 });
 
 app.get('/talker', getTalker);
+app.get('/talker/:id', getTalkerId);
