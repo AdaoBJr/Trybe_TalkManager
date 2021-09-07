@@ -1,13 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-// const talker = require('./talker.json');
+const talkers = require('./talker.json');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+
+// Developer Mozilla: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
+app.get('/talker/:id', async (req, res) => {
+  const { id } = req.params;
+  const talker = talkers.find((obj) => obj.id === parseInt(id, 10));
+
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+
+  return res.status(200).json(talker);
+});
 
 app.get('/talker', async (_req, res) => {
     const file = await fs.readFile('./talker.json', 'utf-8');
@@ -22,8 +32,8 @@ app.get('/talker', async (_req, res) => {
   //   return res.status(500).json({ error: `Erro: ${err.message}` });
   // }
 
-  // if (talker.length === 0) return res.status(200).json([]);
-  // return res.status(200).json(talker);
+  // if (talkers.length === 0) return res.status(200).json([]);
+  // return res.status(200).json(talkers);
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
