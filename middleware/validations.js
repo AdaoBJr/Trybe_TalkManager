@@ -1,6 +1,6 @@
 const HTTP_ERROR_LOGUIN = 400;
 
-const loginCheks = (req, res, next) => {
+const passwordCheks = (req, res, next) => {
   const { password } = req.body;
   if (!password) {
     return res.status(HTTP_ERROR_LOGUIN).json({ message: 'O campo "password" é obrigatório' });
@@ -27,6 +27,6 @@ const emailCheks = (req, res, next) => {
 };
 
 module.exports = {
-  loginCheks,
+  passwordCheks,
   emailCheks,
 };
