@@ -85,7 +85,7 @@ talkerRoute.put('/:id',
   });
 }); // Atualizando Palestrante
 
-talkerRoute.delete('/:id', async (req, res) => {
+talkerRoute.delete('/:id', validateToken, async (req, res) => {
   const talkers = await getTalkers();
   saveTalker(talkers.filter((talker) => talker.id !== req.params.id));
 
