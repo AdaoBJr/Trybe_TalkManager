@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const crypto = require('crypto');
+const { validatedEmail, validatedPassword } = require('./middlewares/validations');
 
 const talkerData = './talker.json';
 
@@ -18,18 +20,18 @@ app.get('/', (_request, response) => {
 app.get('/talker', (_req, res) => {
   fs.readFile(talkerData, 'utf-8', (error, data) => {
     if (error) {
-      res.status(200).json([]);
+      res.status(HTTP_OK_STATUS).json([]);
     }
 
     const talkers = JSON.parse(data);
-    res.status(200).json(talkers);
+    res.status(HTTP_OK_STATUS).json(talkers);
   });
 });
 
 app.get('/talker/:id', (req, res) => {
   fs.readFile(talkerData, 'utf-8', (error, data) => {
     if (error) {
-      res.status(200).json([]);
+      res.status(HTTP_OK_STATUS).json([]);
     }
     const talkers = JSON.parse(data);
     const { id } = req.params;
@@ -37,8 +39,17 @@ app.get('/talker/:id', (req, res) => {
     if (!talkerId) {
       return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
     }
-    return res.status(200).json(talkerId);
+    return res.status(HTTP_OK_STATUS).json(talkerId);
   });
+});
+
+app.post('/login', validatedEmail, validatedPassword, (_req, res) => {
+  const token = crypto.randomBytes(8).toString('hex');
+  res.status(HTTP_OK_STATUS).json({ token: `${token}` });
+});
+
+app.use((error, _req, res, _next) => {
+  res.status(500).json({ error: `Erro: ${error.message}` });
 });
 
 app.listen(PORT, () => {
