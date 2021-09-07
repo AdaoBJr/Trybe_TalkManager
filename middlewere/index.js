@@ -11,6 +11,7 @@ const {
 } = require('./validations');
 const createTalker = require('./createTalker');
 const editTalker = require('./editTalker');
+const deleteTalker = require('./deleteTalker');
 
 module.exports = {
   getAllTalkers,
@@ -25,4 +26,5 @@ module.exports = {
   validateRate,
   createTalker,
   editTalker,
+  deleteTalker,
 };
