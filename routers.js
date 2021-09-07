@@ -42,6 +42,22 @@ router.get('/talker/:id', async (req, res) => {
     return res.status(200).json(getId);
 });
 
+router.post('/talker',
+verifyname,
+verifyToken,
+verifyAge,
+verifyFieldsTalk,
+verifyDate,
+verifyRate, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const palestrantes = await getAllTalkers();
+  const id = palestrantes.length + 1;
+  const novoPalestrante = { id, name, age, talk };
+  palestrantes.push(novoPalestrante);
+  criarNovoPalestrante(palestrantes);
+  return res.status(201).json(novoPalestrante);
+});
+
 router.post('/login', (req, res) => {
   const { email, password } = req.body;
   const emailRegex = /\S+@\S+\.\S+/;
@@ -60,22 +76,6 @@ router.post('/login', (req, res) => {
     }
     const token = crypto.randomBytes(8).toString('hex');
     return res.status(200).json({ token });
-});
-
-router.post('/talker',
-verifyname,
-verifyToken,
-verifyAge,
-verifyFieldsTalk,
-verifyDate,
-verifyRate, async (req, res) => {
-  const { name, age, talk } = req.body;
-  const palestrantes = await getAllTalkers();
-  const id = palestrantes.length + 1;
-  const novoPalestrante = { id, name, age, talk };
-  palestrantes.push(novoPalestrante);
-  criarNovoPalestrante(palestrantes);
-  return res.status(201).json(novoPalestrante);
 });
 
 router.put('/talker/:id',
@@ -102,6 +102,7 @@ const talker = await getAllTalkers();
 const deleteTalker = talker.findIndex((t) => t.id === parseInt(id, 10));
 if (deleteTalker === -1) return res.status(404).json({ message: 'Talker not found!' });
 talker.splice(deleteTalker, 1);
+criarNovoPalestrante(talker);
 res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
