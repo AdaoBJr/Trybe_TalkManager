@@ -75,7 +75,7 @@ talkerRoute.put('/:id',
     return talker;
   }));
 
-  return res.status(HTTP_CREATED_STATUS).json({
+  return res.status(HTTP_OK_STATUS).json({
     id,
     name,
     age,
