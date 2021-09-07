@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { writeFile } = require('fs').promises;
 const { readTalkerFunc } = require('./Helpers/readTalker');
 const { loginFunc } = require('./Helpers/login');
 const { validateParams, validateToken } = require('./Helpers/addTalker');
@@ -48,5 +49,6 @@ app.post('/talker', validateToken, validateParams, async (req, res) => {
     talk,
   };
   data.push(newTalker);
+  await writeFile('./talker.json', JSON.stringify(data));
   return res.status(201).json(newTalker);
 });
