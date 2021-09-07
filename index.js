@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const { readTalkerFunc } = require('./Helpers/readTalker');
 const { loginFunc } = require('./Helpers/login');
+const { validateParams, validateToken } = require('./Helpers/addTalker');
 
 const app = express();
 app.use(bodyParser.json());
@@ -36,3 +37,13 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.post('/login', loginFunc);
+
+app.post('/talker', validateToken, validateParams, (req, res) => {
+  const { name, age, talk } = req.body;
+  return res.status(201).json({
+    id: 1,
+    name,
+    age,
+    talk,
+  });
+});
