@@ -10,16 +10,16 @@ const validateAge = (req, res, next) => {
       .json({ message: 'O campo "age" é obrigatório' });
   }
 
-  if (numberAge < DEFAULT_AGE) {
+  if (typeof numberAge !== 'number' || numberAge < DEFAULT_AGE) {
     return res.status(HTTP_BAD_REQUEST)
-      .json({ mesage: 'A pessoa palestrante deve ser maior de idade' });
+      .json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
   next();
 };
 
 const validateDate = (req, res, next) => {
   const { talk: { watchedAt } } = req.body;
-  const dateRegex = /^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/;
+  const dateRegex = /^[0-9]{2}\/[0-9]{2}\/[0-9]{4}$/;
 
   if (!dateRegex.test(watchedAt)) {
     return res.status(HTTP_BAD_REQUEST)
@@ -48,7 +48,7 @@ const validateName = (req, res, next) => {
 const validateRate = (req, res, next) => {
   const { rate } = req.body.talk;
   const numberRate = Number(rate);
-  if (!Number.isInteger(numberRate) || numberRate < 1 || numberRate > 5) {
+  if (typeof numberRate !== 'number' || numberRate > 5 || numberRate < 1) {
     return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
