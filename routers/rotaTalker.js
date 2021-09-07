@@ -46,4 +46,13 @@ router.put('/:id', tokenCheks, ageCheck, nameCheck, talkCheck, infoTalkCheck, as
   return res.status(HTTP_OK_STATUS).send({ id: +id, name, age, talk });
 });
 
+router.delete('/:id', tokenCheks, async (req, res) => {
+  const { id } = req.params;
+  const DB = await OldDB();
+  const index = DB.findIndex((data) => data.id === +id);
+  DB.splice(index, 1);
+  await fs.writeFile('./talker.json', JSON.stringify(DB));
+  return res.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 module.exports = router;
