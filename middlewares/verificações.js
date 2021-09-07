@@ -32,13 +32,13 @@ const verificaIdade = (req, res, next) => {
 };
 
 const verificaData = (req, res, next) => {
-  const { talk: { watchedAt, rate } } = req.body;
+  const { talk } = req.body;
   const regexData = /^\d{2}\/\d{2}\/\d{4}$/;
-  if (!regexData.test(watchedAt)) {
+  if (!regexData.test(talk.watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um número de 1 à 5' });
+  if (talk.rate < 1 || talk.rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
