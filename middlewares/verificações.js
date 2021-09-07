@@ -53,8 +53,8 @@ const verificaTalk = (req, res, next) => {
 };
 
 module.exports = {
-verificaNome,
 verificaToken,
+verificaNome,
 verificaIdade,
 verificaData,
 verificaTalk,

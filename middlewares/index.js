@@ -1,23 +1,23 @@
 const getTalker = require('./getTalker');
 const getTalkerId = require('./getTalkerId');
 const login = require('./login');
+const addTalker = require('./addTalker');
 const {
-  verificaNome,
   verificaToken,
+  verificaNome,
   verificaIdade,
   verificaData,
   verificaTalk,
 } = require('./verificações');
-const addTalker = require('./addTalker');
 
 module.exports = {
   getTalker,
   getTalkerId,
   login,
-  verificaNome,
+  addTalker,
   verificaToken,
+  verificaNome,
   verificaIdade,
   verificaData,
   verificaTalk,
-  addTalker,
  };

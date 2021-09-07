@@ -4,12 +4,12 @@ const {
   getTalker,
   getTalkerId,
   login,
-  verificaNome,
+  addTalker,
   verificaToken,
+  verificaNome,
   verificaIdade,
   verificaData,
   verificaTalk,
-  addTalker,
  } = require('./middlewares');
 
 const app = express();
@@ -34,8 +34,8 @@ app.get('/talker/:id', getTalkerId);
 app.post('/login', login);
 
 app.post('/talker', [
-  verificaNome,
   verificaToken,
+  verificaNome,
   verificaIdade,
   verificaData,
   verificaTalk,
