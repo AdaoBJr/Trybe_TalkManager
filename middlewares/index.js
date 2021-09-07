@@ -83,9 +83,38 @@ const postTalker = (req, res) => {
   .catch((err) => res.status(HTTP_BAD_REQUEST).json(err));
 };
 
+// --------------------------------------------------------
+// 5º Requisito:
+
+// --------------------------------------------------------
+// 6º Requisito:
+
+const deleteTalker = (req, res) => {
+  const { id } = req.params;
+  handleReadFile()
+  .then((talkers) => JSON.parse(talkers))
+  .then((talkers) => {
+    const talkerIndex = talkers.findIndex((e) => e.id === Number(id));
+    if (talkerIndex >= 0) {
+      talkers.splice(talkerIndex, 1);
+      handleWriteFile(talkers)
+      .then(() => res.status(HTTP_OK_STATUS).json(
+        {
+          message: 'Pessoa palestrante deletada com sucesso',
+        },
+      )
+      .catch((err) => res.status(HTTP_BAD_REQUEST).json(err)));
+    }
+  })
+  .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
+};
+
+// --------------------------------------------------------
+
 module.exports = {
   getTalkers,
   getTalkerByID,
   getToken,
   postTalker,
+  deleteTalker,
 };

@@ -5,6 +5,7 @@ const {
   getTalkerByID,
   getToken,
   postTalker,
+  deleteTalker,
 } = require('./middlewares/index');
 const validateToken = require('./middlewares/validateToken');
 const validateName = require('./middlewares/validateName');
@@ -26,6 +27,14 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+// --------------------------------------------------------
+// 6º Requisito:
+
+app.delete('/talker/:id', validateToken, deleteTalker);
+
+// --------------------------------------------------------
+// 5º Requisito:
 
 // --------------------------------------------------------
 // 4º Requisito:
