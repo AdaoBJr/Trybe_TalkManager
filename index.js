@@ -28,6 +28,23 @@ app.get('/', (_request, response) => {
 const getTalkers = () => fs.readFile('./talker.json', 'utf-8')
   .then((res) => JSON.parse(res));
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { name } = req.query;
+
+  const talkerList = await getTalkers();
+  if (!name) return res.status(200).json(talkerList);
+
+  const talkerFilteredByName = talkerList.filter((talker) => talker.name.includes(name));
+  console.log(talkerFilteredByName);
+  
+  if (talkerFilteredByName) {
+    return res.status(200).json(talkerFilteredByName);
+  }
+  if (talkerFilteredByName.includes(name).length === 0) {
+    return res.status(200).json([]);
+  }
+});
+
 app.get('/talker/:id', async (req, res) => {
   const talkerList = await getTalkers();
 
