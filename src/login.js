@@ -1,6 +1,6 @@
 const emailValidator = require('email-validator');
-const sendErrorMessage = require('./sendErrorMessage');
 const randomstring = require('randomstring');
+const sendErrorMessage = require('./sendErrorMessage');
 
 module.exports = [
   (req, res, next) => {
@@ -19,9 +19,9 @@ module.exports = [
       sendErrorMessage(400, 'O "password" deve ter pelo menos 6 caracteres', res);
     } else next();
   },
-  (req, res, next) => {
+  (req, res, _next) => {
     res.json({
       token: randomstring.generate(16),
-    })
-  }
+    });
+  },
 ];
