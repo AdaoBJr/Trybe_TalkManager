@@ -1,6 +1,6 @@
 const HTTP_BAD_REQUEST = 400;
 
-const validateTalk = (req, res, next) => {
+const validateWatchedAt = (req, res, next) => {
   const { talk } = req.body;
   const { watchedAt } = talk;
   const dateRegex = new RegExp(/\d{2}\/\d{2}\/\d{4}/);
@@ -19,4 +19,4 @@ const validateTalk = (req, res, next) => {
   next();
 };
 
-module.exports = validateTalk;
+module.exports = validateWatchedAt;
