@@ -4,6 +4,12 @@ const fs = require('fs');
 
 const talkers = './talker.json';
 
+const {
+  validateEmail,
+  validatePassword,
+  createToken,
+} = require('./middleware/validations');
+
 const app = express();
 app.use(bodyParser.json());
 
@@ -39,6 +45,12 @@ app.get('/talker/:id', (req, res) => {
     return res.status(200).json(idContent);
   });
 });
+
+app.post('/login', validateEmail, validatePassword, (_req, res) => res.status(200).json(
+  {
+    token: createToken(),
+  },
+));
 
 app.listen(PORT, () => {
   console.log('Online');
