@@ -17,10 +17,10 @@ const {
 
 router.get('/talker/search',
 verifyToken, async (req, res) => {
-const { name } = req.body;
+const { q } = req.query;
 const talker = await getAllTalkers();
-if (!name)res.status(200).json(talker);
-const filterTalkers = talker.filter((t) => t.name.includes(name));
+if (!q)res.status(200).json(talker);
+const filterTalkers = talker.filter((t) => t.name.includes(q));
 res.status(200).json(filterTalkers);
 });
 
