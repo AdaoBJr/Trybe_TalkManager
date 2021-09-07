@@ -40,7 +40,7 @@ const validateName = (req, res, next) => {
 
   if (name.length < DEFAULT_LENGTH) {
     return res.status(HTTP_BAD_REQUEST)
-      .json({ message: 'O campo "name" deve ter pelo menos 3 caracteres' });
+      .json({ message: 'O "name" deve ter pelo menos 3 caracteres' });
   }
   next();
 };
