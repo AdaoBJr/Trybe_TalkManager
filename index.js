@@ -59,13 +59,13 @@ app.post('/login', validatedEmail, validatedPassword, (_req, res) => {
 
 app.post('/talker', validatedToken, validatedName, validatedAge,
   validatedTalk, validatedRate, validatedWatchedAt, (req, res) => {
-  const talkers = fs.readFile('talker.json', 'utf8');
+  const talkers = fs.readFileSync('talker.json', 'utf8');
   const talkersJson = JSON.parse(talkers);
   const { name, age, talk } = req.body;
   const id = 5;
   const newTalker = ({ id, name, age, talk });
   talkersJson.push(newTalker);
-  fs.writeFile('talker.json', JSON.stringify(talkersJson));
+  fs.writeFileSync('talker.json', JSON.stringify(talkersJson));
   return res.status(201).json({ id, name, age, talk });
 });
 
