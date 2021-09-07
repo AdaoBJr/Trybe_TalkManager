@@ -23,7 +23,7 @@ app.post('/', (req, res) => {
   } if (body.password.length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
   }
-  const token = '7mqaVRXJSp886CGr'
+  const token = '7mqaVRXJSp886CGr';
   return res.status(200).json({ token });
 });
 
