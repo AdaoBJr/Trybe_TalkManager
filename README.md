@@ -71,7 +71,7 @@ Você vai desenvolver uma API de um CRUD (**C**reate, **R**ead, **U**pdate e **D
 
 ### Data de Entrega
 
-O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a avaliação final.
+O projeto tem até a seguinte data: `31/05/2021 - 14:00h`. Para ser entregue a avaliação final.
 
 ---
 
@@ -81,9 +81,9 @@ O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a a
 
 1. Clone o repositório
 
-- `git clone git@github.com:tryber/sd-010-b-project-talker-manager.git`.
+- `git clone https://github.com/betrybe/sd-08-project-talker-manager.git`.
 - Entre na pasta do repositório que você acabou de clonar:
-  - `cd sd-010-b-project-talker-manager`
+  - `cd sd-08-project-talker-manager`
 
 2. Instale as dependências [**Caso existam**]
 
@@ -97,7 +97,7 @@ O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a a
   - Exemplo: `git checkout master`
 - Agora crie uma branch à qual você vai submeter os `commits` do seu projeto
   - Você deve criar uma branch no seguinte formato: `nome-de-usuario-nome-do-projeto`
-  - Exemplo: `git checkout -b joaozinho-sd-010-b-project-talker-manager`
+  - Exemplo: `git checkout -b joaozinho-sd-08-project-talker-manager`
 
 4. Adicione as mudanças ao _stage_ do Git e faça um `commit`
 
@@ -114,17 +114,17 @@ O projeto tem até a seguinte data: `08/09/2021 - 14:00h`. Para ser entregue a a
 
 5. Adicione a sua branch com o novo `commit` ao repositório remoto
 
-- Usando o exemplo anterior: `git push -u origin joaozinho-sd-010-b-project-talker-manager`
+- Usando o exemplo anterior: `git push -u origin joaozinho-sd-08-project-talker-manager`
 
 6. Crie um novo `Pull Request` _(PR)_
 
-- Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-010-b-project-talker-manager/pulls)
+- Vá até a página de _Pull Requests_ do [repositório no GitHub](https://github.com/tryber/sd-08-project-talker-manager/pulls)
 - Clique no botão verde _"New pull request"_
 - Clique na caixa de seleção _"Compare"_ e escolha a sua branch **com atenção**
 - Clique no botão verde _"Create pull request"_
 - Adicione uma descrição para o _Pull Request_ e clique no botão verde _"Create pull request"_
 - **Não se preocupe em preencher mais nada por enquanto!**
-- Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-010-b-project-talker-manager/pulls) e confira que o seu _Pull Request_ está criado
+- Volte até a [página de _Pull Requests_ do repositório](https://github.com/tryber/sd-08-project-talker-manager/pulls) e confira que o seu _Pull Request_ está criado
 
 ## Durante o desenvolvimento
 
@@ -149,7 +149,7 @@ Para sinalizar que o seu projeto está pronto para o _"Code Review"_ dos seus co
 
   - No menu à direita, clique no _link_ **"Assignees"** e escolha **o seu usuário**;
 
-  - No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-010-b`.
+  - No menu à direita, clique no _link_ **"Reviewers"** e digite `students`, selecione o time `tryber/students-sd-08`.
 
 Caso tenha alguma dúvida, [aqui tem um video explicativo](https://vimeo.com/362189205).
 
@@ -173,7 +173,7 @@ Usaremos o [ESLint](https://eslint.org/) para fazer a análise estática do seu 
 
 Este projeto já vem com as dependências relacionadas ao _linter_ configuradas nos arquivos `package.json`.
 
-Para poder rodar o `ESLint` em um projeto basta executar o comando `npm install` dentro do projeto e depois `npm run lint`. Se a análise do `ESLint` encontrar problemas no seu código, tais problemas serão mostrados no seu terminal. Se não houver problema no seu código, nada será impresso no seu terminal.
+Para poder rodar os `ESLint` em um projeto basta executar o comando `npm install` dentro do projeto e depois `npm run lint`. Se a análise do `ESLint` encontrar problemas no seu código, tais problemas serão mostrados no seu terminal. Se não houver problema no seu código, nada será impresso no seu terminal.
 
 Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em extensions e baixar o [plugin `ESLint`](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint).
 
@@ -266,7 +266,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 
 - O endpoint deve ser capaz de retornar um token aleatório de 16 caracteres que deverá ser utilizado nas demais requisições.
 
-  - O endpoint deverá retornar um código de `status 200` com o token gerado, com o seguinte corpo:
+  - O endpoint deverá o retornar o token gerado, da seguinte forma:
 
   ```json
   {
@@ -279,7 +279,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
   ```json
   {
     "email": "email@email.com",
-    "password": "123456"
+    "password": 123456
   }
   ```
 
@@ -535,7 +535,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 
   - O campo `talk` é obrigatório e nenhuma das chaves citadas anteriormente podem ser vazias.
 
-    - Caso o campo não seja informado, esteja vazio ou então alguma de suas chaves não tenham sido informadas retorne `status 400`, com o seguinte corpo:
+    - Caso o campo não seja informa, esteja vazio ou então alguma de suas chaves não tenham sido informadas retorne `status 400`, com o seguinte corpo:
 
       ```json
       {
@@ -543,7 +543,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
       }
       ```
 - Caso esteja tudo certo, retorne o `status 200` e a pessoa editada.
-- O endpoint deve retornar o `status 200` e a pessoa palestrante que foi editada, da seguinte forma:
+- O endpoint deve retornar o `status 200` e a pessoa palestrante que foi editada, dá seguinte forma:
 
   ```json
   {
@@ -593,14 +593,14 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 - O endpoint deve retornar um array de palestrantes que contenham em seu nome o termo pesquisado no queryParam da URL. Devendo retornar o `status 200`, com o seguinte corpo:
 
   ```
-  /search?q=Da
+  /search?q=Ke
   ```
 
   ```json
   [
     {
       id: 1,
-      name: "Danielle Santos",
+      name: "Keanu Reeves",
       age: 56,
       talk: {
         watchedAt: "22/10/2019",
@@ -628,7 +628,7 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
     }
     ```
 
-- Caso `searchTerm` não seja informado ou esteja vazio, o endpoint deverá retornar um array com todos as pessoas palestrantes cadastradas, assim como no endpoint GET `/talker`, com um `status 200`.
+- Caso `searchTerm` não seja informado ou esteja vazio, o endpoint devera retornar um array com todos as pessoas palestrantes cadastradas, assim como no endpoint GET `/talker`, com um `status 200`.
 
 - Caso nenhuma pessoa palestrante satisfaça a busca, o endpoint deve retornar o `status 200` e um array vazio.
 
@@ -640,10 +640,6 @@ Você pode também instalar o plugin do `ESLint` no `VSCode`, bastar ir em exten
 
 Ao finalizar e submeter o projeto, não se esqueça de avaliar sua experiência preenchendo o formulário. Leva menos de 3 minutos!
 
-Link: [FORMULÁRIO DE AVALIAÇÃO DE PROJETO](https://bit.ly/3ta7hA0)
+Link: [FORMULÁRIO DE AVALIAÇÃO DE PROJETO](https://be-trybe.typeform.com/to/ZTeR4IbH)
 
 O avaliador automático não necessariamente avalia seu projeto na ordem em que os requisitos aparecem no readme. Isso acontece para deixar o processo de avaliação mais rápido. Então, não se assuste se isso acontecer, ok?
-
----
-
-Você sabia que o LinkedIn é a principal rede social profissional e compartilhar o seu aprendizado lá é muito importante para quem deseja construir uma carreira de sucesso? Compartilhe esse projeto no seu LinkedIn, marque o perfil da Trybe (@trybe) e mostre para a sua rede toda a sua evolução.
