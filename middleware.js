@@ -59,6 +59,16 @@ const validateTalk = (req, res, next) => {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   } 
+  if (!talk.rate) {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+  if (!talk.watchedAt) {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
   next();
 };
 
@@ -66,17 +76,8 @@ const validateRate = (req, res, next) => {
   const RATE_MIN = 1;
   const RATE_MAX = 5;
   const { talk: { rate } } = req.body;
-  console.log(rate);
 
-  const intRate = parseInt(rate, 10);
-
-  if (!rate) {
-    return res.status(400).json({ 
-    message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-  }); 
-}
-
-  if (intRate < RATE_MIN || intRate > RATE_MAX) {
+  if (rate < RATE_MIN || rate > RATE_MAX) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   } 
 
@@ -87,16 +88,10 @@ const validateDate = (req, res, next) => {
   const DATE_FORM = /(\d{1,2})\/(\d{1,2})\/(\d{4})/;
   const { talk: { watchedAt } } = req.body;
 
-  if (!watchedAt) {
-    return res.status(400).json({ 
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-  }
-
   if (!DATE_FORM.test(watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  
+
   next();
 };
 
