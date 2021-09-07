@@ -13,6 +13,15 @@ const create = (data) => {
   return ({ ...data, id });
 };
 
+const modify = (data) => {
+  const fileObject = getFileObject();
+  const index = fileObject.findIndex((item) => item.id === data.id);
+  if (index === -1) return null;
+  fileObject[index] = data;
+  fs.writeFileSync('./talker.json', JSON.stringify(fileObject));
+  return data;
+};
+
 const deleteTalker = (id) => {
   const fileObject = getFileObject();
   const index = fileObject.findIndex((item) => item.id === id);
@@ -23,6 +32,7 @@ const deleteTalker = (id) => {
 module.exports = {
   getFileObject,
   read,
+  modify,
   deleteTalker,
   create,
 };

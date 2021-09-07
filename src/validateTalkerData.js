@@ -19,7 +19,7 @@ module.exports = [
   },
   (req, res, next) => {
     const { talk } = req.body;
-    if (!talk || !talk.watchedAt || !talk.rate) {
+    if (!talk || !talk.watchedAt || talk.rate === undefined) {
       sendErrorMessage(
         400,
         'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
@@ -29,10 +29,10 @@ module.exports = [
   },
   (req, res, next) => {
     const { watchedAt, rate } = req.body.talk;
-    if (!watchedAt.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
-      sendErrorMessage(400, 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"', res);
-    } else if (![1, 2, 3, 4, 5].includes(rate)) {
+    if (![1, 2, 3, 4, 5].includes(rate)) {
       sendErrorMessage(400, 'O campo "rate" deve ser um inteiro de 1 à 5', res);
+    } else if (!watchedAt.match(/^\d{2}\/\d{2}\/\d{4}$/)) {
+      sendErrorMessage(400, 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"', res);
     } else next();
   },
 ];
