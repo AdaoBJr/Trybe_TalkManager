@@ -7,7 +7,8 @@ const { findOne,
   validaToken, 
   editTalker,
   validaNome, validaAge, validaDate, validaRate, validaTalk, addTalker } = require('./meddlewares');
-const app = express();
+
+  const app = express();
 app.use(express.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
