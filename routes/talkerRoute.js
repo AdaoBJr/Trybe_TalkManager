@@ -1,5 +1,5 @@
 const express = require('express');
-const { 
+const {
   getTalkers,
   saveTalker,
 } = require('../midlewears/talkers');
@@ -34,7 +34,7 @@ talkerRoute.get('/:id', async (req, res) => {
   return result;
 }); // Filtrando por Id de Palestrante
 
-talkerRoute.post('/', 
+talkerRoute.post('/',
   validateToken,
   validateName,
   validateAge,
@@ -43,20 +43,13 @@ talkerRoute.post('/',
   validateRate,
   async (req, res) => {
     const talkers = await getTalkers();
-
-    talkers.push(req.body);
+    const { name, age, talk } = req.body;
+    const newTalker = { id: talkers.length + 1, name, age, talk };
+    talkers.push(newTalker);
     saveTalker(talkers);
-    
-    const result = {
-      id: talkers.id,
-      name: talkers.name,
-      age: talkers.age,
-      talk: talkers.talk,
-    };
 
-    return res.status(HTTP_CREATED_STATUS).json(result);
+    return res.status(HTTP_CREATED_STATUS).json(newTalker);
   }); // Adicionando Palestrantes
-
 talkerRoute.put('/:id',
   validateToken,
   validateName,
@@ -65,23 +58,21 @@ talkerRoute.put('/:id',
   validateDate,
   validateRate,
   async (req, res) => {
-  const talkers = await getTalkers();
-  const { name, age, talk } = req.body;
-  const { id } = req.params;
-  saveTalker(talkers.map((talker) => {
-    if (talker.id === Number(id)) {
-      return { ...talker, ...req.body };
-    }
-    return talker;
-  }));
+    const talkers = await getTalkers();
+    const { id } = req.params;
+    saveTalker(talkers.map((talker) => {
+      if (talker.id === Number(id)) {
+        return { ...talker, ...req.body };
+      }
+      return talker;
+    }));
 
-  return res.status(HTTP_OK_STATUS).json({
-    id,
-    name,
-    age,
-    talk: { ...talk },
-  });
-}); // Atualizando Palestrante
+    const result = {
+      ...req.body,
+    };
+
+    return res.status(HTTP_OK_STATUS).json(result);
+  }); // Atualizando Palestrante
 
 talkerRoute.delete('/:id', validateToken, async (req, res) => {
   const talkers = await getTalkers();
