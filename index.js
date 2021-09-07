@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const fsp = require('fs').promises;
 const crypto = require('crypto');
 const {
   validatedEmail,
@@ -67,6 +68,20 @@ app.post('/talker', validatedToken, validatedName, validatedAge,
   talkersJson.push(newTalker);
   fs.writeFileSync('talker.json', JSON.stringify(talkersJson));
   return res.status(201).json({ id, name, age, talk });
+});
+
+app.put('/talker/:id', validatedToken, validatedName, validatedAge,
+validatedTalk, validatedRate, validatedWatchedAt, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const updateTalker = await fsp.readFile('talker.json', 'utf8');
+  const updateTalkerJson = await JSON.parse(updateTalker);
+  const findTalker = updateTalkerJson.find((talker) => talker.id === Number(id));
+  const talkerIndex = updateTalkerJson.indexOf(findTalker, 0);
+  console.log(talkerIndex);
+  updateTalkerJson[talkerIndex] = { ...updateTalkerJson[talkerIndex], name, age, talk };
+  await fsp.writeFile('talker.json', JSON.stringify(updateTalkerJson));
+  return res.status(200).json(updateTalkerJson[talkerIndex]);
 });
 
 app.use((error, _req, res, _next) => {
