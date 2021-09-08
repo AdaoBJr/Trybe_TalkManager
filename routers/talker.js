@@ -13,6 +13,16 @@ const {
 
 const router = express.Router();
 
+router.get('/talker/search', validateToken, (req, res) => {
+  const { q } = req.query;
+  const talkers = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
+
+  if (!q) return res.status(200).json(talkers);
+
+  const talkerByName = talkers.filter(({ name }) => name.includes(q));
+  res.status(200).json(talkerByName);
+});
+
 router.get('/talker', (_req, res) => {
   try {
     const talkers = JSON.parse(fs.readFileSync('./talker.json', 'utf8'));
