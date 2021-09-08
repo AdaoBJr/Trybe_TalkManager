@@ -1,7 +1,8 @@
 const express = require('express');
-const crypto = require('crypto');
 
 const router = express.Router();
+const crypto = require('crypto');
+
 const token = crypto.randomBytes(8).toString('hex');
 
 router.post('/', (req, res) => {
