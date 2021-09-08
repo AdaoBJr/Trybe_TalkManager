@@ -11,15 +11,14 @@ const PORT = '3000';
 
 async function writeFile(req, res, next) {
   const { file } = req;
-  const data = fs.readFile('./talker.json');
-  const newFile = [...file, JSON.parse(data)];
+  const newClient = req.body;
+  newClient.id = file.length + 1;
+  const newFile = [...file, newClient];
   try {
-    fs.writeFile('./talker.json', newFile);
-    res.status(201).send('Ok');
-    next();
+    await fs.writeFile('./talker.json', JSON.stringify(newFile));
+    return next();
   } catch (err) {
-    console.error(err);
-    next(err);
+    return next(err);
   }
 }
 
@@ -27,16 +26,15 @@ async function readFile(req, _res, next) {
   try {
     const stringData = await fs.readFile('./talker.json');
     req.file = JSON.parse(stringData);
-    next();
+    return next();
   } catch (err) {
-    console.error(err);
-    next(err);
+    return next(err);
   }
 }
 
 const validRate = (rate) => (!!(rate >= 1 && rate <= 5));
 
-const validToken = (req, res, next) => {
+const validToken = async (req, res, next) => {
   const token = req.headers.authorization;
   if (!token) {
     return res.status(401).json({ message: 'Token não encontrado' });
@@ -44,10 +42,10 @@ const validToken = (req, res, next) => {
   if (token.length !== 16) {
     return res.status(401).json({ message: 'Token inválido' });
   }
-  next();
+  return next();
 };
 
-const validNameAge = (req, res, next) => {
+const validNameAge = async (req, res, next) => {
   const { name, age } = req.body;
 
   if (!name) {
@@ -63,20 +61,20 @@ const validNameAge = (req, res, next) => {
     return res.status(400).json({ message: 'O campo "age" é obrigatório' });
   }
 
-  next();
+  return next();
 };
 
-const validTalk = (req, res, next) => {
+const validTalk = async (req, res, next) => {
   const { talk } = req.body;
   if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
-  next();
+  return next();
 };
 
-const validWatchedAtRate = (req, res, next) => {
+const validWatchedAtRate = async (req, res, next) => {
   const { talk: { watchedAt, rate } } = req.body;
   if (validRate(rate) === false) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
@@ -90,7 +88,7 @@ const validWatchedAtRate = (req, res, next) => {
   if (dateRegex.test(watchedAt) === false) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  next();
+  return next();
 };
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -130,12 +128,11 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/talker', validToken, validNameAge, validTalk, validWatchedAtRate, readFile, writeFile,
-  (req, res) => {
-  const { file } = req;
-  const data = fs.readFile('./talker.json');
-  console.log(JSON.parse(data));
+  async (_req, res) => {
+  const data = await fs.readFile('./talker.json');
+  const file = JSON.parse(data);
   const newData = file[file.length - 1];
-  res.status(201).json(newData);
+  return res.status(201).json(newData);
 });
 
 app.use((err, _req, res, _next) => {
