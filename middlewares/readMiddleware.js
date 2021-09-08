@@ -8,9 +8,10 @@ module.exports = (_req, res, _next) => {
       if (data === []) {
         return res.status(200).json([]);
       }
-      return res.status(200).json(JSON.parse(data));
+        return res.status(200).json(JSON.parse(data));
     })
     .catch((err) => {
-      console.error(err);
+      console.error(`Impossíver ler arquivo ${PATH}\n Erro: ${err}`);
+      process.exit(1);
     });
 };
