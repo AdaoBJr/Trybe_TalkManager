@@ -12,6 +12,7 @@ const {
 } = require('./verificações');
 const editTalker = require('./editTalker');
 const deleteTalker = require('./deleteTalker');
+const error = require('./erro');
 
 module.exports = {
   getTalker,
@@ -26,4 +27,5 @@ module.exports = {
   verificaTalk,
   editTalker,
   deleteTalker,
+  error,
  };
