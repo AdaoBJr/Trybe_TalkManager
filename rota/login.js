@@ -37,4 +37,3 @@ const formatPass = async (request, response, next) => {
 };
 
 module.exports = { containEmail, containPass, formatEmail, formatPass };
-
