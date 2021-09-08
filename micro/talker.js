@@ -106,7 +106,7 @@ console.log(age);
   next();
 };
 
-const writefile = (file, string) => {
+const writefile = (response, file, string) => {
   fs.writeFile(file, string, (err) => {
     if (err) {
    return response
@@ -123,7 +123,7 @@ const create = async (request, response, _next) => {
   const id = talkersJson.length + 1;
   const out = [...talkersJson, { id, name, age, talk }];
   const string = JSON.stringify(out);
-  writefile(file, string);
+  writefile(response, file, string);
   return response
     .status(201)
     .json({ id, name, age, talk });
@@ -145,6 +145,17 @@ const edit = async (request, response, _next) => {
     .json({ id: Number(id), name, age, talk });
 };
 
+const deleteTalker = async (request, response, _next) => {
+  const { id } = request.params;
+  const data = await getTalker();
+  const out = data.filter((talker) => talker.id !== Number(id));
+  const deleted = JSON.stringify(out);
+  writefile(response, file, deleted);
+  return response
+    .status(200)
+    .json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = {
   getAll,
   getTalkerID,
@@ -156,4 +167,5 @@ module.exports = {
   nameValidate,
   create,
   edit,
+  deleteTalker,
 };

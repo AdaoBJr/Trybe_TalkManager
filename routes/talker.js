@@ -12,6 +12,7 @@ const {
     create,
     rateValidate,
     edit,
+    deleteTalker,
 } = require('../micro/talker');
 
 router.route('/')
@@ -36,6 +37,10 @@ router.route('/:id')
         nameValidate,
         ageValidate,
         edit,
+    )
+    .delete(
+        tolkenValidate,
+        deleteTalker,
     );   
 
 module.exports = router;
