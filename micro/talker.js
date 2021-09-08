@@ -106,8 +106,8 @@ console.log(age);
   next();
 };
 
-const writefile = (response, file, string) => {
-  fs.writeFile(file, string, (err) => {
+const writefile = (response, fileUrl, string) => {
+  fs.writeFile(fileUrl, string, (err) => {
     if (err) {
    return response
       .status(404)
