@@ -145,6 +145,14 @@ const deleteTalker = async (request, response, _next) => {
     .json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const search = async (request, response, _next) => {
+  const { q } = request.query;
+  const talkers = fs.readFileSync(file, 'utf8');
+  const data = await JSON.parse(talkers);
+  const out = data.filter((talker) => talker.name.includes(q));
+  return response.status(200).send(out);
+};
+
 module.exports = {
   getAll,
   getTalkerID,
@@ -157,4 +165,5 @@ module.exports = {
   create,
   edit,
   deleteTalker,
+  search,
 };
