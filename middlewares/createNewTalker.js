@@ -10,9 +10,9 @@ const addTalker = async (req, res) => {
   const data = await fs.readFile(talkersData, 'utf8');
   const result = JSON.parse(data);
   const newTalker = {
-    id: result.length + 1,
     name,
     age,
+    id: result.length + 1,
     talk,
   };
 

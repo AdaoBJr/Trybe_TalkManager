@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 
-const talkersData = 'talker.json';
+const talkersData = './talker.json';
 
 const HTTP_OK_STATUS = 200;
 

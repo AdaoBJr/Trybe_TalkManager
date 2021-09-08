@@ -4,7 +4,7 @@ const NUMBER_MIN_CHARACTERS = 3;
 const validateName = (req, res, next) => {
   const { name } = req.body;
 
-  if (name === '' || !name) {
+  if (!name) {
     return res.status(BAD_REQUEST)
       .json({ message: 'O campo "name" é obrigatório' });
   }
