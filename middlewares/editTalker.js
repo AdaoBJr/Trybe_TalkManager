@@ -10,6 +10,6 @@ const editTalker = (req, res) => {
   findTalker.talk.watchedAt = talk.watchedAt;
   findTalker.talk.rate = talk.rate;
   fs.writeFileSync('talker.json', JSON.stringify(talker));
-  return res.status(200).json(findTalker);
+  res.status(200).json(findTalker);
 };
 module.exports = editTalker;
