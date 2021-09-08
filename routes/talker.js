@@ -31,7 +31,7 @@ router.route('/')
 router.route('/search')
         .get(
             tolkenValidate,
-            search
+            search,
             );
 
 router.route('/:id')
