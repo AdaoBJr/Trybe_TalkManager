@@ -1,6 +1,7 @@
 const express = require('express');
-const router = express.Router();
 const fs = require('fs').promises;
+
+const router = express.Router();
 
 const reader = () => {
   const file = fs.readFile('./talker.json', 'utf8')
