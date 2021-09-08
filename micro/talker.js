@@ -99,10 +99,6 @@ const ageValidate = (request, response, next) => {
     { message: 'A pessoa palestrante deve ser maior de idade' },
       ); 
 }
-console.log(age);
-  // if (!age) {
-  //   return response.status(400).json({ message: 'O campo "age" é obrigatório' });
-  // }
   next();
 };
 
@@ -124,7 +120,7 @@ const create = async (request, response, _next) => {
   writefile(response, file, string);
   return response
     .status(201)
-    .json({ id, name, age, talk });
+    .send({ id: Number(id), name, age, talk });
 };
 
 const edit = async (request, response, _next) => {
@@ -135,7 +131,6 @@ const edit = async (request, response, _next) => {
   const talkers = fs.readFileSync(file, 'utf8');
   const talkersJson = await JSON.parse(talkers);
   talkersJson[index] = { id: Number(id), name, age, talk };
-  console.log(talkersJson[index]);
   const string = JSON.stringify(talkersJson);
   writefile(file, string);
   return response
@@ -145,7 +140,8 @@ const edit = async (request, response, _next) => {
 
 const deleteTalker = async (request, response, _next) => {
   const { id } = request.params;
-  const data = await getTalker();
+  const talkers = fs.readFileSync(file, 'utf8');
+  const data = await JSON.parse(talkers);
   const out = data.filter((talker) => talker.id !== Number(id));
   const deleted = JSON.stringify(out);
   writefile(response, file, deleted);
