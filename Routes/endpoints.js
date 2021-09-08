@@ -18,8 +18,8 @@ router.get('/', async (_req, res) => {
 
 router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  const readX = await readFile();
-  const filtered = readX.find((resp) => Number(resp.id) === Number(id));
+  const readF = await readFile();
+  const filtered = readF.find((resp) => Number(resp.id) === Number(id));
   if (!filtered) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(200).json(filtered);
 });
@@ -43,6 +43,22 @@ router.post('/',
     const newTalkers = JSON.stringify([...file, result]);
     await fs.writeFile('talker.json', newTalkers);
     res.status(201).json(result);
+});
+
+router.put('/:id',
+token,
+Name,
+Age,
+data,
+thisTalk,
+  async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const readF = await readFile();
+  const peopleIndex = readF.findIndex((item) => item.id === Number(id));
+  readF[peopleIndex] = { ...readF[peopleIndex], name, age, talk };
+  await fs.writeFile('talker.json', JSON.stringify(readF));
+  res.status(200).json(readF[peopleIndex]);
 });
 
 module.exports = router;
