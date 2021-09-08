@@ -1,4 +1,7 @@
 const fs = require('fs');
+const path = require('path');
+
+const file = path.resolve(__dirname, '..', 'talker.json');
 
 const editTalker = (req, res) => {
   const { id } = req.params;
@@ -9,7 +12,7 @@ const editTalker = (req, res) => {
   findTalker.age = age;
   findTalker.talk.watchedAt = talk.watchedAt;
   findTalker.talk.rate = talk.rate;
-  fs.writeFileSync('talker.json', JSON.stringify(talker));
+  fs.writeFileSync(file, JSON.stringify(talker));
   res.status(200).json(findTalker);
 };
 module.exports = editTalker;
