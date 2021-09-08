@@ -181,6 +181,17 @@ const putValid = async (req, res) => {
   return res.status(200).json(newTalker);
 };
 
+const deleteValid = async (req, res) => {
+  const { id } = req.params;
+  const file = JSON.parse(await fs.readFile(fileCall, 'utf-8'));
+
+  const fileFilter = file.filter((talker) => talker.id !== Number(id));
+  const fileDelete = fileFilter;
+
+  await fs.writeFile(fileCall, JSON.stringify(fileDelete));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+};
+
 module.exports = { 
   getAll,
   getFilterId, 
@@ -195,4 +206,5 @@ module.exports = {
   postTalker,
   talkValid,
   putValid,
+  deleteValid,
 };
