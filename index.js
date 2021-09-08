@@ -9,9 +9,13 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
-let token;
 
 const talkerData = 'talker.json';
+
+// não remova esse endpoint, e para o avaliador funcionar
+app.get('/', (_request, response) => {
+  response.status(HTTP_OK_STATUS).send();
+});
 
 function validatePassword(password) {
   if (!password || password.trim() === '') return 'O campo "password" é obrigatório';
@@ -36,30 +40,30 @@ function validateData(req, res, next) {
    next(); 
 }
 
-function validateRate(rate) {
-  if (rate < 1 || rate > 5) {
-    return 'O campo "rate" deve ser um inteiro de 1 à 5';
+function validateWatchedAt(watchedAt) {
+  if (!date.isValid(watchedAt, 'DD/MM/YYYY')) {
+    return 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"';
   }
   return false;
 }
 
-function validateWatchedAt(talk) {
-  if (!date.isValid(talk.watchedAt, 'DD-MM-YYYY')) {
-    return 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"';
+function validateRate(talk) {
+  if (talk.rate < 1 || talk.rate > 5) {
+    return 'O campo "rate" deve ser um inteiro de 1 à 5';
   }
-  return validateRate(talk.rate);
+  return validateWatchedAt(talk.watchedAt);
 }
 
 function validateTalk(talk) {
   if (!talk || !talk.watchedAt || !talk.rate) {
     return 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
   }
-  return validateWatchedAt(talk);
+  return validateRate(talk);
 }
 
 function validateAge(age, talk) {
-  if (!age || age.trim() === '') return 'O campo "age" é obrigatório';
-  if (age < 18) return 'A pessoa palestrante deve ser maior de idade';
+  if (!age) return 'O campo "age" é obrigatório';
+  if (parseInt(age, 10) < 18) return 'A pessoa palestrante deve ser maior de idade';
   return validateTalk(talk);
 }
 
@@ -70,10 +74,10 @@ function validateName(name, age, talk) {
 }
 
 function validateToken(req, res, next) {
-  // const { token } = req;
+  const { authorization } = req.headers;
   const { name, age, talk } = req.body;
-  if (!token) return res.status(401).json({ message: 'Token não encontrado' });
-  if (token.length !== 16) return res.status(401).json({ message: 'Token inválido' });
+  if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
+  if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
   const message = validateName(name, age, talk);
   if (message) {
    return res.status(400).json({ message });
@@ -93,9 +97,8 @@ function readData() {
 }
 
 app.post('/login', validateData, (req, res) => {
-  token = randtoken.generate(16);
+  const token = randtoken.generate(16);
   res.status(HTTP_OK_STATUS).json({ token });
-  // req.token = token;
 });
 
 app.get('/talker', (req, res) => {
@@ -117,15 +120,13 @@ app.get('/talker/:id', (req, res) => {
 });
 
 app.post('/talker', validateToken, (req, res) => {
-  const { name, age, talk } = req.body;
-  const data = { id: 1, name, age, talk };
-  fs.writeFileSync(talkerData, data);
-  res.status(201).json(data);
-});
+  const { body } = req;
+  const talkers = JSON.parse(readData());
+  const data = { id: talkers.length + 1, ...body };
 
-// não remova esse endpoint, e para o avaliador funcionar
-app.get('/', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send();
+  talkers.push(data);
+  fs.writeFileSync(talkerData, JSON.stringify(talkers));
+  res.status(201).json(data);
 });
 
 app.listen(PORT, () => {
