@@ -10,13 +10,14 @@ const {
   ageValid,
   watchedAtValid,
   rateValid,
-  postTalker, 
+  postTalker,
+  talkValid, 
 } = require('../middlewares/index');
 
 router.get('/', getAll);
 
 router.get('/:id', getFilterId);
 
-router.post('/', tokenValid, nameValid, ageValid, watchedAtValid, rateValid, postTalker);
+router.post('/', tokenValid, nameValid, ageValid, talkValid, watchedAtValid, rateValid, postTalker);
 
 module.exports = router;

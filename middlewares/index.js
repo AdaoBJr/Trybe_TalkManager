@@ -64,13 +64,12 @@ const postLogin = (_req, res) => {
 
 const tokenValid = (req, res, next) => {
   const { authorization } = req.headers;
-  const tokenRegex = /^[a-zA-Z0-9]{16}$/;
  
   if (!authorization) {
    return res.status(401).json({ message: 'Token não encontrado' });
   }
  
-  if (!tokenRegex.test(authorization)) {
+  if (authorization.length !== 16) {
    return res.status(401).json({ message: 'Token inválido' });
   }
   next();
@@ -137,6 +136,17 @@ const rateValid = (req, res, next) => {
   next();
 };
 
+const talkValid = (req, res, next) => {
+  const { talk } = req.body;
+
+  if (!talk) {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
+  });
+  }
+  next();
+};
+
 const postTalker = async (req, res) => {
   const { name, age, talk } = req.body;
   const file = JSON.parse(await fs.readFile(fileCall, 'utf-8'));
@@ -164,5 +174,6 @@ module.exports = {
   ageValid,
   watchedAtValid,
   rateValid,
-  postTalker, 
+  postTalker,
+  talkValid, 
 };
