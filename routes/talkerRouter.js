@@ -4,14 +4,19 @@ const talkerRouter = express.Router();
 
 const HTTP_OK_STATUS = 200;
 
-const { getAllTalkers, getTalker, postTalker, putTalker, deleteTalker } = require('../readFile');
+const { getAllTalkers,
+        getTalker,
+        postTalker, 
+        putTalker, 
+        deleteTalker, 
+        filterTalkers } = require('../readFile');
+        
 const { tokenValidation,
         nameValidation,
         ageValidation,
         talkValidation,
         watchedAtValidation,
-        rateValidation,
-      } = require('../authMiddleware');
+        rateValidation } = require('../authMiddleware');
       
 talkerRouter.post(
 '/',
@@ -30,6 +35,12 @@ async (request, response) => {
 
 talkerRouter.get('/', async (_request, response) => {
   const talkers = await getAllTalkers();
+  response.status(HTTP_OK_STATUS).json(talkers);
+});
+
+talkerRouter.get('/search', tokenValidation, async (request, response) => {
+  const { q } = request.query;
+  const talkers = await filterTalkers(q);
   response.status(HTTP_OK_STATUS).json(talkers);
 });
 

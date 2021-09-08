@@ -13,6 +13,15 @@ const getTalker = async (id) => {
     return talker;
 };
 
+const filterTalkers = async (filter) => {
+    const talkers = await getAllTalkers();
+    const filteredTalkers = talkers.filter((talker) => (
+         talker.name.toLowerCase().includes(filter.toLowerCase())
+    ));
+    await fs.writeFile(talkerFile, JSON.stringify(filteredTalkers));
+    return filteredTalkers;
+};
+
 const postTalker = async (newTalker) => {
     const talkers = await getAllTalkers();
     const talker = {
@@ -40,4 +49,4 @@ const deleteTalker = async (id) => {
     await fs.writeFile(talkerFile, JSON.stringify(talkers));
 };
 
-module.exports = { getAllTalkers, getTalker, postTalker, putTalker, deleteTalker };
+module.exports = { getAllTalkers, getTalker, postTalker, putTalker, deleteTalker, filterTalkers };
