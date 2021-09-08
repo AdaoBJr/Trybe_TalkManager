@@ -68,9 +68,9 @@ router.post('/talker',
 
 router.put('/talker/:id',
   validateToken,
-  validateAge,
   validateTalk,
   validateName,
+  validateAge,
   validateWatchedAt,
   validateRate,
   (req, res) => {
