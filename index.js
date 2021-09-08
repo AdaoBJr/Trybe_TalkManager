@@ -55,7 +55,7 @@ function validateRate(talk) {
 }
 
 function validateTalk(talk) {
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) { // nota rodapé 1
     return 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios';
   }
   return validateRate(talk);
@@ -96,12 +96,23 @@ function readData() {
   }
 }
 
-app.post('/login', validateData, (req, res) => {
+function validateId(req, res, next) {
+  const { id } = req.params;
+  const talkers = JSON.parse(readData());
+  const talker = talkers.find((t) => t.id === parseInt(id, 10));
+
+  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  req.talker = talker;
+  req.talkers = talkers;
+  next();
+}
+
+app.post('/login', validateData, (_req, res) => {
   const token = randtoken.generate(16);
   res.status(HTTP_OK_STATUS).json({ token });
 });
 
-app.get('/talker', (req, res) => {
+app.get('/talker', (_req, res) => {
   const talkers = JSON.parse(readData());
 
   if (!talkers) return res.status(HTTP_OK_STATUS).json({});
@@ -109,14 +120,8 @@ app.get('/talker', (req, res) => {
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 
-app.get('/talker/:id', (req, res) => {
-  const { id } = req.params;
-  const talkers = JSON.parse(readData());
-  const talker = talkers.find((t) => t.id === parseInt(id, 10));
-
-  if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-
-  res.status(HTTP_OK_STATUS).json(talker);
+app.get('/talker/:id', validateId, (req, res) => {
+  res.status(HTTP_OK_STATUS).json(req.talker);
 });
 
 app.post('/talker', validateToken, (req, res) => {
@@ -129,6 +134,20 @@ app.post('/talker', validateToken, (req, res) => {
   res.status(201).json(data);
 });
 
+app.put('/talker/:id', validateId, validateToken, (req, res) => {
+  const { body } = req;
+  const { id } = req.params;
+  // const talkers = JSON.parse(readData());
+  const talkerIndex = req.talkers.findIndex((t) => t.id === parseInt(id, 10));
+  const data = { ...req.talker, ...body };
+
+  req.talkers.splice(talkerIndex, 1, data);
+  fs.writeFileSync(talkerData, JSON.stringify(req.talkers));
+  res.status(200).json(data);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+// nota rodapé 1: a condição !talk.rate é verdadeira para o caso do valor de rate ser "zero". Por isso se fez necessário acrescentar mais uma condição nesse caso. O requisito 4 passava, mas o 5 não estava passando.
