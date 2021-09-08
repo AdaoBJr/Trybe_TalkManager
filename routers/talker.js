@@ -1,7 +1,7 @@
 const fs = require('fs');
 const express = require('express');
 
-const { createTalker } = require('./actions');
+const { createTalker, updateTalker, deleteTalker } = require('./actions');
 const {
   validateAge,
   validateTalk,
@@ -54,6 +54,27 @@ router.post('/talker',
     createTalker(newTalker);
 
     res.status(201).json(newTalker);
+});
+
+router.put('/talker/:id',
+  validateToken,
+  validateAge,
+  validateTalk,
+  validateName,
+  validateWatchedAt,
+  validateRate,
+  (req, res) => {
+    const updatedTalker = { id: +req.params.id, ...req.body };
+
+    updateTalker(updatedTalker);
+
+    res.status(200).json(updatedTalker);
+});
+
+router.delete('/talker/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+  deleteTalker(id);
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 module.exports = router;
