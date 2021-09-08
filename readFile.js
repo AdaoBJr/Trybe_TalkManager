@@ -26,11 +26,18 @@ const postTalker = async (newTalker) => {
 
 const putTalker = async (id, updatedTalker) => {
     const talkers = await getAllTalkers();
-    const indexTalker = talkers.findIndex((r) => r.id === parseInt(id, 10));
+    const indexTalker = talkers.findIndex((r) => r.id === +(id));
     talkers.splice(indexTalker, 1);
     await fs.writeFile(talkerFile, JSON.stringify(talkers));
     const updatedTalkers = await postTalker(updatedTalker);
     return updatedTalkers;
 };
 
-module.exports = { getAllTalkers, getTalker, postTalker, putTalker };
+const deleteTalker = async (id) => {
+    const talkers = await getAllTalkers();
+    const indexTalker = talkers.findIndex((r) => r.id === +(id));
+    talkers.splice(indexTalker, 1);
+    await fs.writeFile(talkerFile, JSON.stringify(talkers));
+};
+
+module.exports = { getAllTalkers, getTalker, postTalker, putTalker, deleteTalker };

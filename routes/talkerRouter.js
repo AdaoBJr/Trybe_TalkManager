@@ -4,7 +4,7 @@ const talkerRouter = express.Router();
 
 const HTTP_OK_STATUS = 200;
 
-const { getAllTalkers, getTalker, postTalker, putTalker } = require('../readFile');
+const { getAllTalkers, getTalker, postTalker, putTalker, deleteTalker } = require('../readFile');
 const { tokenValidation,
         nameValidation,
         ageValidation,
@@ -53,6 +53,16 @@ talkerRouter.put(
     const { body } = request;
     const talker = await putTalker(id, body);
     response.status(200).json(talker);
+  },
+);
+
+talkerRouter.delete(
+  '/:id',
+  tokenValidation,
+  async (request, response) => {
+    const { id } = request.params;
+    await deleteTalker(id);
+    response.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 
