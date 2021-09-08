@@ -9,8 +9,12 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 app.get('/talker', (_req, res) => {
-  !talker ? res.status(200).json([]) : res.status(200).json(talker);
+  if (!talker) {
+    return res.status(200).json([]);
+  }
+  res.status(200).json(talker);
 });
+
 
 // não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {
