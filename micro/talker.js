@@ -22,8 +22,8 @@ const getTalkerID = async (request, response) => {
   .json(out); 
 };
 
-const getAll = (_request, response) => {
-  const data = getTalker();
+const getAll = async (_request, response) => {
+  const data = await getTalker();
   return response.status(HTTP_OK_STATUS).send(data);
 };
 
@@ -109,9 +109,7 @@ console.log(age);
 const writefile = (response, fileUrl, string) => {
   fs.writeFile(fileUrl, string, (err) => {
     if (err) {
-   return response
-      .status(404)
-      .send(err); 
+      return 'fail';
 }
   });
 };
@@ -134,8 +132,8 @@ const edit = async (request, response, _next) => {
   const { name, age, talk } = request.body;
   const data = await getTalker();
   const index = data.findIndex((talker) => talker.id === Number(id));
-  const talkers = fs.readFileSync(file, 'utf8');
-  const talkersJson = await JSON.parse(talkers);
+  const talkersJson = data;
+  // const talkersJson = await JSON.parse(talkers);
   talkersJson[index] = { id: Number(id), name, age, talk };
   console.log(talkersJson[index]);
   const string = JSON.stringify(talkersJson);
