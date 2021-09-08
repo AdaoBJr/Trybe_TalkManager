@@ -68,7 +68,7 @@ app.post('/talker',
   validateWatchedAt,
   validateRate,
   async (req, res) => {
-    const { name, age, talk: { rate, watchedAt } } = req.body;
+    const { name, age, talk: { watchedAt, rate } } = req.body;
     const readTalkers = await fs2.readFile(talkers, 'utf-8');
     const content = JSON.parse(readTalkers);
     const id = content.length + 1;
@@ -77,14 +77,40 @@ app.post('/talker',
       name,
       age,
       talk: {
-        rate,
         watchedAt,
+        rate,
       },
     };
     content.push(insertNew);
     const completeContent = JSON.stringify(content);
     await fs2.writeFile(talkers, completeContent);
     return res.status(201).json(insertNew);
+});
+
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    const readTalkers = await fs2.readFile(talkers, 'utf-8');
+    const content = JSON.parse(readTalkers);
+    const searchTalker = content.find((t) => t.id === Number(id));
+    const searchIndex = content.findIndex((i) => i.id === Number(id));
+    content[searchIndex] = {
+      id: searchTalker.id,
+      name,
+      age,
+      talk: { watchedAt, rate },
+    };
+    const updateContent = content[searchIndex];
+    const completeContent = JSON.stringify(content);
+    await fs2.writeFile(talkers, completeContent);
+    return res.status(200).json(updateContent);
 });
 
 app.listen(PORT, () => {
