@@ -51,8 +51,8 @@ app.put('/talker/:id', [
   verificaNome,
   verificaIdade,
   verificaTalk,
-  verificaData,
   verificaRate,
+  verificaData,
   editTalker,
 ]);
 
