@@ -11,6 +11,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_OK_STATUS = 400;
+const talkerFile = 'talker.json';
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -18,10 +19,26 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+// REQUISITO 7
+app.get('/talker/search?', middlewares.validaToken, async (req, res) => {
+  const { q } = req.query;
+  const allTalkers = await fs.readFile('talker.json');
+  const allTalkersJson = JSON.parse(allTalkers);
+  if (q === '' || !q) {
+    return res.status(200).json(allTalkersJson);
+  }
+  const files = allTalkersJson.filter((item) => item.name.includes(q));
+  console.log(files);
+  if (!files) {
+    return res.status(200).json([]);
+  }
+  return res.status(200).json(files);
+});
+
 // REQUISITO 1
 // Usei o async/await por se tratar de um funcção assíncrona (readFile);
 app.get('/talker', async (_req, res) => {
-  const getTalkers = await fs.readFile('./talker.json');
+  const getTalkers = await fs.readFile(talkerFile);
   const talkersJson = await JSON.parse(getTalkers);
   if (talkersJson.length === 0) {
     return res.status(HTTP_OK_STATUS).send([]);
@@ -31,7 +48,7 @@ app.get('/talker', async (_req, res) => {
 
 // REQUISITO 2
 app.get('/talker/:id', async (req, res) => {
-  const getTalkers = await fs.readFile('./talker.json');
+  const getTalkers = await fs.readFile(talkerFile);
   const talkersJson = await JSON.parse(getTalkers);
   const { id } = req.params;
   const getTheTalker = talkersJson.find((talker) => talker.id === +id);
@@ -85,7 +102,7 @@ app.post('/talker', middlewares.validaToken, middlewares.validaName,
   middlewares.validaIdade, middlewares.validaSeTalkExiste,
   middlewares.validaTalk, async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
-  const talkers = await fs.readFile('talker.json'); 
+  const talkers = await fs.readFile(talkerFile); 
   const indexTalker = JSON.parse(talkers);
   const newObj = {
     name,
@@ -96,12 +113,47 @@ app.post('/talker', middlewares.validaToken, middlewares.validaName,
       rate,
     },
   };
-  const newArray = [...indexTalker, newObj];
-  await fs.writeFile('talker.json', newArray);
-  const newFieldAdded = await fs.readFile('talker.json');
+  indexTalker.push(newObj);
+  fs.writeFile('talker.json', JSON.stringify(indexTalker));
+  const newFieldAdded = await fs.readFile(talkerFile);
   const newFieldJson = JSON.parse(newFieldAdded);
   const newField = newFieldJson.find((field) => field.name === name);
-  return res.status(201).json({ newField });
+  return res.status(201).json(newField);
+});
+
+// REQUISITO 5
+app.put('/talker/:id', middlewares.validaToken, middlewares.validaName,
+  middlewares.validaIdade, middlewares.validaSeTalkExiste,
+  middlewares.validaTalk, async (req, res, next) => {
+  const { id } = req.params;
+  const allFiles = await fs.readFile(talkerFile);
+  const allFilesJson = JSON.parse(allFiles);
+  const indexFile = allFilesJson.findIndex((item) => item.id === id);
+  try {
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    allFilesJson[indexFile] = {
+    id,
+    name,
+    age,
+    talk: { watchedAt, rate },
+  };
+  } catch (err) { next(err); }
+  console.log(allFilesJson, id);
+  fs.writeFile(talkerFile, JSON.stringify(allFilesJson));
+  res.status(200).json(allFilesJson);
+});
+
+// REQUISITO 6
+app.delete('/talker/:id', middlewares.validaToken, async (req, res) => {
+  const { id } = req.params;
+  const allFiles = await fs.readFile(talkerFile);
+  const allFilesJson = JSON.parse(allFiles);
+  const indexFile = allFilesJson.findIndex((item) => item.id === id);
+  if (indexFile) {
+    allFilesJson.splice(indexFile, 1);
+  }
+  fs.writeFile(talkerFile, JSON.stringify(allFilesJson));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 // Middleware de erro
