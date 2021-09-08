@@ -121,21 +121,22 @@ const watchedAtValid = (req, res, next) => {
   next();
 };
 
+// 4
 const rateValid = (req, res, next) => {
   const { talk: { rate } } = req.body;
 
+  if (rate < 1 || rate > 5) {
+    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+  }
   if (!rate) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
   });
   }
-
-  if (rate < 1 || rate > 5) {
-    return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
   next();
 };
 
+// 4
 const talkValid = (req, res, next) => {
   const { talk } = req.body;
 
@@ -163,6 +164,23 @@ const postTalker = async (req, res) => {
   return res.status(201).json(newTalker);
 };
 
+const putValid = async (req, res) => {
+  const { id } = req.params;
+  const file = JSON.parse(await fs.readFile(fileCall, 'utf-8'));
+
+  const fileFilter = file.filter((talker) => talker.id !== Number(id));
+  
+  const newTalker = {
+    ...req.body,
+    id: Number(id),
+  };
+
+  fileFilter.push(newTalker);
+  const fileEdit = fileFilter;
+  await fs.writeFile(fileCall, JSON.stringify(fileEdit));
+  return res.status(200).json(newTalker);
+};
+
 module.exports = { 
   getAll,
   getFilterId, 
@@ -175,5 +193,6 @@ module.exports = {
   watchedAtValid,
   rateValid,
   postTalker,
-  talkValid, 
+  talkValid,
+  putValid,
 };
