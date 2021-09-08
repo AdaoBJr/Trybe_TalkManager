@@ -120,6 +120,18 @@ app.get('/talker', (_req, res) => {
   res.status(HTTP_OK_STATUS).json(talkers);
 });
 
+app.get('/talker/search', validateToken, (req, res) => {
+  const { q } = req.query;
+  const talkers = JSON.parse(readData());
+  
+  if (!q) {
+    return res.status(HTTP_OK_STATUS).json(talkers);    
+  }
+
+  const searchTalkers = talkers.filter(({ name }) => name.includes(q));
+  return res.status(HTTP_OK_STATUS).json(searchTalkers || {});
+});
+
 app.get('/talker/:id', validateId, (req, res) => {
   res.status(HTTP_OK_STATUS).json(req.talker);
 });
@@ -157,4 +169,6 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-// nota rodapé 1: a condição !talk.rate é verdadeira para o caso do valor de rate ser "zero". Por isso se fez necessário acrescentar mais uma condição nesse caso. O requisito 4 passava, mas o 5 não estava passando.
+// nota rodapé 1: a condição !talk.rate é verdadeira para o caso do valor de rate ser "zero".
+// Por isso se fez necessário acrescentar mais uma condição nesse caso. O requisito 4 passava,
+// mas o 5 não estava passando.
