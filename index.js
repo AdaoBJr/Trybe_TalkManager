@@ -31,13 +31,13 @@ function validateEmail(email, password) {
 }
 
 function validateData(req, res, next) {
-   const { email, password } = req.body;
-   const message = validateEmail(email, password);
-   if (message) {
+  const { email, password } = req.body;
+  const message = validateEmail(email, password);
+  if (message) {
     return res.status(400).json({ message });
-   }
-   
-   next(); 
+  }
+
+  next();
 }
 
 function validateWatchedAt(watchedAt) {
@@ -67,7 +67,7 @@ function validateAge(age, talk) {
   return validateTalk(talk);
 }
 
-function validateName(name, age, talk) {
+function validateName({ name, age, talk }) {
   if (!name || name.trim() === '') return 'O campo "name" é obrigatório';
   if (name.length < 3) return 'O "name" deve ter pelo menos 3 caracteres';
   return validateAge(age, talk);
@@ -75,15 +75,15 @@ function validateName(name, age, talk) {
 
 function validateToken(req, res, next) {
   const { authorization } = req.headers;
-  const { name, age, talk } = req.body;
   if (!authorization) return res.status(401).json({ message: 'Token não encontrado' });
   if (authorization.length !== 16) return res.status(401).json({ message: 'Token inválido' });
-  const message = validateName(name, age, talk);
-  if (message) {
-   return res.status(400).json({ message });
+  if (Object.keys(req.body).length) {
+    const message = validateName(req.body);
+    if (message) {
+      return res.status(400).json({ message });
+    }
   }
-  
-  next(); 
+  next();
 }
 
 function readData() {
@@ -137,13 +137,20 @@ app.post('/talker', validateToken, (req, res) => {
 app.put('/talker/:id', validateId, validateToken, (req, res) => {
   const { body } = req;
   const { id } = req.params;
-  // const talkers = JSON.parse(readData());
   const talkerIndex = req.talkers.findIndex((t) => t.id === parseInt(id, 10));
   const data = { ...req.talker, ...body };
 
   req.talkers.splice(talkerIndex, 1, data);
   fs.writeFileSync(talkerData, JSON.stringify(req.talkers));
   res.status(200).json(data);
+});
+
+app.delete('/talker/:id', validateId, validateToken, (req, res) => {
+  const { id } = req.params;
+  const talkerIndex = req.talkers.findIndex((t) => t.id === parseInt(id, 10));
+  req.talkers.splice(talkerIndex, 1);
+  fs.writeFileSync(talkerData, JSON.stringify(req.talkers));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {
