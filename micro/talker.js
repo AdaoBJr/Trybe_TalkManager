@@ -102,12 +102,8 @@ const ageValidate = (request, response, next) => {
   next();
 };
 
-const writefile = (response, fileUrl, string) => {
-  fs.writeFile(fileUrl, string, (err) => {
-    if (err) {
-      return 'fail';
-}
-  });
+const writefile = (fileUrl, string) => {
+  fs.writeFileSync(fileUrl, string, 'utf8');
 };
 
 const create = async (request, response, _next) => {
@@ -117,7 +113,7 @@ const create = async (request, response, _next) => {
   const id = talkersJson.length + 1;
   const out = [...talkersJson, { id, name, age, talk }];
   const string = JSON.stringify(out);
-  writefile(response, file, string);
+  writefile(file, string);
   return response
     .status(201)
     .send({ id: Number(id), name, age, talk });
@@ -126,12 +122,11 @@ const create = async (request, response, _next) => {
 const edit = async (request, response, _next) => {
   const { id } = request.params;
   const { name, age, talk } = request.body;
-  const data = await getTalker();
-  const index = data.findIndex((talker) => talker.id === Number(id));
   const talkers = fs.readFileSync(file, 'utf8');
-  const talkersJson = await JSON.parse(talkers);
-  talkersJson[index] = { id: Number(id), name, age, talk };
-  const string = JSON.stringify(talkersJson);
+  const data = await JSON.parse(talkers);
+  const index = data.findIndex((talker) => talker.id === Number(id));
+  data[index] = { id: Number(id), name, age, talk };
+  const string = JSON.stringify(data);
   writefile(file, string);
   return response
     .status(200)
@@ -144,7 +139,7 @@ const deleteTalker = async (request, response, _next) => {
   const data = await JSON.parse(talkers);
   const out = data.filter((talker) => talker.id !== Number(id));
   const deleted = JSON.stringify(out);
-  writefile(response, file, deleted);
+  writefile(file, deleted);
   return response
     .status(200)
     .json({ message: 'Pessoa palestrante deletada com sucesso' });
