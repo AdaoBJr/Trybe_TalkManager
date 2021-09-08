@@ -23,15 +23,23 @@ app.listen(PORT, () => {
   - O endpoint deve retornar um array com todas as pessoas palestrantes cadastradas. Devendo retornar o status 200
   - Caso não exista nenhuma pessoa palestrante cadastrada o endpoint deve retornar um array vazio e o status 200.
 
-*/
-
-const talkers = 'talker.json';
+  const talkers = require('./talker.json');
 
 app.get('/talker', (_req, res) => {
-  const data = JSON.parse(fs.readFileSync(talkers, 'utf-8'));
 
-  if (!data) {
-    return res.status(200).json([]);
+  if (!talkers) {
+    return res.status(HTTP_OK_STATUS).send('');
   }
-  res.status(200).json(data);
+  return res.status(HTTP_OK_STATUS).json({ talkers });
+});
+
+*/
+
+app.get('/talker', (_req, res) => {
+  const data = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
+
+  if (!data.length) {
+    return res.status(HTTP_OK_STATUS).json([]);
+  }
+  res.status(HTTP_OK_STATUS).json(data);
 });
