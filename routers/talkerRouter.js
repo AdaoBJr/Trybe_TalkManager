@@ -24,6 +24,19 @@ talk.route('/')
     res.status(201).json(newTalk);
   });
 
+  talk.route('/search')
+  .get(validateToken, async (req, res) => {
+  const { q } = req.query;
+  const talkers = await getTalkers();
+
+  if (!q || q === '') return res.status(200).json(talkers);
+
+  const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
+  return !filteredTalkers 
+  ? res.status(200).json([])
+  : res.status(200).json(filteredTalkers);
+});
+
 talk.route('/:id')
   .get(async (req, res) => {
     const talkers = await getTalkers();

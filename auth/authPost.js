@@ -7,7 +7,6 @@ function validateToken(req, res, next) {
       return res.status(401).json({ message: 'Token inválido' });
     }
   } else {
-    console.log(req.headers);
     return res.status(401).json({ message: 'Token não encontrado' });
   }
   next();
