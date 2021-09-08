@@ -1,18 +1,18 @@
 const fs = require('fs');
 const path = require('path');
 
-const file = path.resolve(__dirname, '..', 'talker.json');
+const filePath = path.resolve(__dirname, '..', 'talker.json');
 
-const editTalker = (req, res) => {
-  const { id } = req.params;
-  const { name, age, talk } = req.body;
-  const talker = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
-  const findTalker = talker.find((f) => f.id === id);
-  findTalker.name = name;
-  findTalker.age = age;
-  findTalker.talk.watchedAt = talk.watchedAt;
-  findTalker.talk.rate = talk.rate;
-  fs.writeFileSync(file, JSON.stringify(talker));
-  res.status(200).json(findTalker);
+const editTalker = (req, res, _next) => {
+  const id = Number(req.params.id);
+  const talkers = JSON.parse(fs.readFileSync('talker.json'));
+  const talker = talkers.find((t) => t.id === id);
+  talker.name = req.body.name;
+  talker.age = req.body.age;
+  talker.talk.watchedAt = req.body.talk.watchedAt;
+  talker.talk.rate = +req.body.talk.rate;
+  fs.writeFileSync(filePath, JSON.stringify(talkers));
+  res.status(200).json(talker);
 };
+
 module.exports = editTalker;
