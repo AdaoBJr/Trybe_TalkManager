@@ -1,8 +1,10 @@
 const express = require('express');
 
-const router = express.Router();
 const fs = require('fs').promises;
+
 const { token, data, Age, Name, thisTalk } = require('./post.js');
+
+const router = express.Router();
 
 const readFile = () => {
     const file = fs.readFile('./talker.json', 'utf8')
