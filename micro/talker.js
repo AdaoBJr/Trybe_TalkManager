@@ -132,8 +132,8 @@ const edit = async (request, response, _next) => {
   const { name, age, talk } = request.body;
   const data = await getTalker();
   const index = data.findIndex((talker) => talker.id === Number(id));
-  const talkersJson = data;
-  // const talkersJson = await JSON.parse(talkers);
+  const talkers = fs.readFileSync(file, 'utf8');
+  const talkersJson = await JSON.parse(talkers);
   talkersJson[index] = { id: Number(id), name, age, talk };
   console.log(talkersJson[index]);
   const string = JSON.stringify(talkersJson);
