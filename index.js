@@ -19,3 +19,4 @@ app.listen(PORT, () => {
 const endpoints = require('./Routes/endpoints');
 
 app.use('/talker', endpoints);
+app.use('/login', login);
