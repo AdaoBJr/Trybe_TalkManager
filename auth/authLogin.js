@@ -8,7 +8,7 @@ module.exports = (req, res, next) => {
       return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
     case !password:
       return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-    case password.lenth < 6:
+    case !password.lenth < 6:
       return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
     default:
     break;
