@@ -37,7 +37,7 @@ talk.route('/:id')
   .put(validateToken, validateNameAge, validateTalk, validateDateRate, async (req, res) => {
     const { id } = req.params;
     const talkers = await getTalkers();
-    const talkerIndex = talkers.findIndex((talker) => talker.id === parseInt(id, 10));
+    const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
     if (talkerIndex < 0) return res.status(404).json({ message: 'erro' });
     talkers[talkerIndex] = { ...talkers[talkerIndex], ...req.body };
     putTalkers(talkers);
