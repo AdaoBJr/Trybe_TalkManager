@@ -13,6 +13,7 @@ const {
   verificaRate,
   editTalker,
   deleteTalker,
+  searchTalker,
  } = require('./middlewares');
 
 const app = express();
@@ -31,6 +32,8 @@ app.listen(PORT, () => {
 });
 
 app.get('/talker', getTalker);
+
+app.get('/talker/search', verificaToken, searchTalker);
 
 app.get('/talker/:id', getTalkerId);
 
