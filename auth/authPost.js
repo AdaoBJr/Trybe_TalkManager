@@ -2,13 +2,13 @@ const dateFormat = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/
 
 function validateToken(req, res, next) {
   const { authorization } = req.headers;
-  switch (false) {
-    case authorization:
-      return res.status(401).json({ message: 'Token não encontrado' });
-    case authorization.length === 16:
+  if (authorization) {
+    if (authorization.length !== 16) {
       return res.status(401).json({ message: 'Token inválido' });
-    default:
-      break;
+    }
+  } else {
+    console.log(req.headers);
+    return res.status(401).json({ message: 'Token não encontrado' });
   }
   next();
 }
@@ -25,7 +25,7 @@ function validateNameAge(req, res, next) {
     case !age:
       return res.status(400)
         .json({ message: 'O campo "age" é obrigatório' });
-    case age < 19:
+    case age < 18:
       return res.status(400)
         .json({ message: 'A pessoa palestrante deve ser maior de idade' });
     default:
@@ -35,15 +35,11 @@ function validateNameAge(req, res, next) {
 }
 
 function validateTalk(req, res, next) {
-  const { talk, talk: { watchedAt, rate } } = req.body;
-  switch (true) {
-    case !talk || !watchedAt || !rate:
-      return res.status(400)
-        .json({
-          message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-        });
-    default:
-      break;
+  const { talk } = req.body;
+  if (!talk || !talk.watchedAt || !talk.rate) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
   }
   next();
 }

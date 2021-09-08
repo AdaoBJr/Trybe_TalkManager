@@ -7,11 +7,11 @@ const {
   validateDateRate,
 } = require('../auth/authPost');
 
-const router = express.Router();
+const talk = express.Router();
 const getTalkers = async () => JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
 const putTalkers = (content) => fs.writeFile('./talker.json', JSON.stringify(content));
 
-router.route('/talker')
+talk.route('/')
   .get(async (_req, res) => {
     const talkers = await getTalkers();
     return talkers.length === 0
@@ -20,12 +20,13 @@ router.route('/talker')
   })
   .post(validateToken, validateNameAge, validateTalk, validateDateRate, async (req, res) => {
     const talkers = await getTalkers();
-    talkers.push(req.body);
+    const newTalk = { id: talkers[talkers.length - 1].id + 1, ...req.body };
+    talkers.push(newTalk);
     putTalkers(talkers);
-    res.status(201).json(req.body);
+    res.status(201).json(newTalk);
   });
 
-router.get('/talker/:id', async (req, res) => {
+  talk.get('/:id', async (req, res) => {
   const talkers = await getTalkers();
   const { id } = req.params;
   const talker = talkers.find((t) => t.id === Number(id));
@@ -35,4 +36,4 @@ router.get('/talker/:id', async (req, res) => {
   : res.status(200).json(talker);
 });
 
-module.exports = router;
+module.exports = talk;
