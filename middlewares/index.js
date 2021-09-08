@@ -7,8 +7,10 @@ const {
   verificaNome,
   verificaIdade,
   verificaData,
+  verificaRate,
   verificaTalk,
 } = require('./verificações');
+const editTalker = require('./editTalker');
 
 module.exports = {
   getTalker,
@@ -19,5 +21,7 @@ module.exports = {
   verificaNome,
   verificaIdade,
   verificaData,
+  verificaRate,
   verificaTalk,
+  editTalker,
  };
