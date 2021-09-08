@@ -19,4 +19,4 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
-app.use('/', getAllTalkers);
+app.get('/talker', getAllTalkers);
