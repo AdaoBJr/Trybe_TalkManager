@@ -1,25 +1,18 @@
 const express = require('express');
-const fs = require('fs').promises;
 
 const router = express.Router();
+const fs = require('fs').promises;
 
-const reader = () => {
-  const file = fs.readFile('./talker.json', 'utf8')
-  .then((r) => JSON.parse(r));
-  return file;
+const readFile = () => {
+    const file = fs.readFile('./talker.json', 'utf8')
+    .then((response) => JSON.parse(response));
+    return file;
 };
 
 router.get('/', async (_req, res) => {
-  const read = await reader();
+  const read = await readFile();
   if (!read) return res.status(200).json(Array.from([]));
-});
-
-router.get('/:id', async (req, res) => {
-  const { id } = req.params;
-  const read = await reader();
-  const filter = read.find((r) => Number(r.id) === Number(id));
-  if (!filter) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-  res.status(200).json(filter);
+  res.status(200).json(read);
 });
 
 module.exports = router;
