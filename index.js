@@ -1,6 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
+const crypto = require('crypto');
+const talkerJson = require('./talker.json');
+
+const {
+  validateEmail,
+  validatePassword,
+  validateName,
+  validateAge,
+  validateDate,
+  validateRate,
+  validateDateAndRate,
+} = require('./validate');
 
 const app = express();
 app.use(bodyParser.json());
@@ -32,6 +44,23 @@ app.get('/talker', async (req, res) => {
     return res.send([]);
   }
   return res.json(talkers);
+});
+
+app.post('talker', validateName,
+  validateAge,
+  validateDate,
+  validateRate,
+  validateDateAndRate, (req, res) => {
+    const { name, age, talk } = req.body;
+
+    talkerJson.push({ name, age, talk });
+    return res.status(201);
+  });
+
+app.post('/login', validateEmail, validatePassword, (req, res) => {
+  const tk = crypto.randomBytes(8).toString('hex');
+  // console.log(token);
+  return res.status(200).json({ token: tk });
 });
 
 app.listen(PORT, () => {
