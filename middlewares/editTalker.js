@@ -4,7 +4,7 @@ const editTalker = (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
   const talker = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
-  const findTalker = talker.fund((f) => f.id === id);
+  const findTalker = talker.find((f) => f.id === id);
   findTalker.name = name;
   findTalker.age = age;
   findTalker.talk.watchedAt = talk.watchedAt;

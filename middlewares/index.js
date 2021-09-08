@@ -11,6 +11,7 @@ const {
   verificaTalk,
 } = require('./verificações');
 const editTalker = require('./editTalker');
+const deleteTalker = require('./deleteTalker');
 
 module.exports = {
   getTalker,
@@ -24,4 +25,5 @@ module.exports = {
   verificaRate,
   verificaTalk,
   editTalker,
+  deleteTalker,
  };
