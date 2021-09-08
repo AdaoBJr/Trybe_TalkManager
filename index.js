@@ -15,7 +15,6 @@ app.get('/talker', (_req, res) => {
   res.status(200).json(talker);
 });
 
-
 // não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
