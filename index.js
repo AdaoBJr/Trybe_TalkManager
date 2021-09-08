@@ -11,7 +11,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const HTTP_NOT_OK_STATUS = 400;
-const talkerFile = 'talker.json';
+const talkerFile = './talker.json';
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
