@@ -38,10 +38,18 @@ talk.route('/:id')
     const { id } = req.params;
     const talkers = await getTalkers();
     const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
-    if (talkerIndex < 0) return res.status(404).json({ message: 'erro' });
+    if (talkerIndex < 0) return res.status(404).json({ message: 'talker not found' });
     talkers[talkerIndex] = { ...talkers[talkerIndex], ...req.body };
     putTalkers(talkers);
     res.status(200).json(talkers[talkerIndex]);
+  })
+  .delete(async (req, res) => {
+    const { id } = req.params;
+    const talkers = await getTalkers();
+    const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
+    if (talkerIndex < 0) return res.status(404).json({ message: 'talker not found' });
+    talkers.splice(talkerIndex, 1);
+    res.status(204).json({ message: 'Pessoa palestrante deletada com sucesso' }).end();
   });
 
 module.exports = talk;
