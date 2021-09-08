@@ -4,19 +4,6 @@ const crypto = require('crypto');
 
 const token = crypto.randomBytes(8).toString('hex');
 
-const tokenValid = (req, res, next) => {
-  const { authorization } = req.headers;
- 
-  if (!authorization) {
-   return res.status(401).json({ message: 'Token não encontrado' });
-  }
- 
-  if (authorization.length !== 16) {
-   return res.status(401).json({ message: 'Token inválido' });
-  }
-  next();
- };
-
 const fileCall = './talker.json';
 
 const HTTP_OK_STATUS = 200;
@@ -74,6 +61,20 @@ const passwordValid = (req, res, next) => {
 const postLogin = (_req, res) => {
   res.status(200).json({ token });
 };
+
+const tokenValid = (req, res, next) => {
+  const { authorization } = req.headers;
+  const tokenRegex = /^[a-zA-Z0-9]{16}$/;
+ 
+  if (!authorization) {
+   return res.status(401).json({ message: 'Token não encontrado' });
+  }
+ 
+  if (!tokenRegex.test(authorization)) {
+   return res.status(401).json({ message: 'Token inválido' });
+  }
+  next();
+ };
 
 // 4
 const nameValid = (req, res, next) => {
