@@ -1,5 +1,5 @@
 const express = require('express');
-const fs = require('fs/promises');
+const fs = require('fs').promises;
 
 const router = express.Router();
 const getTalkers = async () => JSON.parse(await fs.readFile('./talker.json', 'utf-8'));
