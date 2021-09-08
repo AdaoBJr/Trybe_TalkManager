@@ -52,23 +52,37 @@ const nameValidate = async (request, response, next) => {
   next();
 };
 
-const talkValidate = (request, response, next) => {
+const watchedValidate = (request, response, next) => {
   const { talk } = request.body;
-  /* https://stackoverflow.com/questions/6402743/regular-expression-for-mm-dd-yyyy-in-javascript */
-  const dataFormat = new
-  RegExp('/^((0?[1-9]|1[012])[- /.](0?[1-9]|[12][0-9]|3[01])[- /.](19|20)?[0-9]{2})*$/');
+  if (talk === undefined || talk.watchedAt === undefined || talk.rate === undefined) {
+      return response
+      .status(400)
+      .json({ 
+          message: 
+          'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+      });
+  }
+  next();
+};
+
+const dateValidate = (request, response, next) => {
+  const { talk } = request.body;
+  // https://stackoverflow.com/questions/5465375/javascript-date-regex-dd-mm-yyyy
+  const dataFormat = /^[0-9]{2}[/][0-9]{2}[/][0-9]{4}$/;
   if (!dataFormat.test(talk.watchedAt)) {
-    return response
-  .status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+      return response
+              .status(400)
+              .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
-  if (talk.rate < 1 && talk.rate > 5) {
-    return response
-    .status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-  }
-  if (talk === undefined) {
-    return response
-    .status(400)
-    .json({ message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+
+  next();
+};
+
+const rateValidate = (request, response, next) => {
+  const { talk } = request.body;
+  if (talk.rate < 1 || talk.rate > 5) {
+      return response
+      .status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
   next();
 };
@@ -92,15 +106,7 @@ console.log(age);
   next();
 };
 
-const create = async (request, response, _next) => {
-  const { name, age, talk } = request.body;
-  const talkers = fs.readFileSync(file, 'utf8');
-  const talkersJson = await JSON.parse(talkers);
-  const id = talkersJson.length + 1;
-  console.log(talkersJson);
-  const out = [...talkersJson, { id, name, age, talk }];
-  const string = JSON.stringify(out);
-  // console.log(out);
+const writefile = (file, string) => {
   fs.writeFile(file, string, (err) => {
     if (err) {
    return response
@@ -108,17 +114,46 @@ const create = async (request, response, _next) => {
       .send(err); 
 }
   });
+};
+
+const create = async (request, response, _next) => {
+  const { name, age, talk } = request.body;
+  const talkers = fs.readFileSync(file, 'utf8');
+  const talkersJson = await JSON.parse(talkers);
+  const id = talkersJson.length + 1;
+  const out = [...talkersJson, { id, name, age, talk }];
+  const string = JSON.stringify(out);
+  writefile(file, string);
   return response
     .status(201)
     .json({ id, name, age, talk });
+};
+
+const edit = async (request, response, _next) => {
+  const { id } = request.params;
+  const { name, age, talk } = request.body;
+  const data = await getTalker();
+  const index = data.findIndex((talker) => talker.id === Number(id));
+  const talkers = fs.readFileSync(file, 'utf8');
+  const talkersJson = await JSON.parse(talkers);
+  talkersJson[index] = { id: Number(id), name, age, talk };
+  console.log(talkersJson[index]);
+  const string = JSON.stringify(talkersJson);
+  writefile(file, string);
+  return response
+    .status(200)
+    .json({ id: Number(id), name, age, talk });
 };
 
 module.exports = {
   getAll,
   getTalkerID,
   tolkenValidate,
-  talkValidate,
+  watchedValidate,
+  dateValidate,
+  rateValidate,
   ageValidate,
   nameValidate,
   create,
+  edit,
 };
