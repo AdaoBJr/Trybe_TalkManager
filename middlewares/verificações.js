@@ -31,9 +31,23 @@ const verificaIdade = (req, res, next) => {
   next();
 };
 
+const verificaTalk = (req, res, next) => {
+  const { talk } = req.body;
+  if (!talk || !talk.rate || !talk.watchedAt === undefined) {
+    return res.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
+  }
+  next();
+};
+
 const verificaData = (req, res, next) => {
   const { talk } = req.body;
   const regexData = /^\d{2}\/\d{2}\/\d{4}$/;
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
   if (!regexData.test(talk.watchedAt)) {
     return res.status(400).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
   }
@@ -48,20 +62,11 @@ const verificaRate = (req, res, next) => {
   next();
 };
 
-const verificaTalk = (req, res, next) => {
-  const { talk } = req.body;
-  if (!talk || !talk.rate || !talk.watchedAt === undefined) {
-    return res.status(400).json({ 
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' });
-  }
-  next();
-};
-
 module.exports = {
 verificaToken,
 verificaNome,
 verificaIdade,
-verificaData,
 verificaRate,
 verificaTalk,
+verificaData,
 };
