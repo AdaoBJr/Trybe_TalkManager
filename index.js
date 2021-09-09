@@ -50,5 +50,5 @@ app.post('/talker', validateToken, validateParams, async (req, res) => {
   };
   data.push(newTalker);
   await writeFile('./talker.json', JSON.stringify(data));
-  return res.status(201).json(newTalker);
+  // return res.status(201).json(newTalker);
 });
