@@ -64,6 +64,6 @@ app.put('/talker/:id', validateToken, validateParams, async (req, res) => {
   }); 
 }
   data[talkerIndex] = { ...data[talkerIndex], name, age, talk };
-
+  await writeFile('./talker.json', JSON.stringify(data));
   return res.status(200).json(data[talkerIndex]);
 });

@@ -60,8 +60,8 @@ const validateParams = (req, res, next) => {
   const { name, age, talk } = req.body;
   if (validateName(name, res)) return;
   if (validateAge(age, res)) return;
-  if (validateWatchedAndRate(talk, res)) return;
   if (validateTalk(talk, res)) return;
+  if (validateWatchedAndRate(talk, res)) return;
   next();
 };
 
