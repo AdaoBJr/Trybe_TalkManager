@@ -59,5 +59,3 @@ module.exports = {
   validateToken,
   validateParams,
 };
-
-// console.log(12131232.9 % 1);
