@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const { getAllTalkers } = require('../routers/talkers');
+const { getAllTalkers } = require('../middleweres/talkers');
 
 router.route('/')
   .get(getAllTalkers);

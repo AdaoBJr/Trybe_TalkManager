@@ -15,7 +15,7 @@ const getAllTalkers = async (_req, res) => {
   if (!talkers.length) {
     return res.status(HTTP_OK_STATUS).send([]);
   }
-  return res.status(HTTP_OK_STATUS).json({ talkers });
+  return res.status(HTTP_OK_STATUS).json(talkers);
 };
 
 module.exports = {
