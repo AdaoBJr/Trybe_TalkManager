@@ -10,19 +10,12 @@ const getTalkers = async () => {
   return talkers;
 };
 
-// const getAllTalkers = (_req, res) => {
-//   fs.readFile(file, 'utf-8')
-//     .then((response) => JSON.parse(response))
-//     .then((result) => res.status(HTTP_OK_STATUS).json(result))
-//     .catch((_err) => []);
-// };
-
 const getAllTalkers = async (_req, res) => {
   const talkers = await getTalkers();
   if (!talkers.length) {
     return res.status(HTTP_OK_STATUS).send([]);
   }
-  return res.status(HTTP_OK_STATUS).send(talkers);
+  return res.status(HTTP_OK_STATUS).json(talkers);
 };
 
 module.exports = {
