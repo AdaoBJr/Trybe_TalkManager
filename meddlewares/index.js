@@ -139,6 +139,19 @@ const findOne = (id, listTalkers) => {
     await writeFileTalker(talkersList);  
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   };
+
+  const seachTalker = async (req, res) => {
+    const { q } = req.query;
+    const talkers = await readFile();
+    if (!q || q === '') {
+      return res.status(200).json(talkers);    
+    }   
+    const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
+    if (filteredTalkers.length > 0) {
+      return res.status(200).json(filteredTalkers); 
+    } 
+    return res.status(200).json(Array.from([])); 
+  };
   
   module.exports = {
     findOne,
@@ -153,4 +166,5 @@ const findOne = (id, listTalkers) => {
     addTalker,
     editTalker,
     deletaTalker,
+    seachTalker,
   }; 
