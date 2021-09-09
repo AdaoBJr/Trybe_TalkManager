@@ -1,29 +1,22 @@
-const fs = require('fs');
+const fs = require('fs').promises;
 
-const file = './talker.json';
+const file = 'talker.json';
 const OK_STATUS = 200;
 
-// const getTalkers = async () => {
-//   const data = fs.readFile(file, 'utf-8');
-//   const talkers = await JSON.parse(data);
+const getTalkers = async () => {
+  const data = await fs.readFile(file, 'utf-8');
+  const talkers = await JSON.parse(data);
 
-//   return talkers;
-// };
-
-const getTalkers = () => {
-  fs.readFile(file, (err, data) => {
-    if (err) {
-      return null;
-    }
-    return data;
-  });
+  return talkers;
 };
 
 const getAllTalkers = async (_req, res) => {
   const talkers = await getTalkers();
-  if (!talkers.length) {
+
+  if (!talkers) {
     return res.status(OK_STATUS).send([]);
   }
+
   return res.status(OK_STATUS).json(talkers);
 };
 

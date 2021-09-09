@@ -4,7 +4,6 @@ const router = express.Router();
 
 const { getAllTalkers } = require('../middleweres/talkers');
 
-router.route('/')
-  .get(getAllTalkers);
+router.get('/', getAllTalkers);
 
 module.exports = router;
