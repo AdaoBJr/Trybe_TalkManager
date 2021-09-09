@@ -3,7 +3,18 @@ const crypto = require('crypto');
 
 const app = express();
 const bodyParser = require('body-parser');
-const { readData, filterTalkerId, checkEmail, checkPassword } = require('./middleware/index');
+const {
+    readData,
+    filterTalkerId,
+    checkEmail,
+    checkPassword,
+    checkToken,
+    checkName,
+    checkAge,
+    checkTalk,
+    checkTalkObj,
+    addTalk,
+} = require('./middleware/index');
 
 app.use(bodyParser.json());
 
@@ -27,7 +38,7 @@ app.post('/login', checkEmail, checkPassword, (_req, res) => {
     return res.status(200).json({ token });
 });
 
-// app.post('/talker', null);
+app.post('/talker', checkToken, checkName, checkAge, checkTalk, checkTalkObj, addTalk);
 
 app.listen(PORT, () => {
     console.log('Online');
