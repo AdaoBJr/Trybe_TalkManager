@@ -1,5 +1,7 @@
 const fs = require('fs').promises;
 
+const jsonRead = './talker.json';
+
 async function readData(_req, res) {
     const data = await fs.readFile('talker.json', 'utf-8');
     const dataJson = JSON.parse(data);
@@ -137,7 +139,7 @@ function checkTalkObj(req, res, next) {
 
 async function addTalk(req, res) {
     const { name, age, talk: { watchedAt, rate } } = req.body;
-    const data = await fs.readFile('talker.json', 'utf-8');
+    const data = await fs.readFile(jsonRead, 'utf-8');
     const dataJson = JSON.parse(data);
     const newTalker = {
         id: dataJson.length + 1,
@@ -149,7 +151,7 @@ async function addTalk(req, res) {
         },
     };
     dataJson.push(newTalker);
-    await fs.writeFile('./talker.json', JSON.stringify(newTalker));
+    await fs.writeFile('./talker.json', JSON.stringify(dataJson));
     return res.status(201).json(newTalker);
 }
 
@@ -157,7 +159,7 @@ async function editTalker(req, res) {
     const { name, age, talk } = req.body;
     const { id } = req.params;
 
-    const response = await fs.readFile('./talker.json', 'utf-8');
+    const response = await fs.readFile(jsonRead, 'utf-8');
     let convert = JSON.parse(response);
     convert = convert.filter((talker) => talker.id !== Number(id));
 
@@ -170,7 +172,7 @@ async function editTalker(req, res) {
 async function deleteTalker(req, res) {
     const { id } = req.params;
 
-    const data = await fs.readFile('talker.json', 'utf-8');
+    const data = await fs.readFile(jsonRead, 'utf-8');
     const dataJson = JSON.parse(data);
     const deletedTalker = dataJson.filter((talker) => talker.id !== Number(id));
 
