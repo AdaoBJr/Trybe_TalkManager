@@ -130,6 +130,15 @@ const findOne = (id, listTalkers) => {
     await writeFileTalker(talkersList);  
     return res.status(200).json({ id: +id, name, age, talk });
   };
+
+  const deletaTalker = async (req, res) => {  
+    let talkersList = await readFile();
+    const { id } = req.params;  
+    talkersList = talkersList.filter((talker) => talker.id !== +id);
+  
+    await writeFileTalker(talkersList);  
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  };
   
   module.exports = {
     findOne,
@@ -143,4 +152,5 @@ const findOne = (id, listTalkers) => {
     validaTalk,
     addTalker,
     editTalker,
+    deletaTalker,
   }; 
