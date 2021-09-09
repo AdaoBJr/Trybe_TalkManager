@@ -10,9 +10,11 @@ const getTalkers = async () => {
   return talkers;
 };
 
-const getAllTalkers = async (_req, res) => {
-  const talkers = await getTalkers();
-  return res.status(HTTP_OK_STATUS).send(talkers);
+const getAllTalkers = (_req, res) => {
+  fs.readFile(file, 'utf-8')
+    .then((response) => JSON.parse(response))
+    .then((result) => res.status(HTTP_OK_STATUS).json(result))
+    .catch((_err) => []);
 };
 
 module.exports = {
