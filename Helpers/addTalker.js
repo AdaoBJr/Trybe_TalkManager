@@ -34,6 +34,14 @@ const validateAge = (age, res) => {
     return res.status(400).json({ message: 'A pessoa palestrante deve ser maior de idade' });
   }
 };
+
+const validateWatchedAndRate = (talk, res) => {
+  if (!talk.watchedAt || !talk.rate) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+};
 const validateTalk = (talk, res) => {
   const re = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
   const { watchedAt, rate } = talk;
@@ -50,14 +58,10 @@ const validateTalk = (talk, res) => {
 };
 const validateParams = (req, res, next) => {
   const { name, age, talk } = req.body;
-  validateName(name, res);
-  validateAge(age, res);
-  if (!talk.watchedAt || !talk.rate) {
-    return res.status(400).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-  }
-  validateTalk(talk, res);
+  if (validateName(name, res)) return;
+  if (validateAge(age, res)) return;
+  if (validateWatchedAndRate(talk, res)) return;
+  if (validateTalk(talk, res)) return;
   next();
 };
 
