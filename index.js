@@ -80,3 +80,11 @@ app.put('/talker/:id', validateToken, async (req, res) => {
   await writeFile('./talker.json', JSON.stringify(data));
   return res.status(200).json(data[talkerIndex]);
 });
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const data = await readTalkerFunc();
+  const { id } = req.params;
+  const filteredData = data.filter((t) => t.id !== parseInt(id, 10));
+  await writeFile('./talker.json', JSON.stringify(filteredData));
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
