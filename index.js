@@ -42,13 +42,13 @@ app.post('/login', loginFunc);
 app.post('/talker', validateToken, validateParams, async (req, res) => {
   const { name, age, talk } = req.body;
   const data = await readTalkerFunc();
-  const newTalker = {
-    id: data.length + 1,
+  let newTalker = {
     name,
     age,
     talk,
   };
   data.push(newTalker);
   await writeFile('./talker.json', JSON.stringify(data));
+  newTalker = { id: data.length + 1, ...newTalker };
   return res.status(201).json(newTalker);
 });
