@@ -14,7 +14,7 @@ const { findOne,
   validaTalk, 
   addTalker, 
   deletaTalker,
-  seachTalker, } = require('./meddlewares');
+  seachTalker } = require('./meddlewares');
 
 const app = express();
 app.use(bodyParser.json());
