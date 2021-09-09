@@ -1,4 +1,5 @@
 const express = require('express');
+const rescue = require('express-rescue');
 
 const talk = express.Router();
 const { getTalkers, putTalkers } = require('../services/fileManager');
@@ -6,7 +7,7 @@ const { validateToken, validateNameAge, validateTalk, validateDateRate,
 } = require('../auth/authPost');
 
 talk.route('/search')
-  .get(validateToken, async (req, res) => {
+  .get(validateToken, rescue(async (req, res) => {
     const { q } = req.query;
     const talkers = await getTalkers();
 
@@ -16,10 +17,10 @@ talk.route('/search')
     return !filteredTalkers
       ? res.status(200).json([])
       : res.status(200).json(filteredTalkers);
-  });
+  }));
 
 talk.route('/:id')
-  .get(async (req, res) => {
+  .get(rescue(async (req, res) => {
     const talkers = await getTalkers();
     const { id } = req.params;
     const talker = talkers.find((t) => t.id === Number(id));
@@ -27,8 +28,8 @@ talk.route('/:id')
     return !talker
       ? res.status(404).json({ message: 'Pessoa palestrante não encontrada' })
       : res.status(200).json(talker);
-  })
-  .put(validateToken, validateNameAge, validateTalk, validateDateRate, async (req, res) => {
+  }))
+  .put(validateToken, validateNameAge, validateTalk, validateDateRate, rescue(async (req, res) => {
     const { id } = req.params;
     const talkers = await getTalkers();
     const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
@@ -36,8 +37,8 @@ talk.route('/:id')
     talkers[talkerIndex] = { ...talkers[talkerIndex], ...req.body };
     await putTalkers(talkers);
     res.status(200).json(talkers[talkerIndex]);
-  })
-  .delete(validateToken, async (req, res) => {
+  }))
+  .delete(validateToken, rescue(async (req, res) => {
     const { id } = req.params;
     const talkers = await getTalkers();
     const talkerIndex = talkers.findIndex((talker) => talker.id === Number(id));
@@ -45,22 +46,22 @@ talk.route('/:id')
     talkers.splice(talkerIndex, 1);
     await putTalkers(talkers);
     res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' }).end();
-  });
+  }));
 
 talk.route('/')
-  .get(async (_req, res) => {
+  .get(rescue(async (_req, res) => {
     const talkers = await getTalkers();
     return talkers.length === 0
       ? res.status(200).json([])
       : res.status(200).json(talkers);
-  })
-  .post(validateToken, validateNameAge, validateTalk, validateDateRate, async (req, res) => {
+  }))
+  .post(validateToken, validateNameAge, validateTalk, validateDateRate, rescue(async (req, res) => {
     const talkers = await getTalkers();
     const autoId = talkers.length > 0 ? talkers[talkers.length - 1].id + 1 : 1;
     const newTalk = { id: autoId, ...req.body };
     talkers.push(newTalk);
     await putTalkers(talkers);
     res.status(201).json(newTalk);
-  });
+  }));
 
 module.exports = talk;
