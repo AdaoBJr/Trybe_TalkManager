@@ -159,12 +159,24 @@ async function editTalker(req, res) {
 
     const response = await fs.readFile('./talker.json', 'utf-8');
     let convert = JSON.parse(response);
-    convert = convert.filter((talker) => talker.id !== +id);
+    convert = convert.filter((talker) => talker.id !== Number(id));
 
     convert.push({ id: +id, name, age, talk });
 
     await fs.writeFile('./talker.json', JSON.stringify(convert));
-    return res.status(200).json({ id: +id, name, age, talk });
+    return res.status(200).json({ id: Number(id), name, age, talk });
+}
+
+async function deleteTalker(req, res) {
+    const { id } = req.params;
+
+    const data = await fs.readFile('talker.json', 'utf-8');
+    const dataJson = JSON.parse(data);
+    const deletedTalker = dataJson.filter((talker) => talker.id !== Number(id));
+
+    await fs.writeFile('./talker.json', JSON.stringify(deletedTalker));
+
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 }
 
 module.exports = {
@@ -179,4 +191,5 @@ module.exports = {
     checkTalkObj,
     addTalk,
     editTalker,
+    deleteTalker,
 };
