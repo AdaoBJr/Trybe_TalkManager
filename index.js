@@ -2,6 +2,15 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const talkers = require('./talker.json');
+const {
+  validateLogin,
+  validateToken,
+  validateName,
+  validateAge,
+  validateWatchedAt,
+  validateRate,
+  validateTalk,
+} = require('./auth-middleware');
 
 const app = express();
 app.use(bodyParser.json());
@@ -21,32 +30,20 @@ function generateToken(length) {
   return b.join('');
 }
 
-// https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
-function validateEmail(email) {
-  const re = /\S+@\S+\.\S+/;
-  return re.test(email);
-}
+// app.use(
+//   validateLogin,
+//   validateToken,
+//   validateName,
+//   validateAge,
+//   validateWatchedAt,
+//   validateRate,
+//   validateTalk,
+// );
 
-app.post('/login', (req, res, nex) => {
-  const token = { token: generateToken(16) };
-  const { email } = req.body;
-  const { password } = req.body;
-
-  if (!email) return res.status(400).json({ message: 'O campo "email" é obrigatório' });
-
-  if (validateEmail(email) !== true) {
-    return res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
-
-  if (!password) return res.status(400).json({ message: 'O campo "password" é obrigatório' });
-
-  if (password.length < 6) {
-    return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  }
-
-  res.status(200).json(token);
-  nex();
-});
+// app.get('/talker/search?q=searchTerm', (req, res) => {
+//   const { q } = req.query;
+//   const filteredTalker = talkers.filter((t) => t.name.includes(q));
+// });
 
 // Developer Mozilla: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
 app.get('/talker/:id', async (req, res) => {
@@ -59,13 +56,13 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const file = await fs.readFile('./talker.json', 'utf-8');
-  const response = await JSON.parse(file);
+  const readTalkes = await fs.readFile('./talker.json', 'utf-8');
+  const response = await JSON.parse(readTalkes);
   return res.status(200).json(response);
 
   // try {
-  //   const file = await fs.readFile('./talker.json', 'utf-8');
-  //   const response = await JSON.parse(file);
+  //   const readTalkes = await fs.readFile('./talker.json', 'utf-8');
+  //   const response = await JSON.parse(readTalkes);
   //   return res.status(200).json(response);
   // } catch (error) {
   //   return res.status(500).json({ error: `Erro: ${err.message}` });
@@ -73,6 +70,64 @@ app.get('/talker', async (_req, res) => {
 
   // if (talkers.length === 0) return res.status(200).json([]);
   // return res.status(200).json(talkers);
+});
+
+app.post('/login', validateLogin, (_req, res) => {
+  const token = { token: generateToken(16) };
+  return res.status(200).json(token);
+});
+
+app.post('/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+  // const { name, age, watchedAt, rate } = req.body;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+  const readTalkes = await fs.readFile('./talker.json', 'utf-8');
+  const talkes = await JSON.parse(readTalkes);
+  const newTalker = {
+    id: talkers.length + 1,
+    name,
+    age,
+    talk: {
+      watchedAt,
+      rate,
+    },
+  };
+  talkes.push(newTalker);
+  const writeTalkes = JSON.stringify(talkes);
+  fs.writeFile('./talker.json', writeTalkes);
+  return res.status(201).json(newTalker);
+});
+
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateWatchedAt,
+  validateRate,
+  validateTalk,
+  (req, res) => {
+    const { id } = req.params;
+    const { name, age, watchedAt, rate } = req.body;
+    const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+
+    talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, watchedAt, rate };
+
+    return res.status(200).end(talkers[talkerIndex]);
+});
+
+app.delete('/talker/:id', validateToken, (req, res) => {
+  const { id } = req.params;
+  const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+
+  talkers.slice(talkerIndex, 1);
+
+  return res.status(200).end({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 // não remova esse endpoint, e para o avaliador funcionar
