@@ -143,7 +143,7 @@ async function addTalk(req, res) {
         id: dataJson.length + 1,
         name,
         age,
-        talker: {
+        talk: {
             watchedAt,
             rate,
         },
@@ -151,6 +151,20 @@ async function addTalk(req, res) {
     dataJson.push(newTalker);
     await fs.writeFile('./talker.json', JSON.stringify(newTalker));
     return res.status(201).json(newTalker);
+}
+
+async function editTalker(req, res) {
+    const { name, age, talk } = req.body;
+    const { id } = req.params;
+
+    const response = await fs.readFile('./talker.json', 'utf-8');
+    let convert = JSON.parse(response);
+    convert = convert.filter((talker) => talker.id !== +id);
+
+    convert.push({ id: +id, name, age, talk });
+
+    await fs.writeFile('./talker.json', JSON.stringify(convert));
+    return res.status(200).json({ id: +id, name, age, talk });
 }
 
 module.exports = {
@@ -164,4 +178,5 @@ module.exports = {
     checkTalk,
     checkTalkObj,
     addTalk,
+    editTalker,
 };

@@ -14,6 +14,7 @@ const {
     checkTalk,
     checkTalkObj,
     addTalk,
+    editTalker,
 } = require('./middleware/index');
 
 app.use(bodyParser.json());
@@ -39,6 +40,8 @@ app.post('/login', checkEmail, checkPassword, (_req, res) => {
 });
 
 app.post('/talker', checkToken, checkName, checkAge, checkTalk, checkTalkObj, addTalk);
+
+app.put('/talker/:id', checkToken, checkName, checkAge, checkTalk, checkTalkObj, editTalker);
 
 app.listen(PORT, () => {
     console.log('Online');
