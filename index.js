@@ -52,3 +52,18 @@ app.post('/talker', validateToken, validateParams, async (req, res) => {
   await writeFile('./talker.json', JSON.stringify(data));
   return res.status(201).json(newTalker);
 });
+
+app.put('/talker/:id', validateToken, validateParams, async (req, res) => {
+  const { name, age, talk } = req.body;
+  const { id } = req.params;
+  const data = await readTalkerFunc();
+  const talkerIndex = data.findIndex((t) => t.id === parseInt(id, 10));
+  if (talkerIndex === -1) {
+ return res.status(404).json({
+    message: 'Pessoa palestrante não encontrada',
+  }); 
+}
+  data[talkerIndex] = { ...data[talkerIndex], name, age, talk };
+
+  return res.status(200).json(data[talkerIndex]);
+});
