@@ -8,9 +8,7 @@ const {
   returnToken,
 } = require('../middleweres/login');
 
-// router.get('/', returnToken);
-
-router.get(
+router.post(
   '/',
   verifyEmail,
   verifyPassword,

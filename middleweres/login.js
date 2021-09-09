@@ -37,10 +37,7 @@ const verifyPassword = (req, res, next) => {
 const returnToken = (_req, res) => {
   const token = generateToken(16);
 
-  // return res.status(OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
-
   return res.status(OK_STATUS).json({ token });
-  // next();
 };
 
 module.exports = {
