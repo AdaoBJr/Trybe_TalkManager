@@ -7,9 +7,15 @@ const { findOne,
   validarEmail, 
   validaToken, 
   editTalker,
-  validaNome, validaAge, validaDate, validaRate, validaTalk, addTalker } = require('./meddlewares');
+  validaNome, 
+  validaAge, 
+  validaDate,
+  validaRate, 
+  validaTalk, 
+  addTalker, 
+  deletaTalker } = require('./meddlewares');
 
-  const app = express();
+const app = express();
 app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -57,7 +63,7 @@ app.post('/talker',
   validaRate,   
   addTalker);
 
-app.put('/talker/:id', 
+  app.put('/talker/:id', 
   validaToken,
   validaNome, 
   validaAge, 
@@ -65,6 +71,10 @@ app.put('/talker/:id',
   validaDate, 
   validaRate,   
   editTalker);
+
+app.delete('/talker/:id', 
+  validaToken,  
+  deletaTalker);
 
 app.listen(PORT, () => {
   console.log('Online');
