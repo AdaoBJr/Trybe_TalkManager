@@ -91,7 +91,7 @@ verifyRate, async (req, res) => {
   const talkerIndex = editTalker.findIndex((talker) => talker.id === parseInt(id, 10));
     if (talkerIndex === -1) return res.status(400).json({ message: 'Talker not found!' });
     editTalker[talkerIndex] = { ...editTalker[talkerIndex], name, age, talk: { watchedAt, rate } };
-    criarNovoPalestrante(editTalker);
+    await criarNovoPalestrante(editTalker);
    res.status(200).json(editTalker[talkerIndex]);
 });
 
