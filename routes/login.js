@@ -3,10 +3,12 @@ const express = require('express');
 const router = express.Router();
 
 const {
-  returnToken,
   verifyEmail,
   verifyPassword,
+  returnToken,
 } = require('../middleweres/login');
+
+// router.get('/', returnToken);
 
 router.get(
   '/',

@@ -9,7 +9,7 @@ const verifyEmail = (req, res, next) => {
 
   const emailVerif = emailRegex(email);
 
-  if (!emailVerif) {
+  if (!email || email === '') {
     return res.status(BAD_REQ).json({ message: 'O campo "email" é obrigatório' });
   }
 
@@ -23,7 +23,7 @@ const verifyEmail = (req, res, next) => {
 const verifyPassword = (req, res, next) => {
   const { password } = req.body;
 
-  if (!password) {
+  if (!password || password === '') {
     return res.status(BAD_REQ).json({ message: 'O campo "password" é obrigatório' });
   }
 
@@ -37,8 +37,9 @@ const verifyPassword = (req, res, next) => {
 const returnToken = (_req, res) => {
   const token = generateToken(16);
 
-  return res.status(OK_STATUS).json({ token });
+  // return res.status(OK_STATUS).json({ token: '7mqaVRXJSp886CGr' });
 
+  return res.status(OK_STATUS).json({ token });
   // next();
 };
 
