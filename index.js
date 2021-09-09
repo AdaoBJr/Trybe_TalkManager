@@ -30,6 +30,16 @@ app.get('/talker', async (_request, response) => {
   return response.status(HTTP_OK_STATUS).json(data);
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+const { name } = req.query;
+const data = await readTalkerFunc();
+const filteredData = data.filter((talker) => talker.name.includes(name));
+if (filteredData.length === 0) {
+  return res.status(200).json(data);
+} 
+return res.status(200).json(filteredData);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const data = await readTalkerFunc();
