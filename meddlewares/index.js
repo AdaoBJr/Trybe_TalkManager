@@ -4,7 +4,6 @@ const findOne = (id, listTalkers) => {
   };
 
   const fs = require('fs').promises;
-  // const { gerarToken } = require('../helpers');
   
   const validarEmail = (email) => {
     const obrigatorio = { message: 'O campo "email" é obrigatório' };
