@@ -2,11 +2,7 @@ const express = require('express');
 
 const talk = express.Router();
 const { getTalkers, putTalkers } = require('../services/fileManager');
-const {
-  validateToken,
-  validateNameAge,
-  validateTalk,
-  validateDateRate,
+const { validateToken, validateNameAge, validateTalk, validateDateRate,
 } = require('../auth/authPost');
 
 talk.route('/search')

@@ -1,5 +1,3 @@
-const dateFormat = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
-
 function validateToken(req, res, next) {
   const { authorization } = req.headers;
   if (authorization) {
@@ -44,6 +42,7 @@ function validateTalk(req, res, next) {
 }
 
 function validateDateRate(req, res, next) {
+  const dateFormat = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
   const { talk: { watchedAt, rate } } = req.body;
   switch (false) {
     case dateFormat.test(watchedAt):
