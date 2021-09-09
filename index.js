@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs/promises');
+const fs = require('fs');
 const randToken = require('rand-token');
 
 const app = express();
@@ -9,13 +9,13 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-async function writeFile(req, res, next) {
+async function writeFile(req, _res, next) {
   const { file } = req;
   const newClient = req.body;
   newClient.id = file.length + 1;
   const newFile = [...file, newClient];
   try {
-    await fs.writeFile('./talker.json', JSON.stringify(newFile));
+    await fs.promises.writeFile('./talker.json', JSON.stringify(newFile));
     return next();
   } catch (err) {
     return next(err);
@@ -24,7 +24,7 @@ async function writeFile(req, res, next) {
 
 async function readFile(req, _res, next) {
   try {
-    const stringData = await fs.readFile('./talker.json');
+    const stringData = await fs.promises.readFile('./talker.json');
     req.file = JSON.parse(stringData);
     return next();
   } catch (err) {
@@ -129,7 +129,7 @@ app.post('/login', (req, res) => {
 
 app.post('/talker', validToken, validNameAge, validTalk, validWatchedAtRate, readFile, writeFile,
   async (_req, res) => {
-  const data = await fs.readFile('./talker.json');
+  const data = await fs.promises.readFile('./talker.json');
   const file = JSON.parse(data);
   const newData = file[file.length - 1];
   return res.status(201).json(newData);
