@@ -40,9 +40,9 @@ app.post('/login', checkEmail, checkPassword, (_req, res) => {
     return res.status(200).json({ token });
 });
 
-app.post('/talker', checkToken, checkName, checkAge, checkTalk, checkTalkObj, addTalk);
+app.post('/talker', checkToken, checkName, checkAge, checkTalkObj, checkTalk, addTalk);
 
-app.put('/talker/:id', checkToken, checkName, checkAge, checkTalk, checkTalkObj, editTalker);
+app.put('/talker/:id', checkToken, checkName, checkAge, checkTalkObj, checkTalk, editTalker);
 
 app.delete('/talker/:id', checkToken, deleteTalker);
 
