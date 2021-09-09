@@ -13,7 +13,8 @@ const { findOne,
   validaRate, 
   validaTalk, 
   addTalker, 
-  deletaTalker } = require('./meddlewares');
+  deletaTalker,
+  seachTalker, } = require('./meddlewares');
 
 const app = express();
 app.use(bodyParser.json());
@@ -23,6 +24,10 @@ const PORT = '3000';
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
+
+app.get('/talker/search', 
+  validaToken,
+  seachTalker);
 
 app.get('/talker', async (req, res) => {  
  const talkers = await readFile();
