@@ -175,9 +175,13 @@ const deleteTalker = async (req, res) => {
   return res.status(OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const readFile = (fileName) => fs.readFile(fileName, 'utf-8')
+  .then((res) => JSON.parse(res))
+  .catch((err) => JSON.parse(err));
+
 const searchTalker = async (req, res) => {
   const { query } = req.query;
-  const talkList = await writeFile(file);
+  const talkList = await readFile(file);
   const filterTalk = talkList.filter((curr) => curr.name.includes(query));
 
   if (!query) {
