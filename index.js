@@ -28,7 +28,7 @@ app.route('/talker').get(async (_request, response) => {
     return response.status(HTTP_OK_STATUS).json(contentFromFile);
   }
 
-  return response.status(HTTP_OK_STATUS).json(contentFromFile);
+  return response.status(HTTP_OK_STATUS).json([]);
 });
 
 // Requisito 2 
