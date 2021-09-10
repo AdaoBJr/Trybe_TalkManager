@@ -13,24 +13,28 @@ const {
   verifyRate,
   newTalker,
   editTalker,
+  deleteTalker,
 } = require('../middleweres/talkers');
 
-router.get('/:id', getTalkersById);
-router.put(
-  '/:id',
-  verifyToken,
-  verifyName,
-  verifyTalk,
-  verifyWatchedAt,
-  verifyAge,
-  verifyRate,
-  editTalker,
+router.route('/:id')
+  .get(getTalkersById)
+  .put(
+    verifyToken,
+    verifyName,
+    verifyTalk,
+    verifyWatchedAt,
+    verifyAge,
+    verifyRate,
+    editTalker,
+  )
+  .delete(
+    verifyToken,
+    deleteTalker,
 );
 
-router.get('/', getAllTalkers);
-
-router.post(
-  '/',
+router.route('/')
+  .get(getAllTalkers)
+  .post(
   verifyToken,
   verifyName,
   verifyTalk,

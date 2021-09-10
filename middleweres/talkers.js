@@ -156,13 +156,23 @@ const editTalker = async (req, res) => {
   const data = await JSON.parse(talkers);
 
   const index = data.findIndex((talker) => talker.id === Number(id));
-
   data[index] = { id: Number(id), name, age, talk };
-
   const string = JSON.stringify(data);
   writeFile(file, string);
 
   return res.status(OK_STATUS).json({ id: Number(id), name, age, talk });
+};
+
+const deleteTalker = async (req, res) => {
+  const { id } = req.params;
+  const talkers = fsinc.readFileSync(file, 'utf8');
+  const data = await JSON.parse(talkers);
+
+  const talkerIdFilter = data.filter((talker) => talker.id !== Number(id));
+  const deleted = JSON.stringify(talkerIdFilter);
+  writeFile(file, deleted);
+
+  return res.status(OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
 module.exports = {
@@ -176,4 +186,5 @@ module.exports = {
   verifyRate,
   newTalker,
   editTalker,
+  deleteTalker,
 };
