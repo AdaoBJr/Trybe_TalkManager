@@ -1,5 +1,10 @@
 const crypto = require('crypto');
 
+function createToken() {
+  const tk = crypto.randomBytes(8).toString('hex');
+  return tk;
+}
+
 function validateEmail(req, res, next) {
   const { email } = req.body;
   const reg = new RegExp(/^[\w.]+@[a-z]+.\w{2,3}$/g);
@@ -24,6 +29,21 @@ function validatePassword(req, res, next) {
 
   if (password.length < 6) {
     return res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+  }
+
+  next();
+}
+
+function validateToken(req, res, next) {
+  const tk = req.headers.authorization;
+  // console.log(tk);
+
+  if (!tk) {
+    return res.status(401).json({ message: 'Token não encontrado' });
+  }
+
+  if (tk.length !== 16) {
+    return res.status(401).json({ message: 'Token inválido' });
   }
 
   next();
@@ -57,11 +77,25 @@ function validateAge(req, res, next) {
   next();
 }
 
+function validateTalk(req, res, next) {
+  const { talk } = req.body;
+  // const { watchedAt } = talk;
+  // const { rate } = talk;
+
+  if (!talk || talk.watchedAt === undefined || talk.rate === undefined) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+    });
+  }
+
+  next();
+}
+
 function validateDate(req, res, next) {
   const { talk } = req.body;
-  const { watchedAt } = talk;
+  const { watchedAt = '' } = talk;
   const reg = new RegExp(/^(\d{2})\/(\d{2})\/(\d{4})$/);
-  console.log(req.body);
+  // console.log(req.body);
 
   if (!watchedAt) {
     return res.status(400).json({
@@ -93,47 +127,14 @@ function validateRate(req, res, next) {
   next();
 }
 
-function validateTalk(req, res, next) {
-  const { talk } = req.body;
-  // const { watchedAt } = talk;
-  // const { rate } = talk;
-
-  if (!talk || talk.watchedAt === undefined || talk.rate === undefined) {
-    return res.status(400).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-    });
-  }
-
-  next();
-}
-
-function createToken() {
-  const tk = crypto.randomBytes(8).toString('hex');
-  return tk;
-}
-
-function validateToken(req, res, next) {
-  const tk = createToken();
-
-  if (!tk) {
-    return res.status(401).json({ message: 'Token não encontrado' });
-  }
-
-  if (tk.length !== 16) {
-    return res.status(401).json({ message: 'Token inválido' });
-  }
-
-  next();
-}
-
 module.exports = {
   validateEmail,
   validatePassword,
-  validateName,
-  validateAge,
-  validateDate,
-  validateRate,
-  validateTalk,
   createToken,
   validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
 };

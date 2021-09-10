@@ -6,13 +6,13 @@ const fs = require('fs').promises;
 const {
   validateEmail,
   validatePassword,
-  validateName,
-  validateAge,
-  validateDate,
-  validateRate,
-  validateTalk,
   createToken,
   validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
 } = require('./validate');
 
 const app = express();
@@ -47,12 +47,14 @@ app.get('/talker', async (req, res) => {
   return res.json(talkers);
 });
 
-app.post('/talker', validateName,
+app.post('/talker',
+  validateToken,
+  validateName,
   validateAge,
+  validateTalk,
   validateDate,
   validateRate,
-  validateTalk,
-  validateToken, async (req, res) => {
+  async (req, res) => {
     const { name, age, talk } = req.body;
     const talkers = await getTalkers();
     const addTalker = {
