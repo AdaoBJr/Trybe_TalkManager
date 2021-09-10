@@ -14,8 +14,8 @@ const {
   newTalker,
 } = require('../middleweres/talkers');
 
-router.get('/', getAllTalkers);
 router.get('/:id', getTalkersById);
+router.get('/', getAllTalkers);
 
 router.post(
   '/',
@@ -26,6 +26,6 @@ router.post(
   verifyAge,
   verifyRate,
   newTalker,
-);
+  );
 
 module.exports = router;

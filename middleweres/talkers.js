@@ -96,10 +96,10 @@ const verifyTalk = (req, res, next) => {
 };
 
 const verifyWatchedAt = (req, res, next) => {
-  const { talk: { watchedAt } } = req.body;
-  const data = dataRegex(watchedAt);
+  const { talk } = req.body;
+  const data = dataRegex(talk.watchedAt);
 
-  if (!watchedAt || watchedAt === '') {
+  if (!talk.watchedAt || talk.watchedAt === '') {
     res.status(BAD_REQ).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -134,10 +134,10 @@ const writeFile = (url, string) => {
 
 const newTalker = async (req, res) => {
   const { name, age, talk } = req.body;
-  const talkers = await fsinc.readFileSync(file, 'utf8');
+  const talkers = fsinc.readFileSync(file, 'utf8');
 
   const talkersToJson = await JSON.parse(talkers);
-  const id = talkersToJson.length + 1;
+  const id = await talkersToJson.length + 1;
   const reqBody = [...talkersToJson, { id, name, age, talk }];
   const string = await JSON.stringify(reqBody);
 
