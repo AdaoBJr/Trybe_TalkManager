@@ -123,7 +123,7 @@ const verifyRate = (req, res, next) => {
     });
   }
 
-  if (talk.rate > 5 || talk.rate < 1) {
+  if (talk.rate < 1 || talk.rate > 5) {
     return res.status(BAD_REQ).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
@@ -184,12 +184,12 @@ const searchTalker = async (req, res) => {
   const talkList = await readFile(file);
   const filterTalk = talkList.filter((curr) => curr.name.includes(query));
 
-  if (!query) {
+  if (!query || query === '') {
     return res.status(OK_STATUS).json(talkList);
   }
 
-  if (!filterTalk) {
-    return res.status(OK_STATUS).json(Array.from([]));
+  if (!filterTalk || filterTalk === '') {
+    return res.status(OK_STATUS).send([]);
   }
 
   return res.status(OK_STATUS).json(filterTalk);

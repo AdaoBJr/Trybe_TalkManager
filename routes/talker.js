@@ -31,7 +31,7 @@ router.route('/:id')
   .delete(
     verifyToken,
     deleteTalker,
-);
+  );
 
 router.route('/search')
     .get(
@@ -42,13 +42,13 @@ router.route('/search')
 router.route('/')
   .get(getAllTalkers)
   .post(
-  verifyToken,
-  verifyName,
-  verifyAge,
-  verifyTalk,
-  verifyWatchedAt,
-  verifyRate,
-  newTalker,
-);
+    verifyToken,
+    verifyName,
+    verifyAge,
+    verifyTalk,
+    verifyWatchedAt,
+    verifyRate,
+    newTalker,
+  );
 
 module.exports = router;
