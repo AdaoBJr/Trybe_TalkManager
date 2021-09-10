@@ -87,7 +87,7 @@ const verifyTalk = (req, res, next) => {
   const { talk } = req.body;
 
   if (!talk || talk === '') {
-    res.status(BAD_REQ).json({
+    return res.status(BAD_REQ).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
@@ -100,13 +100,15 @@ const verifyWatchedAt = (req, res, next) => {
   const data = dataRegex(talk.watchedAt);
 
   if (!talk.watchedAt || talk.watchedAt === '') {
-    res.status(BAD_REQ).json({
+    return res.status(BAD_REQ).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
 
   if (data !== true) {
-    res.status(BAD_REQ).json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+    return res.status(BAD_REQ).json({
+      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
+    });
   }
 
   next();
@@ -116,13 +118,13 @@ const verifyRate = (req, res, next) => {
   const { talk: { rate } } = req.body;
 
   if (!rate || rate === '') {
-    res.status(BAD_REQ).json({
+    return res.status(BAD_REQ).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
 
   if (rate <= 0 || rate > 5) {
-    res.status(BAD_REQ).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+    return res.status(BAD_REQ).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
 
   next();
