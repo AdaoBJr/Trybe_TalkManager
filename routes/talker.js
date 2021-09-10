@@ -14,6 +14,7 @@ const {
   newTalker,
   editTalker,
   deleteTalker,
+  searchTalker,
 } = require('../middleweres/talkers');
 
 router.route('/:id')
@@ -32,14 +33,20 @@ router.route('/:id')
     deleteTalker,
 );
 
+router.route('/search')
+    .get(
+      verifyToken,
+      searchTalker,
+    );
+
 router.route('/')
   .get(getAllTalkers)
   .post(
   verifyToken,
   verifyName,
+  verifyAge,
   verifyTalk,
   verifyWatchedAt,
-  verifyAge,
   verifyRate,
   newTalker,
 );
