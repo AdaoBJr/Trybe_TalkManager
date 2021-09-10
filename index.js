@@ -7,8 +7,8 @@ const { searchById } = require('./services/content');
 const app = express();
 app.use(bodyParser.json());
 
-const HTTP_OK = 200;
-const HTTP_NOT_FIND = 400;
+const HTTP_OK_STATUS = 200;
+const HTTP_NOT_FIND_STATUS = 400;
 const PORT = '3000';
 
 const filePaths = {
@@ -17,7 +17,7 @@ const filePaths = {
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
-  response.status(HTTP_OK).send();
+  response.status(HTTP_OK_STATUS).send();
 });
 
 // Requisito 1
@@ -25,10 +25,10 @@ app.route('/talker').get(async (_request, response) => {
   const contentFromFile = await handleFileReading(filePaths.talker);
 
   if (contentFromFile) {
-    return response.status(200).json(contentFromFile);
+    return response.status(HTTP_OK_STATUS).json(contentFromFile);
   }
 
-  response.status(200).json([]);
+  return response.status(HTTP_OK_STATUS).json(contentFromFile);
 });
 
 // Requisito 2 
@@ -39,11 +39,11 @@ app.route('/talker/:id').get(async (request, response) => {
   const findedTalker = searchById(talkersDatabase, id);
 
   if (findedTalker) {
-    return response.status(HTTP_OK).json(findedTalker);
+    return response.status(HTTP_OK_STATUS).json(findedTalker);
   }
 
   return response
-    .status(HTTP_NOT_FIND)
+    .status(HTTP_NOT_FIND_STATUS)
     .json({ message: 'Pessoa palestrante não encontrada' });
 });
 
