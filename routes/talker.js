@@ -21,9 +21,9 @@ router.route('/:id')
   .put(
     verifyToken,
     verifyName,
+    verifyAge,
     verifyTalk,
     verifyWatchedAt,
-    verifyAge,
     verifyRate,
     editTalker,
   )
