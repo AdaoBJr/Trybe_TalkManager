@@ -1,8 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-const crypto = require('crypto');
-const talkerJson = require('./talker.json');
+// const talkerJson = require('./talker.json');
 
 const {
   validateEmail,
@@ -11,7 +10,9 @@ const {
   validateAge,
   validateDate,
   validateRate,
-  validateDateAndRate,
+  validateTalk,
+  createToken,
+  validateToken,
 } = require('./validate');
 
 const app = express();
@@ -46,22 +47,29 @@ app.get('/talker', async (req, res) => {
   return res.json(talkers);
 });
 
-app.post('talker', validateName,
+app.post('/talker', validateName,
   validateAge,
   validateDate,
   validateRate,
-  validateDateAndRate, (req, res) => {
+  validateTalk,
+  validateToken, async (req, res) => {
     const { name, age, talk } = req.body;
+    const talkers = await getTalkers();
+    const addTalker = {
+      name,
+      id: 5,
+      age,
+      talk,
+    };
 
-    talkerJson.push({ name, age, talk });
-    return res.status(201);
+    const newTalker = [...talkers, addTalker];
+    await fs.writeFile('./talker.json', JSON.stringify(newTalker));
+    return res.status(201).json(addTalker);
   });
 
-app.post('/login', validateEmail, validatePassword, (req, res) => {
-  const tk = crypto.randomBytes(8).toString('hex');
+app.post('/login', validateEmail, validatePassword, (req, res) =>
   // console.log(token);
-  return res.status(200).json({ token: tk });
-});
+  res.status(200).json({ token: createToken() }));
 
 app.listen(PORT, () => {
   console.log('Online');
