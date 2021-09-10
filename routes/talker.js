@@ -20,9 +20,9 @@ router.get('/:id', getTalkersById);
 router.post(
   '/',
   verifyToken,
-  verifyWatchedAt,
   verifyName,
   verifyTalk,
+  verifyWatchedAt,
   verifyAge,
   verifyRate,
   newTalker,
