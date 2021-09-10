@@ -2,7 +2,7 @@ const express = require('express');
 
 const router = express.Router();
 
-const { emailValid, passwordValid, postLogin } = require('../middlewares/index');
+const { emailValid, passwordValid, postLogin } = require('../middlewares/login');
 
 router.post('/', emailValid, passwordValid, postLogin);
 

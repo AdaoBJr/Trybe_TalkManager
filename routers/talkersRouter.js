@@ -2,19 +2,22 @@ const express = require('express');
 
 const router = express.Router();
 
+const { getAll } = require('../middlewares/getAllTalkers');
+const { getFilterId } = require('../middlewares/getTalkerById');
+const { tokenValid } = require('../middlewares/tokemValid');
+const { postTalker } = require('../middlewares/createTalker');
+const { putValid } = require('../middlewares/editTalker');
+const { deleteValid } = require('../middlewares/deleteTalker');
+const { searchTalker } = require('../middlewares/searchTalker');
 const { 
-  getAll,
-  getFilterId,
-  tokenValid,
-  nameValid,
-  ageValid,
-  watchedAtValid,
+  nameValid, 
+  ageValid, 
+  watchedAtValid, 
   rateValid,
-  postTalker,
-  talkValid,
-  putValid,
-  deleteValid, 
-} = require('../middlewares/index');
+  talkValid, 
+} = require('../middlewares/newEditDelete');
+
+router.get('/search', tokenValid, searchTalker);
 
 router.get('/', getAll);
 
