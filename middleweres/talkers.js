@@ -148,6 +148,23 @@ const newTalker = async (req, res) => {
   return res.status(GOOD_REQ).send({ id: Number(id), name, age, talk });
 };
 
+const editTalker = async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+
+  const talkers = fsinc.readFileSync(file, 'utf8');
+  const data = await JSON.parse(talkers);
+
+  const index = data.findIndex((talker) => talker.id === Number(id));
+
+  data[index] = { id: Number(id), name, age, talk };
+
+  const string = JSON.stringify(data);
+  writeFile(file, string);
+
+  return res.status(OK_STATUS).json({ id: Number(id), name, age, talk });
+};
+
 module.exports = {
   getTalkersById,
   getAllTalkers,
@@ -158,4 +175,5 @@ module.exports = {
   verifyWatchedAt,
   verifyRate,
   newTalker,
+  editTalker,
 };
