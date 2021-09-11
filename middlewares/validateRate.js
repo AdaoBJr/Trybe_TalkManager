@@ -4,13 +4,13 @@ const validateRate = (req, res, next) => {
   const { talk } = req.body;
   const { rate } = talk;
   
-  if (!rate || rate === '') {
+  if (rate === undefined || rate === '') {
     return res.status(HTTP_BAD_REQUEST).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
   }
    
-  if (rate >= 1 && rate >= 5) {
+  if (rate < 1 || rate > 5) {
       return res.status(HTTP_BAD_REQUEST)
       .json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5', 
     });

@@ -43,7 +43,7 @@ const getTalkerByID = (req, res) => {
 // --------------------------------------------------------
 // 3º Requisito:
 
-const getToken = (req, res, _next) => {
+const getToken = (req, res) => {
   const { email, password } = req.body;
 
   if (validateEmail(email) === 'empty') {
