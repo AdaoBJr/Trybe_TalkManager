@@ -1,15 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
-const talkers = require('./talker.json');
+// const talkers = require('./talker.json');
 const {
   validateLogin,
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
   validateWatchedAt,
   validateRate,
-  validateTalk,
 } = require('./auth-middleware');
 
 const app = express();
@@ -30,6 +30,10 @@ function generateToken(length) {
   return b.join('');
 }
 
+async function readFile() {
+  return fs.readFile('./talker.json', 'utf-8');
+}
+
 // app.use(
 //   validateLogin,
 //   validateToken,
@@ -48,7 +52,8 @@ function generateToken(length) {
 // Developer Mozilla: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const talker = talkers.find((obj) => obj.id === parseInt(id, 10));
+  const consultingFile = await readFile();
+  const talker = consultingFile.find((obj) => obj.id === parseInt(id, 10));
 
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
@@ -56,7 +61,7 @@ app.get('/talker/:id', async (req, res) => {
 });
 
 app.get('/talker', async (_req, res) => {
-  const readTalkes = await fs.readFile('./talker.json', 'utf-8');
+  const readTalkes = await readFile();
   const response = await JSON.parse(readTalkes);
   return res.status(200).json(response);
 
@@ -77,6 +82,7 @@ app.post('/login', validateLogin, (_req, res) => {
   return res.status(200).json(token);
 });
 
+// const { name, age, talk.watchedAt, talk.rate } = req.body;
 app.post('/talker',
   validateToken,
   validateName,
@@ -85,12 +91,11 @@ app.post('/talker',
   validateWatchedAt,
   validateRate,
   async (req, res) => {
-  // const { name, age, watchedAt, rate } = req.body;
   const { name, age, talk: { watchedAt, rate } } = req.body;
-  const readTalkes = await fs.readFile('./talker.json', 'utf-8');
+  const readTalkes = await readFile();
   const talkes = await JSON.parse(readTalkes);
   const newTalker = {
-    id: talkers.length + 1,
+    id: readTalkes.length + 1,
     name,
     age,
     talk: {
@@ -99,8 +104,8 @@ app.post('/talker',
     },
   };
   talkes.push(newTalker);
-  const writeTalkes = JSON.stringify(talkes);
-  fs.writeFile('./talker.json', writeTalkes);
+  const writeTalkers = JSON.stringify(talkes);
+  await fs.writeFile('./talker.json', writeTalkers);
   return res.status(201).json(newTalker);
 });
 
@@ -108,24 +113,74 @@ app.put('/talker/:id',
   validateToken,
   validateName,
   validateAge,
+  validateTalk,
   validateWatchedAt,
   validateRate,
-  validateTalk,
-  (req, res) => {
+  async (req, res) => {
     const { id } = req.params;
-    const { name, age, watchedAt, rate } = req.body;
-    const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    const jsonReadTalkes = await readFile();
+    const readTalkes = await JSON.parse(jsonReadTalkes);
 
-    talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, watchedAt, rate };
+    const newTalker = { id: Number(id), name, age, talk: { watchedAt, rate } };
+    const updatedTalker = readTalkes.map((t) => ((t.id === parseInt(id, 10)) ? newTalker : t));
 
-    return res.status(200).end(talkers[talkerIndex]);
-});
+    const writeTalkers = JSON.stringify(updatedTalker);
+    await fs.writeFile('./talker.json', writeTalkers);
+    return res.status(200).json(newTalker);
+  });
+
+  // async (req, res) => {
+  //   const { id } = req.params;
+  //   const { name, age, talk: { watchedAt, rate } } = req.body;
+  //   const jsonReadTalkes = await readFile();
+  //   console.log('Linha 123', jsonReadTalkes);
+  //   const readTalkes = await JSON.parse(jsonReadTalkes);
+  //   console.log('Linha 125', readTalkes);
+  //   const talkerIndex = readTalkes.findIndex((t) => t.id === parseInt(id, 10));
+  //   console.log('Linha 127', talkerIndex);
+  //   const talker = readTalkes.find((t) => t.id === parseInt(id, 10));
+  //   console.log('Linha 129', talker);
+  //   readTalkes[talkerIndex] = { id: Number(id), name, age, talk: { watchedAt, rate } };
+  //   const replacedItem = readTalkes.splice(readTalkes.indexOf(talker), 1, readTalkes[talkerIndex]);
+  //   console.log('Linha 130', readTalkes[talkerIndex]);
+  //   console.log('Linha 131', replacedItem);
+  //   console.log('Linha 134', readTalkes);
+  //   const writeTalkers = JSON.stringify(readTalkes);
+  //   await fs.writeFile('./talker.json', writeTalkers);
+  //   return res.status(200).json(readTalkes[talkerIndex]);
+  // }
+
+  // https://stackoverflow.com/questions/5915789/how-to-replace-item-in-array
+
+  // const removingOldFile = readTalkes.splice(talkerIndex, 1);
+  // console.log('Linha 132', removingOldFile);
+  // const puttingUpdatedFile = removingOldFile.push(readTalkes[talkerIndex]);
+  // console.log('Linha 134', puttingUpdatedFile);
+
+  // readTalkes[talkerIndex] = { ...readTalkes[talkerIndex], name, age, talk: { watchedAt, rate } };
+
+  // (req, res) => {
+  //   const { id } = req.params;
+  //   const { name, age, talk: { watchedAt, rate } } = req.body;
+  //   const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+
+  //   // talkers[talkerIndex] = { id: Number(id), name, age, talk: { watchedAt, rate } };
+  //   talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk: { watchedAt, rate } };
+
+  //   // const xxx = JSON.stringify(talkers);
+  //   // await fs.writeFile('./talker.json', xxx);
+  //   // console.log(typeof xxx, talkerIndex, 'LINHA 122');
+
+  //   return res.status(200).json(talkers[talkerIndex]);
+  // }
 
 app.delete('/talker/:id', validateToken, (req, res) => {
   const { id } = req.params;
-  const talkerIndex = talkers.findIndex((t) => t.id === parseInt(id, 10));
+  const lookingForTalker = readFile();
+  const talkerIndex = lookingForTalker.findIndex((t) => t.id === parseInt(id, 10));
 
-  talkers.slice(talkerIndex, 1);
+  lookingForTalker.slice(talkerIndex, 1);
 
   return res.status(200).end({ message: 'Pessoa palestrante deletada com sucesso' });
 });
