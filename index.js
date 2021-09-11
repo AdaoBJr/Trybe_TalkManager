@@ -29,6 +29,22 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  const talkers = await getTalkers();
+  const { q } = req.query;
+  const filterTalkers = talkers.filter((p) => p.name.includes(q));
+
+  if (!filterTalkers || filterTalkers === '') {
+    return res.status(200).json(talkers);
+  }
+
+  // if (filterTalkers !== name) {
+  //   return res.status(200).json([]);
+  // }
+
+  return res.status(200).json(filterTalkers);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const talkers = await getTalkers();
   const { id } = req.params;
@@ -36,7 +52,7 @@ app.get('/talker/:id', async (req, res) => {
 
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
-  res.json(talker);
+  return res.json(talker);
 });
 
 app.get('/talker', async (req, res) => {
