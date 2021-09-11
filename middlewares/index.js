@@ -10,8 +10,6 @@ const {
   verificaRate,
   verificaTalk,
 } = require('./verificações');
-const deleteTalker = require('./deleteTalker');
-const searchTalker = require('./searchTalker');
 
 module.exports = {
   getTalker,
@@ -24,6 +22,4 @@ module.exports = {
   verificaData,
   verificaRate,
   verificaTalk,
-  deleteTalker,
-  searchTalker,
  };
