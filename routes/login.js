@@ -4,6 +4,8 @@ const bodyParser = require('body-parser');
 const app = express();
 app.use(bodyParser.json());
 
+
+// https://pt.stackoverflow.com/questions/1386/express%C3%A3o-regular-para-valida%C3%A7%C3%A3o-de-e-mail
 function checkEmail(email) {
   const emailRegex = /^[a-z0-9.]+@[a-z0-9.]+\.[a-z]+$/i;
   return emailRegex.test(email);
