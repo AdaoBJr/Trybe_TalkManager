@@ -83,12 +83,28 @@ app.put('/talker/:id',
     const talkersIndex = talkers.findIndex((talker) => talker.id === Number(id));
 
     if (talkersIndex === -1) {
-      return res.status(404);
+      return res.status(404).end();
     }
 
     talkers[talkersIndex] = { ...talkers[talkersIndex], name, age, talk };
     await fs.writeFile('./talker.json', JSON.stringify(talkers));
     return res.status(200).json(talkers[talkersIndex]);
+  });
+
+app.delete('/talker/:id',
+  validateToken,
+  async (req, res) => {
+    const talkers = await getTalkers();
+    const { id } = req.params;
+    const talkersIndex = talkers.findIndex((talker) => talker.id === Number(id));
+
+    if (talkersIndex === -1) {
+      return res.status(404).end();
+    }
+
+    talkers.splice(talkersIndex, 1);
+    await fs.writeFile('./talker.json', JSON.stringify(talkers));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   });
 
 app.post('/login', validateEmail, validatePassword, (req, res) =>
