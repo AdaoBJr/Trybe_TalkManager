@@ -43,4 +43,3 @@ app.post('/talker', [
   verificaRate,
   addTalker,
 ]);
-
