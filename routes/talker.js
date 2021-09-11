@@ -92,6 +92,17 @@ app.get('/:id', (req, res) => {
 });
 
 app.use(tokenMidd);
+
+app.delete('/:id', (req, res) => { // localhost:3000/talker/:id
+  const idParam = req.params.id;
+  const id = Number(idParam);
+  const talkers = JSON.parse(fs.readFileSync(`${__dirname}/../talker.json`));
+  const index = id - 1;
+  talkers.splice(index, 1);
+  fs.writeFileSync(`${__dirname}/../talker.json`, JSON.stringify(talkers));
+  res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
 app.use(nameMidd);
 app.use(ageMidd);
 app.use(talkMidd);
