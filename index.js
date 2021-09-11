@@ -69,6 +69,28 @@ app.post('/talker',
     return res.status(201).json(addTalker);
   });
 
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateDate,
+  validateRate,
+  async (req, res) => {
+    const talkers = await getTalkers();
+    const { id } = req.params;
+    const { name, age, talk } = req.body;
+    const talkersIndex = talkers.findIndex((talker) => talker.id === Number(id));
+
+    if (talkersIndex === -1) {
+      return res.status(404);
+    }
+
+    talkers[talkersIndex] = { ...talkers[talkersIndex], name, age, talk };
+    await fs.writeFile('./talker.json', JSON.stringify(talkers));
+    return res.status(200).json(talkers[talkersIndex]);
+  });
+
 app.post('/login', validateEmail, validatePassword, (req, res) =>
   // console.log(token);
   res.status(200).json({ token: createToken() }));
