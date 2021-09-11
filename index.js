@@ -11,6 +11,7 @@ const {
   verificaTalk,
   verificaData,
   verificaRate,
+  editTalker,
  } = require('./middlewares');
 
 const app = express();
@@ -42,4 +43,14 @@ app.post('/talker', [
   verificaData,
   verificaRate,
   addTalker,
+]);
+
+app.put('/talker/:id', [ 
+  verificaToken,
+  verificaNome,
+  verificaIdade,
+  verificaTalk,
+  verificaData,
+  verificaRate,
+  editTalker,
 ]);
