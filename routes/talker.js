@@ -76,6 +76,17 @@ const tokenMidd = (req, res, next) => {
   return next();
 }; 
 
+app.get('/search', tokenMidd, (req, res) => { // localhost:3000/talker/search
+  const query = req.query.q;
+  const talkers = JSON.parse(fs.readFileSync(`${__dirname}/../talker.json`));
+  const search = talkers.filter(({ name }) => name.includes(query));
+
+  if (search) {
+    res.status(200).json(search);
+  }
+  res.status(200).json(talkers);
+});
+
 app.get('/', (req, res) => {
   const talkers = JSON.parse(fs.readFileSync(`${__dirname}/../talker.json`));
    res.status(200).json(talkers);
