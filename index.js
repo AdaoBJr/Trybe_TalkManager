@@ -49,7 +49,6 @@ app.put('/talker/:id', [
   verificaToken,
   verificaNome,
   verificaIdade,
-  verificaTalk,
   verificaData,
   verificaRate,
   editTalker,
