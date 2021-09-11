@@ -1,7 +1,3 @@
-const randtoken = require('rand-token');
-const validator = require('email-validator');
-const validateDate = require('validate-date');
-
 const findTalkerByID = (talkers, id) => talkers.find((e) => e.id === Number(id));
 
 const findTalkersByName = (allTalkers, talkerName) => {
@@ -27,20 +23,51 @@ const changeEditedTalker = (allTalkers, editedTalker) => {
   return editedTalkersList;
 };
 
-const generateToken = () => randtoken.generate(16);
+const generateToken = () => {
+  // Thanks to:
+  // https://stackoverflow.com/questions/10726909/random-alpha-numeric-string-in-javascript/22028809
+  const token = Array(16).fill(0).map(() => Math.random().toString(36).charAt(2)).join('');
+  return token;
+};
+
+// Thanks to:
+// https://stackoverflow.com/questions/46155/how-to-validate-an-email-address-in-javascript
+const emailTester = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+// Thanks to:
+// https://www.npmjs.com/package/email-validator
+// O avaliador não estava instalando o módulo
+function emailValidator(email) {
+  if (email.length > 254) { return false; }
+
+  const valid = emailTester.test(email);
+  if (!valid) { return false; }
+
+  // Further checking of some things regex can't handle
+  const parts = email.split('@');
+  if (parts[0].length > 64) { return false; }
+
+  const domainParts = parts[1].split('.');
+  if (domainParts.some((part) => part.length > 63)) { return false; }
+
+  return true;
+}
 
 const verifyEmailAndPassword = (email, password, MESSAGES) => {
   if (!email) return MESSAGES.emptyEmail;
   if (!password) return MESSAGES.emptyPassword;
   if (password.toString().length < 6) return MESSAGES.passwordLowerThenSix;
-  const validEmail = validator.validate(email);
+  const validEmail = emailValidator(email);
   if (!validEmail) return MESSAGES.wrongEmailFormat;
   return false;
 };
 
+// Thanks to:
+// https://stackoverflow.com/questions/15491894/regex-to-validate-date-format-dd-mm-yyyy-with-leap-year-support
 const isValidDate = (date) => {
-  if (date.includes('-')) return false;
-  return validateDate(date, 'boolean', 'dd/mm/yyyy');
+  const regex = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/;
+  const isValid = regex.test(date);
+  return isValid;
 };
 
 const addIdToTalk = (talkers, body) => {
