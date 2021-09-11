@@ -12,6 +12,7 @@ const {
   verificaData,
   verificaRate,
   editTalker,
+  deleteTalker,
  } = require('./middlewares');
 
 const app = express();
@@ -52,4 +53,9 @@ app.put('/talker/:id', [
   verificaData,
   verificaRate,
   editTalker,
+]);
+
+app.delete('/talker/:id', [
+  verificaToken,
+  deleteTalker,
 ]);
