@@ -5,7 +5,7 @@ const {
   getTalkerByID,
   getToken,
   postTalker,
-  deleteTalker,
+  /* deleteTalker, */
 } = require('./middlewares/index');
 const validateToken = require('./middlewares/validateToken');
 const validateName = require('./middlewares/validateName');
