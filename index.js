@@ -33,7 +33,7 @@ app.listen(PORT, () => {
 
 app.get('/talker', getTalker);
 
-app.get('/talker/search', searchTalker);
+app.get('/talker/search', verificaToken, searchTalker);
 
 app.get('/talker/:id', getTalkerId);
 
