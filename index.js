@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { getAllTalkers, getSingleTalker  } = require('./middlewares');
+const { getAllTalkers, getSingleTalker } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
