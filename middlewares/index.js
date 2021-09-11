@@ -86,6 +86,28 @@ const postTalker = (req, res) => {
 // --------------------------------------------------------
 // 5º Requisito:
 
+// Source: https://app.betrybe.com/course/back-end/introducao-ao-desenvolvimento-web-com-nodejs/express-middlewares/0ba5165f-5fda-4b6b-8de7-d2ccf5782c18/conteudos/e0470c45-ed25-49b8-9675-47bb00b17e42/middlewares/569b400a-f13c-4cee-bad2-bce01348baab?use_case=side_bar
+const putTalker = (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk: { watchedAt, rate } } = req.body;
+
+  handleReadFile()
+  .then((talkersList) => JSON.parse(talkersList))
+  .then((talkersList) => {
+    const talkers = talkersList;
+    const talkerIndex = talkers.findIndex((e) => e.id === Number(id));
+    
+    if (talkerIndex === -1) {
+      return res.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
+    }
+    talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk: { watchedAt, rate } };
+    handleWriteFile(talkers)
+    .then(() => res.status(HTTP_OK_STATUS).json(talkers[talkerIndex]))
+    .catch((err) => res.status(HTTP_BAD_REQUEST).json(err));
+  })
+  .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
+};
+
 // --------------------------------------------------------
 // 6º Requisito:
 
@@ -116,5 +138,6 @@ module.exports = {
   getTalkerByID,
   getToken,
   postTalker,
+  putTalker,
   deleteTalker,
 };
