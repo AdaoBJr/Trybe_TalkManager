@@ -56,7 +56,7 @@ const dateMidd = (req, res, next) => {
 const talkMidd = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || (!talk.watchedAt || !talk.rate)) {
+  if (!talk || (talk.watchedAt === undefined || talk.rate === undefined)) {
     return res.status(400).send({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     });
@@ -91,13 +91,27 @@ app.get('/:id', (req, res) => {
   return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 });
 
-app.post('/', talkMidd, tokenMidd, nameMidd, ageMidd, dateMidd, (req, res) => {
+app.use(tokenMidd);
+app.use(nameMidd);
+app.use(ageMidd);
+app.use(talkMidd);
+app.use(dateMidd);
+
+app.post('/', (req, res) => {
   const talker = req.body;
   const talkers = JSON.parse(fs.readFileSync(`${__dirname}/../talker.json`));
   talker.id = talkers.length + 1;
   talkers.push(talker);
   fs.writeFileSync(`${__dirname}/../talker.json`, JSON.stringify(talkers));
   res.status(201).json(talker);
+});
+
+app.put('/:id', (req, res) => {
+  const { id } = req.params;
+  const talkers = JSON.parse(fs.readFileSync(`${__dirname}/../talker.json`));
+  talkers[id - 1] = { id: Number(id), ...req.body };
+  fs.writeFileSync(`${__dirname}/../talker.json`, JSON.stringify(talkers));
+  res.status(200).json(talkers[id - 1]);
 });
 
 module.exports = app;
