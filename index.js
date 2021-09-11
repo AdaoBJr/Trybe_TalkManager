@@ -11,7 +11,6 @@ const {
   verificaTalk,
   verificaData,
   verificaRate,
-  editTalker,
   deleteTalker,
   searchTalker,
  } = require('./middlewares');
@@ -47,15 +46,6 @@ app.post('/talker', [
   verificaData,
   verificaRate,
   addTalker,
-]);
-
-app.put('/talker/:id', [
-  verificaToken,
-  verificaNome,
-  verificaIdade,
-  verificaRate,
-  verificaData,
-  editTalker,
 ]);
 
 app.delete('/talker/:id', [
