@@ -3,7 +3,7 @@ const HTTP_BAD_REQUEST = 400;
 const validateName = (req, res, next) => {
   const { name } = req.body;
 
-  if (!name || name === '') {
+  if (name === undefined || name === '') {
     return res.status(HTTP_BAD_REQUEST).json(
       {
         message: 'O campo "name" é obrigatório',

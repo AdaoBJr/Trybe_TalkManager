@@ -5,7 +5,7 @@ const validateWatchedAt = (req, res, next) => {
   const { watchedAt } = talk;
   const dateRegex = new RegExp(/\d{2}\/\d{2}\/\d{4}/);
 
-  if (!watchedAt || watchedAt === '') {
+  if (talk === undefined || watchedAt === undefined || watchedAt === '') {
     return res.status(HTTP_BAD_REQUEST).json({
         message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
     });
