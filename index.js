@@ -46,8 +46,8 @@ app.post('/login', getToken);
 // --------------------------------------------------------
 
 // Source: https://app.betrybe.com/course/back-end/introducao-ao-desenvolvimento-web-com-nodejs/express-middlewares/0ba5165f-5fda-4b6b-8de7-d2ccf5782c18/conteudos/e0470c45-ed25-49b8-9675-47bb00b17e42/criando-middlewares-globais-com-appuse/de9e872b-d5ab-4bdc-8daf-39ee16b17e34?use_case=next_button
-// Source: Ativa o uso dos seguintes middlewares nas rotas abaixo:
-app.use(validateToken, validateName, validateAge, validateWatchedAt, validateRate);
+// Ativa o uso dos seguintes middlewares nas rotas abaixo:
+// app.use(validateToken, validateName, validateAge, validateWatchedAt, validateRate);
 
 // 4º Requisito:
 
@@ -64,6 +64,8 @@ app.post('/talker',
 
 // --------------------------------------------------------
 // 6º Requisito:
+
+// app.use(validateToken);
 
 app.delete('/talker/:id', validateToken, deleteTalker);
 
