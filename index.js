@@ -67,6 +67,6 @@ app.post('/talker',
 
 // app.use(validateToken);
 
-app.delete('/talker/:id', validateToken, deleteTalker);
+// app.delete('/talker/:id', validateToken, deleteTalker);
 
 // --------------------------------------------------------
