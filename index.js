@@ -78,3 +78,6 @@ app.put('/talker/:id',
 app.delete('/talker/:id', deleteTalker);
 
 // --------------------------------------------------------
+// 7º Requisito:
+
+// app.get('/talker/search?q=searchTerm', );

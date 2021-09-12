@@ -126,10 +126,13 @@ const deleteTalker = (req, res) => {
     .then(() => res.status(HTTP_OK_STATUS).json(
       { message: 'Pessoa palestrante deletada com sucesso' },
     )
-    .catch((err) => res.status(HTTP_BAD_REQUEST).json(err)));
+    .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` })));
   })
   .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
 };
+
+// --------------------------------------------------------
+// 7º Requisito:
 
 // --------------------------------------------------------
 
