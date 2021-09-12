@@ -168,7 +168,7 @@ app.get('/talker/search?q=Da', validToken, readFile, async (req, res) => {
     const findPeople = file.filter((people) => people.name.includes(q));
     return res.status(200).json({ findPeople });
   } catch (err) {
-    return res.status(401).json({ message: 'Pessoa palestrante não encontrada' });
+    return res.status(400).json({ message: 'Pessoa palestrante não encontrada' });
   }
 });
 
