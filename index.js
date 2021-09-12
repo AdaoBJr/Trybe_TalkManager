@@ -8,8 +8,16 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const { getTalkersList, getTalkerById } = require('./readFile.js');
-const { validateEmail, validatePassword } = require('./authentication');
+const { getTalkersList, getTalkerById, addTalker } = require('./readFile.js');
+const { validateEmail,
+  validatePassword,
+  validateName,
+  validateToken,
+  validateWatchedAt,
+  validateAge,
+  validateRate,
+  validateTalk,
+} = require('./authentication');
 
 app.get('/', (_req, res) => {
   res.status(HTTP_OK_STATUS).send();
@@ -29,10 +37,25 @@ app.get('/talker/:id', async (req, res) => {
   res.status(200).json(talker);
 });
 
-app.post('/login', validateEmail, validatePassword, async (request, response) => {
+app.post('/login', validateEmail, validatePassword, async (req, res) => {
   const token = randomBytes(8).toString('hex');
-  response.status(HTTP_OK_STATUS).json({ token });
+  res.status(HTTP_OK_STATUS).json({ token });
 });
+
+app.post(
+  '/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { body } = req;
+    const talker = await addTalker(body);
+    res.status(201).json(talker);
+},
+);
 
 app.listen(PORT, () => {
   console.log('Now live running at Port 3000!');
