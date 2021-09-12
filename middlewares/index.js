@@ -7,7 +7,6 @@ const validatePassword = require('../helpers/validatePassword');
 const HTTP_OK_STATUS = 200;
 const HTTP_CREATED = 201;
 const HTTP_BAD_REQUEST = 400;
-// const HTTP_UNAUTHORIZED = 401;
 const HTTP_NOT_FOUND = 404;
 
 // --------------------------------------------------------
@@ -132,27 +131,21 @@ const deleteTalker = (req, res) => {
 };
 
 // --------------------------------------------------------
+// Source: https://app.betrybe.com/course/back-end/introducao-ao-desenvolvimento-web-com-nodejs/express-http-com-nodejs/8022a9b1-7548-4298-97ce-9acfa8986e66/conteudos/4656169d-84b8-46d8-a2b0-2f08511b86fa/query-string/1ecdc484-ce86-45ac-a364-0d9ba3f5affa?use_case=side_bar
+
 // 7º Requisito:
 
-// const getTalkerByName = (req, res) => {
-//   const { name } = req.query;
+const getTalkerByName = (req, res) => {
+  const { name } = req.query;
 
-//   handleReadFile()
-//   .then((talkersList) => JSON.parse(talkersList))
-//   .then((talkersList) => {
-//     const talkers = talkersList;
-//     const filteredTalkers = talkers.filter((talker) => talker.name.includes(name));
-    
-//     if (talkerIndex === -1) {
-//       return res.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
-//     }
-//     talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk: { watchedAt, rate } };
-//     handleWriteFile(talkers)
-//     .then(() => res.status(HTTP_OK_STATUS).json(talkers[talkerIndex]))
-//     .catch((err) => res.status(HTTP_BAD_REQUEST).json(err));
-//   })
-//   .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
-// };
+  handleReadFile()
+  .then((talkersList) => JSON.parse(talkersList))
+  .then((talkersList) => {
+    const talkers = talkersList;
+    const filteredTalkers = talkers.filter((talker) => talker.name.includes(name));
+    return res.status(HTTP_OK_STATUS).json(filteredTalkers);
+  });
+};
 
 // --------------------------------------------------------
 
@@ -163,4 +156,5 @@ module.exports = {
   postTalker,
   putTalker,
   deleteTalker,
+  getTalkerByName,
 };

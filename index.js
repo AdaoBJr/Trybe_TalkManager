@@ -7,7 +7,7 @@ const {
   postTalker,
   putTalker,
   deleteTalker,
-  /* getTalkerByName, */
+  getTalkerByName,
 } = require('./middlewares/index');
 const validateToken = require('./middlewares/validateToken');
 const validateName = require('./middlewares/validateName');
@@ -15,6 +15,7 @@ const validateAge = require('./middlewares/validateAge');
 const validateWatchedAt = require('./middlewares/validateWatchedAt');
 const validateRate = require('./middlewares/validateRate');
 const validateTalk = require('./middlewares/validateTalk');
+const validateQueryString = require('./middlewares/validateQueryString');
 
 const app = express();
 app.use(bodyParser.json());
@@ -30,6 +31,12 @@ app.get('/', (_request, response) => {
 app.listen(PORT, () => {
   console.log('Online');
 });
+
+// --------------------------------------------------------
+// 7º Requisito:
+// Em rotas com mesmo método/verbo e radical comun, à outras rotas,mais específicas devem vir primeiro.
+
+app.get('/talker/search', validateToken, validateQueryString, getTalkerByName);
 
 // --------------------------------------------------------
 // 2º Requisito:
@@ -52,6 +59,7 @@ app.post('/login', getToken);
 // Ativa o uso dos middlewares comuns a todas as rotas abaixo:
 app.use(validateToken);
 
+// --------------------------------------------------------
 // 4º Requisito:
 
 app.post('/talker',
@@ -79,6 +87,3 @@ app.put('/talker/:id',
 app.delete('/talker/:id', deleteTalker);
 
 // --------------------------------------------------------
-// 7º Requisito:
-
-// app.get('/talker/search?q=searchTerm', getTalkerByName);
