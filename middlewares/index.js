@@ -136,13 +136,14 @@ const deleteTalker = (req, res) => {
 // 7º Requisito:
 
 const getTalkerByName = (req, res) => {
-  const { name } = req.query;
+  const { q } = req.query;
+  console.log(q);
 
   handleReadFile()
   .then((talkersList) => JSON.parse(talkersList))
   .then((talkersList) => {
     const talkers = talkersList;
-    const filteredTalkers = talkers.filter((talker) => talker.name.includes(name));
+    const filteredTalkers = talkers.filter((talker) => talker.name.includes(q));
     return res.status(HTTP_OK_STATUS).json(filteredTalkers);
   });
 };
