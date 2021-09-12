@@ -139,11 +139,26 @@ app.put('/talker/:id', validToken, validNameAge, validTalk, validWatchedAtRate, 
   async (req, res) => {
     const { id } = req.params;
     const { file } = req;
-    const findPeople = file.findIndex((people) => people.id === id);
+    const indexPeople = file.findIndex((people) => parseFloat(people.id) === parseFloat(id));
     const editPeople = { id, ...req.body };
-    file[findPeople] = editPeople;
+    file[indexPeople] = editPeople;
     await fs.promises.writeFile('./talker.json', JSON.stringify(file));
     return res.status(200).json(editPeople);
+});
+
+app.delete('/talker/:id', validToken, readFile, async (req, res) => {
+  const { id } = req.params;
+  const { file } = req;
+  const findPeople = file.find((people) => parseFloat(people.id) === parseFloat(id));
+  const newFile = file.filter((people) => people !== findPeople);
+  console.log(id);
+  console.log(newFile);
+  try {
+    await fs.promises.writeFile('./talker.json', JSON.stringify(newFile));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (err) {
+    return res.status(400).json({ message: 'Ocorreu algum erro' });
+  }
 });
 
 app.use((err, _req, res, _next) => {
