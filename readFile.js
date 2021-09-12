@@ -1,6 +1,6 @@
 const fs = require('fs').promises;
 
-const getAllTalkers = async () => {
+const getTalkersList = async () => {
     const talkerJSON = './talker.json';
     const allTalkers = await fs.readFile(talkerJSON);
     return JSON.parse(allTalkers);
@@ -13,4 +13,4 @@ const getTalkerById = async (id) => {
     return talkerById;
 };
 
-module.exports = { getAllTalkers, getTalkerById };
+module.exports = { getTalkersList, getTalkerById };
