@@ -175,15 +175,19 @@ app.put('/talker/:id',
   //   return res.status(200).json(talkers[talkerIndex]);
   // }
 
-app.delete('/talker/:id', validateToken, (req, res) => {
+app.delete('/talker/:id', validateToken, async (req, res) => {
   const { id } = req.params;
-  const lookingForTalker = readFile();
-  const talkerIndex = lookingForTalker.findIndex((t) => t.id === parseInt(id, 10));
+  const jsonLookingForTalker = await readFile();
+  const lookingForTalker = JSON.parse(jsonLookingForTalker);
 
-  lookingForTalker.slice(talkerIndex, 1);
+  const deleteTalker = lookingForTalker.filter((t) => t.id !== parseFloat(id, 10));
 
-  return res.status(200).end({ message: 'Pessoa palestrante deletada com sucesso' });
+  const writeTalkers = JSON.stringify(deleteTalker);
+  await fs.writeFile('./talker.json', writeTalkers);
+  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 });
+// const talkerIndex = lookingForTalker.findIndex((t) => t.id === parseInt(id, 10));
+// lookingForTalker.slice(talkerIndex, 1);
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
