@@ -8,6 +8,7 @@ app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
+const talkerData = './talker.json';
 
 async function writeFile(req, _res, next) {
   const { file } = req;
@@ -15,7 +16,7 @@ async function writeFile(req, _res, next) {
   newClient.id = file.length + 1;
   const newFile = [...file, newClient];
   try {
-    await fs.promises.writeFile('./talker.json', JSON.stringify(newFile));
+    await fs.promises.writeFile(talkerData, JSON.stringify(newFile));
     return next();
   } catch (err) {
     return next(err);
@@ -24,7 +25,7 @@ async function writeFile(req, _res, next) {
 
 async function readFile(req, _res, next) {
   try {
-    const stringData = await fs.promises.readFile('./talker.json');
+    const stringData = await fs.promises.readFile(talkerData);
     req.file = JSON.parse(stringData);
     return next();
   } catch (err) {
@@ -129,7 +130,7 @@ app.post('/login', (req, res) => {
 
 app.post('/talker', validToken, validNameAge, validTalk, validWatchedAtRate, readFile, writeFile,
   async (_req, res) => {
-  const data = await fs.promises.readFile('./talker.json');
+  const data = await fs.promises.readFile(talkerData);
   const file = JSON.parse(data);
   const newData = file[file.length - 1];
   return res.status(201).json(newData);
@@ -142,7 +143,7 @@ app.put('/talker/:id', validToken, validNameAge, validTalk, validWatchedAtRate, 
     const indexPeople = file.findIndex((people) => parseFloat(people.id) === parseFloat(id));
     const editPeople = { id, ...req.body };
     file[indexPeople] = editPeople;
-    await fs.promises.writeFile('./talker.json', JSON.stringify(file));
+    await fs.promises.writeFile(talkerData, JSON.stringify(file));
     return res.status(200).json(editPeople);
 });
 
@@ -151,13 +152,23 @@ app.delete('/talker/:id', validToken, readFile, async (req, res) => {
   const { file } = req;
   const findPeople = file.find((people) => parseFloat(people.id) === parseFloat(id));
   const newFile = file.filter((people) => people !== findPeople);
-  console.log(id);
-  console.log(newFile);
   try {
-    await fs.promises.writeFile('./talker.json', JSON.stringify(newFile));
+    await fs.promises.writeFile(talkerData, JSON.stringify(newFile));
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   } catch (err) {
     return res.status(400).json({ message: 'Ocorreu algum erro' });
+  }
+});
+
+app.get('/talker/search?q=Da', validToken, readFile, async (req, res) => {
+  const { q } = req.query;
+  const { file } = req;
+  console.log(q);
+  try {
+    const findPeople = file.filter((people) => people.name.includes(q));
+    return res.status(200).json({ findPeople });
+  } catch (err) {
+    return res.status(401).json({ message: 'Pessoa palestrante não encontrada' });
   }
 });
 
