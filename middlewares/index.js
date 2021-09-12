@@ -118,19 +118,41 @@ const deleteTalker = (req, res) => {
   .then((talkers) => {
     const talkerIndex = talkers.findIndex((e) => e.id === Number(id));
 
-    if (talkerIndex >= 0) {
-      talkers.splice(talkerIndex, 1);
-      handleWriteFile(talkers)
-      .then(() => res.status(HTTP_OK_STATUS).json(
-        {
-          message: 'Pessoa palestrante deletada com sucesso',
-        },
-      )
-      .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` })));
+    if (talkerIndex === -1) {
+      return res.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
     }
+    talkers.splice(talkerIndex, 1);
+    handleWriteFile(talkers)
+    .then(() => res.status(HTTP_OK_STATUS).json(
+      { message: 'Pessoa palestrante deletada com sucesso' },
+    ))
+    .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
   })
   .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
 };
+
+// --------------------------------------------------------
+// 7º Requisito:
+
+// const getTalkerByName = (req, res) => {
+//   const { name } = req.query;
+
+//   handleReadFile()
+//   .then((talkersList) => JSON.parse(talkersList))
+//   .then((talkersList) => {
+//     const talkers = talkersList;
+//     const filteredTalkers = talkers.filter((talker) => talker.name.includes(name));
+    
+//     if (talkerIndex === -1) {
+//       return res.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
+//     }
+//     talkers[talkerIndex] = { ...talkers[talkerIndex], name, age, talk: { watchedAt, rate } };
+//     handleWriteFile(talkers)
+//     .then(() => res.status(HTTP_OK_STATUS).json(talkers[talkerIndex]))
+//     .catch((err) => res.status(HTTP_BAD_REQUEST).json(err));
+//   })
+//   .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
+// };
 
 // --------------------------------------------------------
 

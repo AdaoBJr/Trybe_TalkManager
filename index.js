@@ -7,6 +7,7 @@ const {
   postTalker,
   putTalker,
   deleteTalker,
+  /* getTalkerByName, */
 } = require('./middlewares/index');
 const validateToken = require('./middlewares/validateToken');
 const validateName = require('./middlewares/validateName');
@@ -80,4 +81,4 @@ app.delete('/talker/:id', deleteTalker);
 // --------------------------------------------------------
 // 7º Requisito:
 
-// app.get('/talker/search?q=searchTerm', );
+// app.get('/talker/search?q=searchTerm', getTalkerByName);
