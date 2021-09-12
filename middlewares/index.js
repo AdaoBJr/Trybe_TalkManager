@@ -118,21 +118,19 @@ const deleteTalker = (req, res) => {
   .then((talkers) => {
     const talkerIndex = talkers.findIndex((e) => e.id === Number(id));
 
-    if (talkerIndex === -1) {
-      return res.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
+    if (talkerIndex >= 0) {
+      talkers.splice(talkerIndex, 1);
+      handleWriteFile(talkers)
+      .then(() => res.status(HTTP_OK_STATUS).json(
+        {
+          message: 'Pessoa palestrante deletada com sucesso',
+        },
+      )
+      .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` })));
     }
-    talkers.splice(talkerIndex, 1);
-    handleWriteFile(talkers)
-    .then(() => res.status(HTTP_OK_STATUS).json(
-      { message: 'Pessoa palestrante deletada com sucesso' },
-    )
-    .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` })));
   })
   .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
 };
-
-// --------------------------------------------------------
-// 7º Requisito:
 
 // --------------------------------------------------------
 
