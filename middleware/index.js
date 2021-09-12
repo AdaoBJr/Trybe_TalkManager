@@ -151,7 +151,7 @@ async function addTalk(req, res) {
         },
     };
     dataJson.push(newTalker);
-    await fs.writeFile('./talker.json', JSON.stringify(dataJson));
+    await fs.writeFile(jsonRead, JSON.stringify(dataJson));
     return res.status(201).json(newTalker);
 }
 
@@ -176,7 +176,7 @@ async function deleteTalker(req, res) {
     const dataJson = JSON.parse(data);
     const deletedTalker = dataJson.filter((talker) => talker.id !== Number(id));
 
-    await fs.writeFile('./talker.json', JSON.stringify(deletedTalker));
+    await fs.writeFile(jsonRead, JSON.stringify(deletedTalker));
 
     res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 }
