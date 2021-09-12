@@ -17,6 +17,7 @@ const {
     addTalk,
     editTalker,
     deleteTalker,
+    getTalkerByQuery,
 } = require('./middleware/index');
 
 app.use(bodyParser.json());
@@ -31,6 +32,8 @@ app.get('/', (_request, response) => {
 });
 
 // Rotas
+app.get('/talker/search', checkToken, getTalkerByQuery);
+
 app.get('/talker', readData);
 
 app.get('/talker/:id', filterTalkerId);

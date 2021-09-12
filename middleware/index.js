@@ -197,6 +197,26 @@ async function deleteTalker(req, res) {
     res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 }
 
+async function getTalkerByQuery(req, res) {
+    const { q } = req.query;
+
+    const data = await fs.readFile(jsonRead, 'utf-8');
+    const dataJson = JSON.parse(data);
+    const getByQuery = dataJson.filter((talker) => talker.name.includes(q));
+
+    if (getByQuery) {
+        res.status(200).json(getByQuery);
+    }
+
+    if (!q) {
+        res.status(200).json(dataJson);
+    }
+
+    if (!getByQuery) {
+        res.status(200).json([]);
+    }
+}
+
 module.exports = {
     readData,
     filterTalkerId,
@@ -211,4 +231,5 @@ module.exports = {
     addTalk,
     editTalker,
     deleteTalker,
+    getTalkerByQuery,
 };
