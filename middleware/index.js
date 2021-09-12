@@ -106,36 +106,52 @@ function checkAge(req, res, next) {
     next();
 }
 
-function checkTalk(req, res, next) {
-    const { talk: { watchedAt, rate } } = req.body;
-    const dateValidate = /^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/;
-
-    if (!watchedAt.match(dateValidate)) {
-        return res.status(400).json({
-            message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
-        });
+const checkTalk = (req, res, next) => {
+    const { talk } = req.body;
+    if (!talk) {
+        return res
+            .status(400)
+            .json({
+                message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+            });
     }
+    if (!talk.watchedAt && talk.watchedAt !== 0) {
+        return res
+            .status(400)
+            .json({
+                message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+            });
+    }
+    next();
+};
 
-    if (Number(rate) < 1 || Number(rate) > 5) {
+const checkRate = (req, res, next) => {
+    const { rate } = req.body.talk;
+    if (!rate && rate !== 0) {
+        return res
+            .status(400)
+            .json({
+                message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+            });
+    }
+    if (rate < 1 || rate > 5) {
         return res.status(400).json({
             message: 'O campo "rate" deve ser um inteiro de 1 à 5',
         });
     }
-
     next();
-}
+};
 
-function checkTalkObj(req, res, next) {
+const checkDate = (req, res, next) => {
     const { talk } = req.body;
-
-    if (Object.keys(talk).length === 0) {
-        return res.status(400).json({
-            message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
-        });
+    const regexDate = /^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$/g;
+    if (!regexDate.test(talk.watchedAt)) {
+        return res
+            .status(400)
+            .json({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
     }
-
     next();
-}
+};
 
 async function addTalk(req, res) {
     const { name, age, talk: { watchedAt, rate } } = req.body;
@@ -190,9 +206,9 @@ module.exports = {
     checkName,
     checkAge,
     checkTalk,
-    checkTalkObj,
+    checkDate,
+    checkRate,
     addTalk,
     editTalker,
     deleteTalker,
 };
-//

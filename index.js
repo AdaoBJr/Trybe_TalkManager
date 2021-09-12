@@ -12,7 +12,8 @@ const {
     checkName,
     checkAge,
     checkTalk,
-    checkTalkObj,
+    checkDate,
+    checkRate,
     addTalk,
     editTalker,
     deleteTalker,
@@ -40,9 +41,10 @@ app.post('/login', checkEmail, checkPassword, (_req, res) => {
     return res.status(200).json({ token });
 });
 
-app.post('/talker', checkToken, checkName, checkAge, checkTalkObj, checkTalk, addTalk);
+app.post('/talker', checkToken, checkName, checkAge, checkTalk, checkDate, checkRate, addTalk);
 
-app.put('/talker/:id', checkToken, checkName, checkAge, checkTalkObj, checkTalk, editTalker);
+app.put('/talker/:id',
+    checkToken, checkName, checkAge, checkTalk, checkDate, checkRate, editTalker);
 
 app.delete('/talker/:id', checkToken, deleteTalker);
 
