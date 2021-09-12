@@ -6,7 +6,7 @@ const {
   getToken,
   postTalker,
   putTalker,
-  /* deleteTalker, */
+  deleteTalker,
 } = require('./middlewares/index');
 const validateToken = require('./middlewares/validateToken');
 const validateName = require('./middlewares/validateName');
@@ -75,6 +75,6 @@ app.put('/talker/:id',
 // --------------------------------------------------------
 // 6º Requisito:
 
-// app.delete('/talker/:id', validateToken, deleteTalker);
+app.delete('/talker/:id', deleteTalker);
 
 // --------------------------------------------------------

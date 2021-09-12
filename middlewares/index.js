@@ -117,16 +117,16 @@ const deleteTalker = (req, res) => {
   .then((talkers) => JSON.parse(talkers))
   .then((talkers) => {
     const talkerIndex = talkers.findIndex((e) => e.id === Number(id));
-    if (talkerIndex >= 0) {
-      talkers.splice(talkerIndex, 1);
-      handleWriteFile(talkers)
-      .then(() => res.status(HTTP_OK_STATUS).json(
-        {
-          message: 'Pessoa palestrante deletada com sucesso',
-        },
-      )
-      .catch((err) => res.status(HTTP_BAD_REQUEST).json(err)));
+
+    if (talkerIndex === -1) {
+      return res.status(HTTP_NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
     }
+    talkers.splice(talkerIndex, 1);
+    handleWriteFile(talkers)
+    .then(() => res.status(HTTP_OK_STATUS).json(
+      { message: 'Pessoa palestrante deletada com sucesso' },
+    )
+    .catch((err) => res.status(HTTP_BAD_REQUEST).json(err)));
   })
   .catch((err) => res.status(HTTP_BAD_REQUEST).json({ message: `Error ${err}` }));
 };
