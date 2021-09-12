@@ -135,6 +135,17 @@ app.post('/talker', validToken, validNameAge, validTalk, validWatchedAtRate, rea
   return res.status(201).json(newData);
 });
 
+app.put('/talker/:id', validToken, validNameAge, validTalk, validWatchedAtRate, readFile, 
+  async (req, res) => {
+    const { id } = req.params;
+    const { file } = req;
+    const findPeople = file.findIndex((people) => people.id === id);
+    const editPeople = { id, ...req.body };
+    file[findPeople] = editPeople;
+    await fs.promises.writeFile('./talker.json', JSON.stringify(file));
+    return res.status(200).json(editPeople);
+});
+
 app.use((err, _req, res, _next) => {
   res.status(500).send(err);
 });
