@@ -58,7 +58,7 @@ app.post(
 );
 
 app.put(
-  '/:id',
+  '/talker/:id',
   validateToken,
   validateName,
   validateAge,
