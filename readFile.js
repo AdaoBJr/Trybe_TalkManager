@@ -25,4 +25,16 @@ const addTalker = async (talker) => {
   return newTalker;
 };
 
-module.exports = { getTalkersList, getTalkerById, addTalker };
+const updateTalker = async (id, updatedTalker) => {
+  const talkerJSON = './talker.json';
+  const allTalkers = await getTalkersList();
+  const indexTalker = allTalkers.findIndex((r) => r.id === +(id));
+
+  allTalkers.splice(indexTalker, 1);
+  await fs.writeFile(talkerJSON, JSON.stringify(allTalkers));
+
+  const updatedTalkers = await addTalker(updatedTalker);
+  return updatedTalkers;
+};
+
+module.exports = { getTalkersList, getTalkerById, addTalker, updateTalker };

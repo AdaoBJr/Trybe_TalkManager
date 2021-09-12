@@ -8,7 +8,7 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const { getTalkersList, getTalkerById, addTalker } = require('./readFile.js');
+const { getTalkersList, getTalkerById, addTalker, updateTalker } = require('./readFile.js');
 const { validateEmail,
   validatePassword,
   validateName,
@@ -54,7 +54,22 @@ app.post(
     const { body } = req;
     const talker = await addTalker(body);
     res.status(201).json(talker);
-},
+  },
+);
+
+app.put(
+  '/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { params: { id }, body } = req;
+    const talker = await updateTalker(id, body);
+    res.status(200).json(talker);
+  },
 );
 
 app.listen(PORT, () => {
