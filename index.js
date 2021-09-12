@@ -44,15 +44,27 @@ async function readFile() {
 //   validateTalk,
 // );
 
-// app.get('/talker/search?q=searchTerm', (req, res) => {
-//   const { q } = req.query;
-//   const filteredTalker = talkers.filter((t) => t.name.includes(q));
-// });
+app.get('/talker/search',
+  validateToken,
+  async (req, res) => {
+  const { q } = req.query;
+  const jsonTalkers = await readFile();
+  const talkers = JSON.parse(jsonTalkers);
+  const filteredTalker = talkers.filter(({ name }) => name.includes(q));
+  // if (!q || q === '') {
+  //   return res.status(200).json(talkers);
+  // }
+  // if (filteredTalker.length === 0) {
+  //   return res.status(200).json([]);
+  // }
+  return res.status(200).json(filteredTalker);
+});
 
 // Developer Mozilla: https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Reference/Global_Objects/parseInt
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
-  const consultingFile = await readFile();
+  const jsonConsultingFile = await readFile();
+  const consultingFile = JSON.parse(jsonConsultingFile);
   const talker = consultingFile.find((obj) => obj.id === parseInt(id, 10));
 
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
@@ -62,7 +74,7 @@ app.get('/talker/:id', async (req, res) => {
 
 app.get('/talker', async (_req, res) => {
   const readTalkes = await readFile();
-  const response = await JSON.parse(readTalkes);
+  const response = JSON.parse(readTalkes);
   return res.status(200).json(response);
 
   // try {
@@ -93,9 +105,9 @@ app.post('/talker',
   async (req, res) => {
   const { name, age, talk: { watchedAt, rate } } = req.body;
   const readTalkes = await readFile();
-  const talkes = await JSON.parse(readTalkes);
+  const talkes = JSON.parse(readTalkes);
   const newTalker = {
-    id: readTalkes.length + 1,
+    id: talkes.length + 1,
     name,
     age,
     talk: {
@@ -120,9 +132,9 @@ app.put('/talker/:id',
     const { id } = req.params;
     const { name, age, talk: { watchedAt, rate } } = req.body;
     const jsonReadTalkes = await readFile();
-    const readTalkes = await JSON.parse(jsonReadTalkes);
+    const readTalkes = JSON.parse(jsonReadTalkes);
 
-    const newTalker = { id: Number(id), name, age, talk: { watchedAt, rate } };
+    const newTalker = { id: parseInt(id, 10), name, age, talk: { watchedAt, rate } };
     const updatedTalker = readTalkes.map((t) => ((t.id === parseInt(id, 10)) ? newTalker : t));
 
     const writeTalkers = JSON.stringify(updatedTalker);
