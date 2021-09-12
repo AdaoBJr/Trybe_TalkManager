@@ -163,7 +163,7 @@ async function editTalker(req, res) {
     let convert = JSON.parse(response);
     convert = convert.filter((talker) => talker.id !== Number(id));
 
-    convert.push({ id: +id, name, age, talk });
+    convert.push({ id: Number(id), name, age, talk });
 
     await fs.writeFile('./talker.json', JSON.stringify(convert));
     return res.status(200).json({ id: Number(id), name, age, talk });
