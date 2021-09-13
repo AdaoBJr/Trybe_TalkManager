@@ -97,6 +97,18 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/talker/search', validToken, readFile, async (req, res) => {
+  const { q } = req.query;
+  const { file } = req;
+  console.log(file, q, 'file e q');
+  if (!q) {
+    return res.status(200).send([]);
+  }
+  const findPeople = file.filter((people) => people.name.includes(q));
+  console.log(findPeople);
+  return res.status(200).json(findPeople);
+});
+
 app.get('/talker', readFile, (req, res) => {
   const { file } = req;
   return res.status(HTTP_OK_STATUS).json(file); 
@@ -157,18 +169,6 @@ app.delete('/talker/:id', validToken, readFile, async (req, res) => {
     return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   } catch (err) {
     return res.status(400).json({ message: 'Ocorreu algum erro' });
-  }
-});
-
-app.get('/talker/search?q=Da', validToken, readFile, async (req, res) => {
-  const { q } = req.query;
-  const { file } = req;
-  console.log(q);
-  try {
-    const findPeople = file.filter((people) => people.name.includes(q));
-    return res.status(200).json({ findPeople });
-  } catch (err) {
-    return res.status(400).json({ message: 'Pessoa palestrante não encontrada' });
   }
 });
 
