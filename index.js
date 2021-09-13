@@ -8,7 +8,9 @@ app.use(bodyParser.json());
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
-const { getTalkersList, getTalkerById, addTalker, updateTalker } = require('./readFile.js');
+const { getTalkersList, getTalkerById, addTalker,
+  updateTalker, excludeTalker } = require('./readFile.js');
+
 const { validateEmail,
   validatePassword,
   validateName,
@@ -69,6 +71,16 @@ app.put(
     const { params: { id }, body } = req;
     const talker = await updateTalker(id, body);
     res.status(200).json(talker);
+  },
+);
+
+app.delete(
+  '/talker/:id',
+  validateToken,
+  async (req, res) => {
+    const { id } = req.params;
+    await excludeTalker(id);
+    res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 
