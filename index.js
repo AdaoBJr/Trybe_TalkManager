@@ -141,7 +141,7 @@ app.put('/talker/:id', validToken, validNameAge, validTalk, validWatchedAtRate, 
     const { id } = req.params;
     const { file } = req;
     const indexPeople = file.findIndex((people) => parseFloat(people.id) === parseFloat(id));
-    const editPeople = { id, ...req.body };
+    const editPeople = { id: parseFloat(id), ...req.body };
     file[indexPeople] = editPeople;
     await fs.promises.writeFile(talkerData, JSON.stringify(file));
     return res.status(200).json(editPeople);
