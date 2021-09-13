@@ -62,5 +62,5 @@ app.delete('/talker/:id', [
 ]);
 
 app.listen(PORT, () => {
-  console.log(`Online`);
+  console.log('Online');
 });
