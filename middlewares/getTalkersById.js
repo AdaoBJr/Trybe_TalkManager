@@ -16,6 +16,6 @@ module.exports = (req, res, _next) => {
     })
     .catch((err) => {
       console.error(`Não foi possível ler o arquivo ${pathId}\n Erro: ${err}`);
-      process.exit(1);
+      // process.exit(1);
     });
 };

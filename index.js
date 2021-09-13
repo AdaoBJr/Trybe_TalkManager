@@ -1,14 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 // const readMiddleware = require('./middlewares/readMiddleware');
-const { readMiddleware, getTalkersById } = require('./middlewares');
+const { getTalkers, getTalkersById } = require('./middlewares');
 
 const app = express();
 app.use(bodyParser.json());
 
 // app.use('/talker', readMiddleware);
 app.use('/talker/:id', getTalkersById);
-app.use('/talker', readMiddleware);
+app.use('/talker', getTalkers);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

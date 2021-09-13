@@ -13,6 +13,6 @@ module.exports = (_req, res, _next) => {
     })
     .catch((err) => {
       console.error(`Impossível ler arquivo ${PATH}\n Erro: ${err}`);
-      process.exit(1);
+      // process.exit(1);
     });
 };
