@@ -12,9 +12,14 @@ const rateValidation = require('../auxiliar_functions/validations/rateValidation
 const getAllTalkers = require('../middleweres/talkers/getAllTalkers');
 const getTalkerById = require('../middleweres/talkers/getTalkerById');
 const registerNewTalker = require('../middleweres/talkers/registerNewTalker');
+const deleteTalkerById = require('../middleweres/talkers/deleteTalkerById');
 
 router.route('/:id')
-  .get(getTalkerById);
+  .get(getTalkerById)
+  .delete(
+    tokenValidation,
+    deleteTalkerById,
+  );
 
 router.route('/')
   .get(getAllTalkers)
