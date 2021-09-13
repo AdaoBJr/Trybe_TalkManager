@@ -95,6 +95,7 @@ router.get('/search', validateToken, async (req, res) => {
   .catch((err) => console.log(`erro: ${err.message}`));
 
   if (!q || q === '') return res.status(200).json(talkers);
+  console.log('diferente');
 
   const talker = talkers.filter(({ name }) => name.includes(q));
 
