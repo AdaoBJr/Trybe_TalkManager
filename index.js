@@ -9,7 +9,7 @@ const HTTP_OK_STATUS = 200;
 const PORT = '3000';
 
 const { getTalkersList, getTalkerById, addTalker,
-  updateTalker, excludeTalker } = require('./readFile.js');
+  updateTalker, excludeTalker, filterTalkersByName } = require('./readFile.js');
 
 const { validateEmail,
   validatePassword,
@@ -37,6 +37,12 @@ app.get('/talker/:id', async (req, res) => {
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
   res.status(200).json(talker);
+});
+
+app.get('/search', validateToken, async (request, response) => {
+  const { q } = request.query;
+  const talkers = await filterTalkersByName(q);
+  response.status(HTTP_OK_STATUS).json(talkers);
 });
 
 app.post('/login', validateEmail, validatePassword, async (req, res) => {
