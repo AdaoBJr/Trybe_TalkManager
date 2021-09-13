@@ -1,6 +1,6 @@
 const { randomBytes } = require('crypto');
 
-const PASSWORD_LENGTH_MIN = 6;
+const MIN_PASSWORD_LENGTH = 6;
 
 const MessagesError = {
   invalidEmail: 'O "email" deve ter o formato "email@email.com"',
@@ -14,7 +14,7 @@ function validatorEmail(email) {
 
   const validateRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const validEmail = validateRegex.test(email);
-  
+
   if (!email || email === '') { return emptyEmail; }
   if (!validEmail) { return invalidEmail; }
 
@@ -24,9 +24,10 @@ function validatorEmail(email) {
 function validatorPassword(password) {
   const { invalidPassword, emptyPassword } = MessagesError;
 
-  const validPassword = password.length >= PASSWORD_LENGTH_MIN;
-
   if (!password) { return emptyPassword; }
+
+  const validPassword = password.length >= MIN_PASSWORD_LENGTH;
+
   if (!validPassword) { return invalidPassword; }
 
   return validPassword;

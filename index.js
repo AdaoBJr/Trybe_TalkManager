@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 const { handleFileReading } = require('./services/readAndWrite');
 const { searchById } = require('./services/content');
-const { validatorEmail, validatorPassword, SignupInfo } = require('./services/login');
+const { validatorEmail, validatorPassword, SignupInfo } = require('./services/login.js');
 
 const app = express();
 app.use(bodyParser.json());
@@ -51,20 +51,17 @@ app.route('/talker/:id').get(async (request, response) => {
 
 // Requisito 3
 app.route('/login').post((request, response) => {
-  const { email, password } = request.body;
+  const { email, password } = request.body; 
+
   const validateEmail = validatorEmail(email);
-  const validatePassword = validatorPassword(password);
+  const validatePassword = validatorPassword(password); 
 
   if (validateEmail !== true) {
-    return response
-      .status(HTTP_BAD_REQUEST_STATUS)
-      .json({ message: validateEmail });
+    return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validateEmail });
   }
 
   if (validatePassword !== true) {
-    return response
-      .status(500)
-      .json({ message: validatePassword });
+    return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatePassword });
   }
 
   const getToken = SignupInfo(email, password);
