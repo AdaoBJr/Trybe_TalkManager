@@ -12,12 +12,14 @@ const registerNewTalker = async (req, res) => {
 
   const id = await Number(dataLength(talkersData)) + 1;
 
-  const newTalkersArray = [...talkers, { id, name, age, talk }];
-  const newTalkersJson = await JSON.stringify(newTalkersArray);
+  const newTalker = { id, name, age, talk };
+
+  const newTalkersArray = [...talkers, newTalker];
+  const newTalkersJson = JSON.stringify(newTalkersArray);
 
   await writeOnFile(talkersData, newTalkersJson);
 
-  return res.status(CREATED).json(newTalkersArray);
+  return res.status(CREATED).json(newTalker);
 };
 
 module.exports = registerNewTalker;
