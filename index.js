@@ -30,6 +30,12 @@ app.get('/talker', async (_req, res) => {
     res.status(HTTP_OK_STATUS).json(allTalkers);
 });
 
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.query;
+  const filteredTalkers = await filterTalkersByName(q);
+  res.status(HTTP_OK_STATUS).json(filteredTalkers);
+});
+
 app.get('/talker/:id', async (req, res) => {
   const { id } = req.params;
   const talker = await getTalkerById(id);
@@ -37,12 +43,6 @@ app.get('/talker/:id', async (req, res) => {
   if (!talker) return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
 
   res.status(200).json(talker);
-});
-
-app.get('/talker/search', validateToken, async (req, res) => {
-  const { q } = req.query;
-  const filteredTalkers = await filterTalkersByName(q);
-  res.status(HTTP_OK_STATUS).json(filteredTalkers);
 });
 
 app.post('/login', validateEmail, validatePassword, async (req, res) => {
