@@ -13,9 +13,19 @@ const getAllTalkers = require('../middleweres/talkers/getAllTalkers');
 const getTalkerById = require('../middleweres/talkers/getTalkerById');
 const registerNewTalker = require('../middleweres/talkers/registerNewTalker');
 const deleteTalkerById = require('../middleweres/talkers/deleteTalkerById');
+const editTalkerById = require('../middleweres/talkers/editTalkerById');
 
 router.route('/:id')
   .get(getTalkerById)
+  .put(
+    tokenValidation,
+    nameValidation,
+    ageValidation,
+    talkValidation,
+    dateValidation,
+    rateValidation,
+    editTalkerById,
+  )
   .delete(
     tokenValidation,
     deleteTalkerById,
