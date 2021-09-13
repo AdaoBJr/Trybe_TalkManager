@@ -1,21 +1,23 @@
-const { CREATED, BAD_REQUEST } = require('../../http_status/status');
-const appendFile = require('../../auxiliar_functions/talkers_data/appendFile');
-const idGenerator = require('../../auxiliar_functions/generators/idGenerator');
+const { CREATED } = require('../../http_status/status');
+
+const dataLength = require('../../auxiliar_functions/talkers_data/dataLength');
+const readOnFile = require('../../auxiliar_functions/talkers_data/readOnFile');
+const writeOnFile = require('../../auxiliar_functions/talkers_data/writeOnFile');
 
 const talkersData = 'talker.json';
 
 const registerNewTalker = async (req, res) => {
   const { name, age, talk } = req.body;
+  const talkers = await readOnFile(talkersData);
 
-  const id = idGenerator(talkersData);
+  const id = await Number(dataLength(talkersData)) + 1;
 
-  const newTalkerObj = { id, name, age, talk };
+  const newTalkersArray = [...talkers, { id, name, age, talk }];
+  const newTalkersJson = await JSON.stringify(newTalkersArray);
 
-  const response = await appendFile(talkersData, newTalkerObj);
+  await writeOnFile(talkersData, newTalkersJson);
 
-  if (!response) return res.status(BAD_REQUEST).json({ id });
-
-  return res.status(CREATED).send({ id: Number(id), name, age, talk });
+  return res.status(CREATED).json(newTalkersArray);
 };
 
 module.exports = registerNewTalker;

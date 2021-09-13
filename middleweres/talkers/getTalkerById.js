@@ -1,11 +1,11 @@
-const readFile = require('../../auxiliar_functions/talkers_data/readFile');
+const readOnFile = require('../../auxiliar_functions/talkers_data/readOnFile');
 const { OK, NOT_FOUND } = require('../../http_status/status');
 
 const NOT_FOUND_MESSAGE = 'Pessoa palestrante não encontrada';
 const talkerData = 'talker.json';
 
 const getTalkerById = async (req, res) => {
-  const talkers = await readFile(talkerData);
+  const talkers = await readOnFile(talkerData);
   const { id } = await req.params;
 
   const talker = await talkers.find((curr) => curr.id === +id);

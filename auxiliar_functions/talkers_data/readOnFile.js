@@ -1,6 +1,6 @@
 const fsPromise = require('fs').promises;
 
-const readFile = (file) => {
+const readOnFile = (file) => {
  const requisition = fsPromise.readFile(file, 'utf-8')
   .then((response) => JSON.parse(response))
   .catch((error) => error);
@@ -8,4 +8,4 @@ const readFile = (file) => {
  return requisition;
 };
 
-module.exports = readFile;
+module.exports = readOnFile;
