@@ -7,8 +7,8 @@ const app = express();
 app.use(bodyParser.json());
 
 // app.use('/talker', readMiddleware);
-app.use('/talker/:id', getTalkersById);
-app.use('/talker', readMiddleware);
+app.get('/talker/:id', getTalkersById);
+app.get('/talker', readMiddleware);
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

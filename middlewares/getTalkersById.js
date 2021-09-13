@@ -1,21 +1,21 @@
 const fs = require('fs').promises;
 
-const pathArquivo = './talker.json';
+const PATH = './talker.json';
 
 module.exports = (req, res, _next) => {
   const { id } = req.params;
-  fs.readFile(pathArquivo, 'utf8')
+  fs.readFile(PATH, 'utf8')
     .then((data) => {
-      const dataParsed = JSON.parse(data);
-      const talkerFound = dataParsed.find((talker) => JSON.stringify(talker.id) === id);
+      const parsed = JSON.parse(data);
+      const found = parsed.find((talker) => JSON.stringify(talker.id) === id);
 
-      if (!talkerFound) {
+      if (!found) {
         return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
       }
-      return res.status(200).json(talkerFound);
+        return res.status(200).json(found);
     })
     .catch((err) => {
-      console.error(`Não foi possível ler o arquivo ${pathArquivo}\n Erro: ${err}`);
+      console.error(`Não foi possível ler o arquivo ${PATH}\n Erro: ${err}`);
       process.exit(1);
     });
 };
