@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 const PATH = './talker.json';
 
 module.exports = (_req, res, _next) => {
-  console.log('consegui?');
+  // console.log('consegui?');
   fs.readFile(PATH, 'utf8')
     .then((data) => {
       if (data === []) {
