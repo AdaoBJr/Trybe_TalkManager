@@ -14,6 +14,13 @@ const getTalkerById = require('../middleweres/talkers/getTalkerById');
 const registerNewTalker = require('../middleweres/talkers/registerNewTalker');
 const deleteTalkerById = require('../middleweres/talkers/deleteTalkerById');
 const editTalkerById = require('../middleweres/talkers/editTalkerById');
+const searchTalker = require('../middleweres/talkers/searchTalker');
+
+router.route('/search')
+  .get(
+    tokenValidation,
+    searchTalker,
+    );
 
 router.route('/:id')
   .get(getTalkerById)
