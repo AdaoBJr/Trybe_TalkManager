@@ -3,12 +3,7 @@ const express = require('express');
 const router = express.Router();
 const fs = require('fs').promises;
 
-const HTTP_OK_STATUS = 200;
-const HTTP_ERROR_STATUS = 404;
-const HTTP_TOKEN_ERROR_STATUS = 401;
-const HTTP_USER_ERROR_STATUS = 400;
-
-const readFile = async () => {
+const readFileJson = async () => {
     const talkers = await fs.readFile('./talker.json', 'utf8');
     return JSON.parse(talkers);
 };
@@ -17,11 +12,11 @@ const authToken = (req, res, next) => {
     const { authorization } = req.headers;
 
     if (!authorization) {
-        return res.status(HTTP_TOKEN_ERROR_STATUS).send({ message: 'Token não encontrado' });
+        return res.status(401).send({ message: 'Token não encontrado' });
     }
 
     if (authorization.length < 16) {
-        return res.status(HTTP_TOKEN_ERROR_STATUS).send({ message: 'Token inválido' });
+        return res.status(401).send({ message: 'Token inválido' });
     }
 
     next();
@@ -31,12 +26,12 @@ const authName = (req, res, next) => {
     const { name } = req.body;
     
     if (!name) {
-        return res.status(HTTP_USER_ERROR_STATUS).send({ 
+        return res.status(400).send({ 
         message: 'O campo "name" é obrigatório' }); 
     }
 
     if (name.length <= 3) {
-       return res.status(HTTP_USER_ERROR_STATUS).send(
+       return res.status(400).send(
             { message: 'O "name" deve ter pelo menos 3 caracteres' },
         );
     }
@@ -48,10 +43,10 @@ const authAge = (req, res, next) => {
     const { age } = req.body;
 
     if (!age) {
-       return res.status(HTTP_USER_ERROR_STATUS).send({ message: 'O campo "age" é obrigatório' });
+       return res.status(400).send({ message: 'O campo "age" é obrigatório' });
     }
     if (Number(age) < 18) {
-       return res.status(HTTP_USER_ERROR_STATUS).send({
+       return res.status(400).send({
             message: 'A pessoa palestrante deve ser maior de idade', 
         });
     }
@@ -100,19 +95,24 @@ const setNewTalker = async (talker) => {
 };
 
 router.get('/', async (_req, res) => {
-    const talkers = await readFile();
-    res.status(HTTP_OK_STATUS).json(talkers);
+    const talkers = await readFileJson();
+    res.status(200).json(talkers);
 });
 
 router.get('/:id', async (req, res) => {
     const { id } = req.params;
-    const talkers = await readFile();
+    const talkers = await readFileJson();
     const findTalker = talkers.find((talker) => talker.id === Number(id));
 
-    if (findTalker) {
-        return res.status(HTTP_OK_STATUS).json(findTalker);
+    if (!findTalker) {
+        return res.status(404).send({ message: 'Pessoa palestrante não encontrada' });
     }
-    return res.status(HTTP_ERROR_STATUS).json({ message: 'Pessoa palestrante não encontrada' });
+    return res.status(200).json(findTalker);
+});
+
+router.get('/search', (req, res) => {
+    const { q } = req.query;
+   return res.status(200).json({ message: q });
 });
 
 router.post('/',
@@ -123,7 +123,7 @@ router.post('/',
     authToken,
     authWatchedAt,
     async (req, res) => {
-        const talkers = await readFile();
+        const talkers = await readFileJson();
         const newTalker = { ...req.body, id: talkers.length + 1 };
         const updatedTalkers = [...talkers, newTalker];
         await setNewTalker(updatedTalkers);
@@ -140,7 +140,7 @@ router.put('/:id',
     authWatchedAt,
     async (req, res) => {
         const { id } = req.params;
-        const talkers = await readFile();
+        const talkers = await readFileJson();
         const talkersEd = talkers.filter((t) => t.id !== Number(id));
         const newTalker = { ...req.body, id: Number(id) };
         const updatedTalkers = [...talkersEd, newTalker];
@@ -150,7 +150,7 @@ router.put('/:id',
 
 router.delete('/:id', authToken, async (req, res) => {
     const { id } = req.params;
-    const talkers = await readFile();
+    const talkers = await readFileJson();
     const talkersId = talkers.filter((t) => t.id !== Number(id));
     await setNewTalker(talkersId);
     res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
