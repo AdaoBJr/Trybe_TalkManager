@@ -1,18 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const authenticationMiddleware = require('./middlewares/auth-middleware');
+const authenticationMiddleware = require('./middlewares/authentication-middleware.js');
 
-const { searchById } = require('./services/content');
+const { searchById } = require('./services/content.js');
 
 const { 
   validatorEmail, 
   validatorPassword, 
-  SignupInfo, 
+  signupInfo, 
   registration, 
 } = require('./services/login.js');
 
-const { handleFileReading, handleFileWriting } = require('./services/readAndWrite');
+const { handleFileReading, handleFileWriting } = require('./services/readAndWrite.js');
 
 const app = express();
 app.use(bodyParser.json());
@@ -74,7 +74,7 @@ app.post('/login', async (request, response) => {
     return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatePassword });
   }
 
-  const getToken = SignupInfo(email, password);
+  const getToken = signupInfo(email, password);
   return response.status(HTTP_OK_STATUS).json({ token: getToken.token });
 });
 

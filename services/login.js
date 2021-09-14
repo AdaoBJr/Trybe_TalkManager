@@ -53,7 +53,7 @@ function tokenGenerator() {
   return newtoken;
 }
 
-function SignupInfo(email, password) {
+function signupInfo(email, password) {
   const newUserToken = tokenGenerator();
   const newUser = { 
     email, 
@@ -63,7 +63,7 @@ function SignupInfo(email, password) {
   return newUser;
 }
 
-function verifyToken(targetToken) {
+function verifyToken(_database, targetToken) {
   const { emptyToken, invalidToken } = MessagesError;
 
   const MIN_TOKEN_LENGTH = 16;
@@ -105,7 +105,7 @@ function validatorAge(targetAge) {
   return validatedAge;
 }
 
-function VerifyPositive(targetNumber) {
+function verifyPositive(targetNumber) {
   const MIN_VALUE = 1; const MAX_VALUE = 5; const result = true;
 
   const stringToNumber = parseInt(targetNumber, 10);
@@ -121,7 +121,7 @@ function validatorTalkInfo(talkObject) {
   const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/; 
 
   const validatedWatchedAt = DATE_REGEX.test(talkObject.watchedAt);
-  const validatedRate = VerifyPositive(talkObject.rate);
+  const validatedRate = verifyPositive(talkObject.rate);
 
   if (!talkObject.watchedAt || !talkObject.rate) { return emptyTalk; }
   if (!validatedWatchedAt) { return invalidTalkWatchedAt; }
@@ -174,7 +174,7 @@ function registration(targetName, targetAge, talkObject) {
 module.exports = { 
   validatorEmail, 
   validatorPassword, 
-  SignupInfo,
+  signupInfo,
   verifyToken,
   registration,
 };
