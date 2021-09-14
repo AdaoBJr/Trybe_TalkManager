@@ -1,19 +1,31 @@
 const { randomBytes } = require('crypto');
 
-const MIN_PASSWORD_LENGTH = 6;
-
 const MessagesError = {
-  invalidEmail: 'O "email" deve ter o formato "email@email.com"',
   emptyEmail: 'O campo "email" é obrigatório',
-  invalidPassword: 'O "password" deve ter pelo menos 6 caracteres',
+  invalidEmail: 'O "email" deve ter o formato "email@email.com"',
+
   emptyPassword: 'O campo "password" é obrigatório',
+  invalidPassword: 'O "password" deve ter pelo menos 6 caracteres',
+
+  emptyToken: 'Token não encontrado',
+  invalidToken: 'Token inválido',
+
+  emptyName: 'O campo "name" é obrigatório',
+  invalidName: 'O "name" deve ter pelo menos 3 caracteres',
+
+  emptyAge: 'O campo "age" é obrigatório',
+  invalidAge: 'A pessoa palestrante deve ser maior de idade',
+
+  emptyTalk: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+  invalidTalkWatchedAt: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"',
+  invalidTalkRate: 'O campo "rate" deve ser um inteiro de 1 à 5',
 };
 
 function validatorEmail(email) {
-  const { invalidEmail, emptyEmail } = MessagesError;
+  const { emptyEmail, invalidEmail } = MessagesError;
 
-  const validateRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const validEmail = validateRegex.test(email);
+  const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const validEmail = EMAIL_REGEX.test(email);
 
   if (!email || email === '') { return emptyEmail; }
   if (!validEmail) { return invalidEmail; }
@@ -22,7 +34,9 @@ function validatorEmail(email) {
 }
 
 function validatorPassword(password) {
-  const { invalidPassword, emptyPassword } = MessagesError;
+  const { emptyPassword, invalidPassword } = MessagesError;
+
+  const MIN_PASSWORD_LENGTH = 6;
 
   if (!password) { return emptyPassword; }
 
@@ -41,9 +55,126 @@ function tokenGenerator() {
 
 function SignupInfo(email, password) {
   const newUserToken = tokenGenerator();
-  const newUser = { email, password, token: newUserToken };
+  const newUser = { 
+    email, 
+    password, 
+    token: newUserToken };
 
   return newUser;
 }
 
-module.exports = { validatorEmail, validatorPassword, SignupInfo };
+function verifyToken(targetToken) {
+  const { emptyToken, invalidToken } = MessagesError;
+
+  const MIN_TOKEN_LENGTH = 16;
+
+  if (!targetToken) { return emptyToken; }
+
+  const tokenExist = targetToken.length >= MIN_TOKEN_LENGTH;
+
+  if (!tokenExist) { return invalidToken; }
+
+  return tokenExist;
+}
+
+function validatorName(targetName) {
+  const { emptyName, invalidName } = MessagesError;
+  
+  const MIN_NAME_LENGTH = 3;
+
+  if (!targetName) { return emptyName; }
+
+  const validatedName = targetName.length >= MIN_NAME_LENGTH;
+
+  if (!validatedName) { return invalidName; }
+
+  return validatedName;
+}
+
+function validatorAge(targetAge) {
+  const { emptyAge, invalidAge } = MessagesError;
+
+  const MIN_AGE = 18;
+
+  const validatedAge = Number(targetAge) >= MIN_AGE;
+
+  if (!targetAge) { return emptyAge; }
+
+  if (!validatedAge) { return invalidAge; }
+
+  return validatedAge;
+}
+
+function VerifyPositive(targetNumber) {
+  const MIN_VALUE = 1; const MAX_VALUE = 5; const result = true;
+
+  const stringToNumber = parseInt(targetNumber, 10);
+
+  if (stringToNumber > MAX_VALUE || stringToNumber < MIN_VALUE) { return false; }
+
+  return result;
+}
+
+function validatorTalkInfo(talkObject) {
+  const { emptyTalk, invalidTalkWatchedAt, invalidTalkRate } = MessagesError;
+
+  const DATE_REGEX = /^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/; 
+
+  const validatedWatchedAt = DATE_REGEX.test(talkObject.watchedAt);
+  const validatedRate = VerifyPositive(talkObject.rate);
+
+  if (!talkObject.watchedAt || !talkObject.rate) { return emptyTalk; }
+  if (!validatedWatchedAt) { return invalidTalkWatchedAt; }
+  if (!validatedRate) { return invalidTalkRate; }
+}
+
+function validatorRegistration(targetName, targetAge, talkObject) {
+  const allValidatedStatus = true;
+
+  const checkName = validatorName(targetName);
+  const checkAge = validatorAge(targetAge);
+  const checkTalkContent = validatorTalkInfo(talkObject);
+
+  if (typeof checkName === 'string') return checkName;
+  if (typeof checkAge === 'string') return checkAge;
+  if (typeof checkTalkContent === 'string') return checkTalkContent;
+
+  return allValidatedStatus;
+}
+
+function generateRegistrationObject(targetName, targetAge, talkObject) {
+  const id = 5;
+  const newTalker = {
+    name: targetName,
+    age: Number(targetAge),
+    id,
+    talk: {
+      // eslint-disable-next-line radix
+      rate: parseInt(talkObject.rate, 10),
+      watchedAt: talkObject.watchedAt,
+    },
+  };
+
+  return newTalker;
+}
+
+function registration(targetName, targetAge, talkObject) {
+  const { emptyTalk } = MessagesError;
+
+  if (!talkObject) { return emptyTalk; }
+
+  const talker = generateRegistrationObject(targetName, targetAge, talkObject);
+  const validationsResult = validatorRegistration(targetName, targetAge, talkObject);
+
+  if (typeof validationsResult === 'string') { return validationsResult; }
+
+  return talker;
+}
+
+module.exports = { 
+  validatorEmail, 
+  validatorPassword, 
+  SignupInfo,
+  verifyToken,
+  registration,
+};

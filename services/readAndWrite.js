@@ -13,11 +13,11 @@ async function handleFileReading(filePath, encoding = ENCODING) {
   }
 }
 
-async function handleFileWriting(filePath, newContent) {
+async function handleFileWriting(filePath, newContent, encoding = ENCODING) {
   try {
     const stringifyContent = JSON.stringify(newContent);
     
-    await writeFile(filePath, stringifyContent);
+    await writeFile(filePath, stringifyContent, encoding);
   } catch ({ message }) {
     console.error(`Erro ao escrever o arquivo: ${message}`);
   }

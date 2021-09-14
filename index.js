@@ -1,20 +1,31 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const { handleFileReading } = require('./services/readAndWrite');
+const authenticationMiddleware = require('./middlewares/auth-middleware');
+
 const { searchById } = require('./services/content');
-const { validatorEmail, validatorPassword, SignupInfo } = require('./services/login.js');
+
+const { 
+  validatorEmail, 
+  validatorPassword, 
+  SignupInfo, 
+  registration, 
+} = require('./services/login.js');
+
+const { handleFileReading, handleFileWriting } = require('./services/readAndWrite');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
+const HTTP_CREATED_STATUS = 201;
 const HTTP_BAD_REQUEST_STATUS = 400;
 const HTTP_NOT_FOUND_STATUS = 404;
 const PORT = '3000';
 
 const filePaths = {
   talker: './talker.json',
+  tokens: './tokens.json',
 };
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -23,7 +34,7 @@ app.get('/', (_request, response) => {
 });
 
 // Requisito 1
-app.route('/talker').get(async (_request, response) => {
+app.get('/talker', async (_request, response) => {
   const contentFromFile = await handleFileReading(filePaths.talker);
 
   if (contentFromFile) {
@@ -34,23 +45,22 @@ app.route('/talker').get(async (_request, response) => {
 });
 
 // Requisito 2 
-app.route('/talker/:id').get(async (request, response) => {
+app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
 
   const talkersDatabase = await handleFileReading(filePaths.talker);
   const findedTalker = searchById(talkersDatabase, id);
+  const messageError = { message: 'Pessoa palestrante não encontrada' };
 
   if (findedTalker) {
     return response.status(HTTP_OK_STATUS).json(findedTalker);
   }
 
-  return response
-    .status(HTTP_NOT_FOUND_STATUS)
-    .json({ message: 'Pessoa palestrante não encontrada' });
+  return response.status(HTTP_NOT_FOUND_STATUS).json(messageError);
 });
 
 // Requisito 3
-app.route('/login').post((request, response) => {
+app.post('/login', async (request, response) => {
   const { email, password } = request.body; 
 
   const validateEmail = validatorEmail(email);
@@ -66,6 +76,25 @@ app.route('/login').post((request, response) => {
 
   const getToken = SignupInfo(email, password);
   return response.status(HTTP_OK_STATUS).json({ token: getToken.token });
+});
+
+// Requisito 4
+app.use(authenticationMiddleware);
+
+app.post('/talker', async (request, response) => {
+  const { name, age, talk } = request.body;
+
+  const currentFileContent = await handleFileReading(filePaths.talker);
+
+  const validatedTalkerData = registration(name, age, talk);
+
+  if (typeof validatedTalkerData === 'string') {
+    return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });
+  }
+
+  currentFileContent.push(validatedTalkerData);
+  await handleFileWriting(filePaths.talker, currentFileContent);
+  return response.status(HTTP_CREATED_STATUS).json(validatedTalkerData);
 });
 
 app.listen(PORT, () => {
