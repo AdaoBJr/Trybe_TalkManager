@@ -142,12 +142,11 @@ function validatorRegistration(targetName, targetAge, talkObject) {
   return allValidatedStatus;
 }
 
-function generateRegistrationObject(targetName, targetAge, talkObject) {
-  const id = 5;
+function generateRegistrationObject(targetName, targetAge, talkObject, id) {
   const newTalker = {
     name: targetName,
     age: Number(targetAge),
-    id,
+    id: Number(id),
     talk: {
       // eslint-disable-next-line radix
       rate: parseInt(talkObject.rate, 10),
@@ -158,12 +157,12 @@ function generateRegistrationObject(targetName, targetAge, talkObject) {
   return newTalker;
 }
 
-function registration(targetName, targetAge, talkObject) {
+function registration(targetName, targetAge, talkObject, id) {
   const { emptyTalk } = MessagesError;
 
   if (!talkObject) { return emptyTalk; }
 
-  const talker = generateRegistrationObject(targetName, targetAge, talkObject);
+  const talker = generateRegistrationObject(targetName, targetAge, talkObject, id);
   const validationsResult = validatorRegistration(targetName, targetAge, talkObject);
 
   if (typeof validationsResult === 'string') { return validationsResult; }

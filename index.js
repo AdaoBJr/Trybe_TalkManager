@@ -2,8 +2,13 @@ const express = require('express');
 const bodyParser = require('body-parser');
 
 const authenticationMiddleware = require('./middlewares/authentication-middleware.js');
+const searchMiddleware = require('./middlewares/search-middleware.js');
 
-const { searchById, updateContentById, deleteContentById } = require('./services/content.js');
+const { 
+  searchById, 
+  updateContentById, 
+  deleteContentById, 
+} = require('./services/content.js');
 
 const { 
   validatorEmail, 
@@ -13,7 +18,10 @@ const {
   
 } = require('./services/login.js');
 
-const { handleFileReading, handleFileWriting } = require('./services/readAndWrite.js');
+const { 
+  handleFileReading, 
+  handleFileWriting, 
+} = require('./services/readAndWrite.js');
 
 const app = express();
 app.use(bodyParser.json());
@@ -38,9 +46,7 @@ app.get('/', (_request, response) => {
 app.get('/talker', async (_request, response) => {
   const contentFromFile = await handleFileReading(filePaths.talker);
 
-  if (contentFromFile) {
-    return response.status(HTTP_OK_STATUS).json(contentFromFile);
-  }
+  if (contentFromFile) { return response.status(HTTP_OK_STATUS).json(contentFromFile); }
 
   return response.status(HTTP_OK_STATUS).json([]);
 });
@@ -86,8 +92,9 @@ app.post('/talker', async (request, response) => {
   const { name, age, talk } = request.body;
 
   const currentFileContent = await handleFileReading(filePaths.talker);
+  const id = currentFileContent.length + 1;
 
-  const validatedTalkerData = registration(name, age, talk);
+  const validatedTalkerData = registration(name, age, talk, id);
 
   if (typeof validatedTalkerData === 'string') {
     return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });
@@ -136,6 +143,9 @@ app.delete('/talker/:id', async (request, response) => {
     console.error(`Erro: ${message}`);
   }
 });
+
+// Requisito 7
+app.get('/talker/search', authenticationMiddleware, searchMiddleware);
 
 app.listen(PORT, () => {
   console.log('Online');

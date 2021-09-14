@@ -5,9 +5,15 @@ function searchById(database, targetId) {
   return findResult;
 }
 
+function searchByName(database, targetName) {
+  const formatString = String(targetName).toLowerCase();
+  const filteredResults = database.filter(({ name }) => name.toLowerCase().includes(formatString));
+
+  return filteredResults;
+}
+
 function updateContentById(database, targetId) {
   const stringToNumber = Number(targetId);
-
   const updatedContent = database.filter(({ id }) => Number(id) !== stringToNumber);
 
   return updatedContent;
@@ -41,4 +47,9 @@ function deleteContentById(database, targetId) {
   return deletedResult;
 }
 
-module.exports = { searchById, updateContentById, deleteContentById };
+module.exports = { 
+  searchById, 
+  searchByName, 
+  updateContentById, 
+  deleteContentById, 
+};
