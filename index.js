@@ -3,7 +3,7 @@ const bodyParser = require('body-parser');
 
 const authenticationMiddleware = require('./middlewares/authentication-middleware.js');
 
-const { searchById, updateContentById } = require('./services/content.js');
+const { searchById, updateContentById, deleteContentById } = require('./services/content.js');
 
 const { 
   validatorEmail, 
@@ -98,6 +98,7 @@ app.post('/talker', async (request, response) => {
   return response.status(HTTP_CREATED_STATUS).json(validatedTalkerData);
 });
 
+// Requisito 5
 app.put('/talker/:id', async (request, response) => {
   const { name, age, talk } = request.body;
   const { id } = request.params;
@@ -116,6 +117,24 @@ app.put('/talker/:id', async (request, response) => {
   await handleFileWriting(filePaths.talker, newContent);
 
   return response.status(HTTP_OK_STATUS).json(updatedTalker);
+});
+
+// Requisito 6
+app.delete('/talker/:id', async (request, response) => {
+  const { id } = request.params;
+
+  try {
+    const currentFileContent = await handleFileReading(filePaths.talker);
+    const deletionResults = deleteContentById(currentFileContent, id);
+    const newContent = deletionResults.content;
+    const successMessage = deletionResults.message;
+
+    await handleFileWriting(filePaths.talker, newContent);
+
+    return response.status(HTTP_OK_STATUS).json({ message: successMessage });
+  } catch ({ message }) {
+    console.error(`Erro: ${message}`);
+  }
 });
 
 app.listen(PORT, () => {
