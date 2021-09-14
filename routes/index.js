@@ -17,11 +17,11 @@ const authToken = (req, res, next) => {
     const { authorization } = req.headers;
 
     if (!authorization) {
-        res.status(HTTP_TOKEN_ERROR_STATUS).send({ message: 'Token não encontrado' });
+        return res.status(HTTP_TOKEN_ERROR_STATUS).send({ message: 'Token não encontrado' });
     }
 
     if (authorization.length < 16) {
-        res.status(HTTP_TOKEN_ERROR_STATUS).send({ message: 'Token inválido' });
+        return res.status(HTTP_TOKEN_ERROR_STATUS).send({ message: 'Token inválido' });
     }
 
     next();
@@ -30,10 +30,13 @@ const authToken = (req, res, next) => {
 const authName = (req, res, next) => {
     const { name } = req.body;
     
-    if (!name) res.status(HTTP_USER_ERROR_STATUS).send({ message: 'O campo "name" é obrigatório' });
+    if (!name) {
+        return res.status(HTTP_USER_ERROR_STATUS).send({ 
+        message: 'O campo "name" é obrigatório' }); 
+    }
 
     if (name.length <= 3) {
-        res.status(HTTP_USER_ERROR_STATUS).send(
+       return res.status(HTTP_USER_ERROR_STATUS).send(
             { message: 'O "name" deve ter pelo menos 3 caracteres' },
         );
     }
@@ -45,10 +48,10 @@ const authAge = (req, res, next) => {
     const { age } = req.body;
 
     if (!age) {
-        res.status(HTTP_USER_ERROR_STATUS).send({ message: 'O campo "age" é obrigatório' });
+       return res.status(HTTP_USER_ERROR_STATUS).send({ message: 'O campo "age" é obrigatório' });
     }
     if (Number(age) < 18) {
-        res.status(HTTP_USER_ERROR_STATUS).send({
+       return res.status(HTTP_USER_ERROR_STATUS).send({
             message: 'A pessoa palestrante deve ser maior de idade', 
         });
     }
@@ -60,7 +63,7 @@ const authTalk = (req, res, next) => {
     const { talk } = req.body;
     
     if (!talk || talk.watchedAt.length === undefined || talk.rate.length === undefined) {
-        res.status(400).send(
+       return res.status(400).send(
             {
                 message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
             },
@@ -75,7 +78,9 @@ const authWatchedAt = (req, res, next) => {
 
     const dateRegex = new RegExp(/^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i);
     if (!dateRegex.test(talk.watchedAt)) {
-        res.status(400).send({ message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' });
+       return res.status(400).send({ 
+           message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"', 
+        });
     }
 
     next();
@@ -85,7 +90,7 @@ const authRate = (req, res, next) => {
     const { talk } = req.body;
     
     if (talk.rate <= 0 || talk.rate >= 6) {
-        res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+       return res.status(400).send({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
     }
     next();
 };
@@ -125,5 +130,22 @@ router.post('/',
 
         res.status(201).json(newTalker);
     });
+
+router.put('/:id',
+    authAge,
+    authName,
+    authRate,
+    authTalk,
+    authToken,
+    authWatchedAt,
+    async (req, res) => {
+        const { id } = req.params;
+        const talkers = await readFile();
+        const talkersEd = talkers.filter((t) => t.id !== Number(id));
+        const newTalker = { ...req.body, id: Number(id) };
+        const updatedTalkers = [...talkersEd, newTalker];
+        await setNewTalker(updatedTalkers);
+        res.status(200).json(newTalker);
+});
 
 module.exports = router;
