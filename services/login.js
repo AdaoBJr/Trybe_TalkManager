@@ -110,7 +110,7 @@ function verifyPositive(targetNumber) {
 
   const stringToNumber = parseInt(targetNumber, 10);
 
-  if (stringToNumber > MAX_VALUE || stringToNumber < MIN_VALUE) { return false; }
+  if (stringToNumber < MIN_VALUE || stringToNumber > MAX_VALUE) { return false; }
 
   return result;
 }
@@ -123,7 +123,7 @@ function validatorTalkInfo(talkObject) {
   const validatedWatchedAt = DATE_REGEX.test(talkObject.watchedAt);
   const validatedRate = verifyPositive(talkObject.rate);
 
-  if (!talkObject.watchedAt || !talkObject.rate) { return emptyTalk; }
+  if (talkObject.watchedAt == null || talkObject.rate == null) { return emptyTalk; }
   if (!validatedWatchedAt) { return invalidTalkWatchedAt; }
   if (!validatedRate) { return invalidTalkRate; }
 }

@@ -3,13 +3,14 @@ const bodyParser = require('body-parser');
 
 const authenticationMiddleware = require('./middlewares/authentication-middleware.js');
 
-const { searchById } = require('./services/content.js');
+const { searchById, updateContentById } = require('./services/content.js');
 
 const { 
   validatorEmail, 
   validatorPassword, 
   signupInfo, 
   registration, 
+  
 } = require('./services/login.js');
 
 const { handleFileReading, handleFileWriting } = require('./services/readAndWrite.js');
@@ -95,6 +96,26 @@ app.post('/talker', async (request, response) => {
   currentFileContent.push(validatedTalkerData);
   await handleFileWriting(filePaths.talker, currentFileContent);
   return response.status(HTTP_CREATED_STATUS).json(validatedTalkerData);
+});
+
+app.put('/talker/:id', async (request, response) => {
+  const { name, age, talk } = request.body;
+  const { id } = request.params;
+
+  const validatedTalkerData = registration(name, age, talk, id);
+
+  if (typeof validatedTalkerData === 'string') {
+    return response.status(HTTP_BAD_REQUEST_STATUS).json({ message: validatedTalkerData });
+  }
+
+  const currentFileContent = await handleFileReading(filePaths.talker);
+  const newContent = updateContentById(currentFileContent, id);
+  const updatedTalker = { name, age: Number(age), id: Number(id), talk };
+
+  newContent.push(updatedTalker);
+  await handleFileWriting(filePaths.talker, newContent);
+
+  return response.status(HTTP_OK_STATUS).json(updatedTalker);
 });
 
 app.listen(PORT, () => {
