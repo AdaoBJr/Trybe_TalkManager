@@ -14,7 +14,9 @@ const authEmail = (req, res, next) => {
         res.status(HTTP_LOGIN_ERROR_STATUS).json({ message: 'O campo "email" é obrigatório' });
     }
     if (!emailRegex.test(email)) {
-        res.status(HTTP_LOGIN_ERROR_STATUS).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+        res.status(HTTP_LOGIN_ERROR_STATUS).json(
+            { message: 'O "email" deve ter o formato "email@email.com"' },
+        );
     }
     next();
 };
