@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const authenticationMiddleware = require('./middlewares/authentication-middleware.js');
-const searchMiddleware = require('./middlewares/search-middleware.js');
+const authenticationMiddleware = require('./middlewares/authenticationMiddleware.js');
+const searchMiddleware = require('./middlewares/searchMiddleware.js');
 
 const { 
   searchById, 
@@ -50,6 +50,9 @@ app.get('/talker', async (_request, response) => {
 
   return response.status(HTTP_OK_STATUS).json([]);
 });
+
+// Requisito 7
+app.get('/talker/search', authenticationMiddleware, searchMiddleware);
 
 // Requisito 2 
 app.get('/talker/:id', async (request, response) => {
@@ -143,9 +146,6 @@ app.delete('/talker/:id', async (request, response) => {
     console.error(`Erro: ${message}`);
   }
 });
-
-// Requisito 7
-app.get('/talker/search', authenticationMiddleware, searchMiddleware);
 
 app.listen(PORT, () => {
   console.log('Online');

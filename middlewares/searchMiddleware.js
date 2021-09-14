@@ -1,5 +1,5 @@
-const { searchByName } = require('../services/content.js');
-const { handleFileReading } = require('../services/readAndWrite.js');
+const { searchByName } = require('../services/content');
+const { handleFileReading } = require('../services/readAndWrite');
 
 const HTTP_OK_STATUS = 200;
 const talkers = './talker.json';
