@@ -14,7 +14,7 @@ const authEmail = (req, res, next) => {
         res.status(HTTP_LOGIN_ERROR_STATUS).json({ message: 'O campo "email" é obrigatório' });
     }
     if (!emailRegex.test(email)) {
-        res.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
+        res.status(HTTP_LOGIN_ERROR_STATUS).json({ message: 'O "email" deve ter o formato "email@email.com"' });
     }
     next();
 };
@@ -24,12 +24,14 @@ const authPassword = (req, res, next) => {
 
     if (!password) {
         res.status(HTTP_LOGIN_ERROR_STATUS).json(
-            { message: 'O "password" deve ter pelo menos 6 caracteres' },
+            { message: 'O campo "password" é obrigatório' },
         );
     }
 
     if (password.length < 6) {
-        res.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
+        res.status(HTTP_LOGIN_ERROR_STATUS).json(
+            { message: 'O "password" deve ter pelo menos 6 caracteres' },
+        );
     }
     next();
 };
