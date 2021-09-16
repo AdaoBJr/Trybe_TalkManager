@@ -13,8 +13,10 @@ app.get('/', (_request, response) => {
 });
 
 const talker = require('./routers/talkerRouter');
+const login = require('./routers/loginRouter');
 
 app.use('/talker', talker);
+app.use('/login', login);
 
 app.listen(PORT, () => {
   console.log('Online');
