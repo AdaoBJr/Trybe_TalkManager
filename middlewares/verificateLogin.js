@@ -9,7 +9,7 @@ const validates = (req, res) => {
 
   const validateEmail = regex.test(email);
 
-  if (email.length === 0) {
+  if (email.length === null) {
     return res.status(400).json({ message: 'O campo "email" é obrigatório' });
   }
   if (!validateEmail) {
