@@ -1,9 +1,9 @@
-const express = require('express');
-const bodyParser = require('body-parser');
-const middlewares = require('./middlewares/getTalker');
+import express from 'express';
+import { json } from 'body-parser';
+import middlewares from './middlewares/getTalker';
 
 const app = express();
-app.use(bodyParser.json());
+app.use(json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -16,5 +16,5 @@ app.get('/', (_request, response) => {
 app.get('/talker', middlewares);
 
 app.listen(PORT, () => {
-  console.log('Online');
+  console.log(`Online em localhost:${PORT}`);
 });
