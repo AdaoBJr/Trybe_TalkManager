@@ -1,9 +1,9 @@
 import express from 'express';
-import { json } from 'body-parser';
+import bodyParser from 'body-parser';
 import middlewares from './middlewares/getTalker';
 
 const app = express();
-app.use(json());
+app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';

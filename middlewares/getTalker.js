@@ -1,4 +1,4 @@
-import { promises as fs } from 'fs';
+import fs from 'fs';
 
 const getTalker = (_req, res) => {
   const talkers = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
