@@ -1,3 +1,4 @@
 const getTalkers = require('./getTalker');
+const getId = require('./getId');
 
-module.exports = getTalkers;
+module.exports = { getTalkers, getId };
