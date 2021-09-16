@@ -10,7 +10,7 @@ const validatesEmail = (email) => {
   return regex.test(email);
 };
 
-const checkAuthValidation = (email, validateEmail, password) => {
+const checkAuthValidation = (email, validateEmail, password, res) => {
   if (!email) {
     return res.status(400).json({
       message: 'O campo "email" é obrigatório'
@@ -40,7 +40,7 @@ const authLogin = (req, res) => {
   } = req.body;
   const validateEmail = validatesEmail(email);
 
-  checkAuthValidation(email, validateEmail, password);
+  checkAuthValidation(email, validateEmail, password, res);
 
   return res.status(200).json({
     token: generatesToken(),
