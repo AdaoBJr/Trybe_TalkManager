@@ -1,4 +1,7 @@
+const express = require('express');
 const crypto = require('crypto');
+
+const loginRouter = express.Router();
 let token = null;
 
 const generatesToken = () => {
@@ -10,13 +13,13 @@ const validatesEmail = (email) => {
   return regex.test(email);
 };
 
-const checkAuthValidation = (email, validateEmail, password, res) => {
+const validateUserInfo = (email, isValidEmail, password, res) => {
   if (!email) {
     return res.status(400).json({
-      message: 'O campo "email" é obrigatório'
+      message: 'O campo "email" é obrigatório',
     });
   }
-  if (!validateEmail) {
+  if (!isValidEmail) {
     return res.status(400).json({
       message: 'O email deve ter o formato "email@email.com"',
     });
@@ -33,24 +36,20 @@ const checkAuthValidation = (email, validateEmail, password, res) => {
   }
 };
 
-const authLogin = (req, res) => {
+loginRouter.post('/', (req, res) => {
+
+  console.log('entrou');
+
   const {
     email,
     password,
   } = req.body;
-  const validateEmail = validatesEmail(email);
-
-  checkAuthValidation(email, validateEmail, password, res);
+  const isValidEmail = validatesEmail(email);
+  validateUserInfo(email, isValidEmail, password, res);
   generatesToken();
-
-  console.log(token);
-
   return res.status(200).json({
-    token: token,
+    token,
   });
-};
+});
 
-module.exports = {
-  authLogin,
-  token
-};
+module.exports = loginRouter;
