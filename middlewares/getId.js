@@ -5,7 +5,7 @@ const getId = (req, res) => {
     const talkers = JSON.parse(fs.readFileSync('talker.json', 'utf-8'));
     const talkerId = talkers.find((talker) => talker.id === Number(id));
 
-    if(talkerId) {
+    if (talkerId) {
       return res.status(200).json(talkerId);
     }
     return res.status(400).json({ message: 'Pessoa palestrante não encontrada' });
