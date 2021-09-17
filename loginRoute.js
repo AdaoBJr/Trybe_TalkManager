@@ -2,7 +2,8 @@ const express = require('express');
 const crypto = require('crypto');
 
 const loginRouter = express.Router();
-let token = null;
+// let token = null;
+let token = '1234567891234567'
 
 const generatesToken = () => {
   token = crypto.randomBytes(8).toString('hex');
@@ -36,20 +37,20 @@ const validateUserInfo = (email, isValidEmail, password, res) => {
   }
 };
 
-loginRouter.post('/', (req, res) => {
-
-  console.log('entrou');
-
+loginRouter.post('/', async (req, res) => {
   const {
     email,
     password,
   } = req.body;
   const isValidEmail = validatesEmail(email);
   validateUserInfo(email, isValidEmail, password, res);
-  generatesToken();
+  await generatesToken();
   return res.status(200).json({
     token,
   });
 });
 
-module.exports = loginRouter;
+module.exports = {
+  loginRouter,
+  token
+};
