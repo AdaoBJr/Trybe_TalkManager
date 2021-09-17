@@ -3,6 +3,7 @@ const bodyParser = require('body-parser');
 const fs = require('fs');
 
 const talkerFile = './talker.json';
+// const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
 
 const app = express();
 app.use(bodyParser.json());
@@ -16,15 +17,28 @@ app.get('/', (_request, response) => {
 });
 // ------------------------------------------ //
 
+// cria /talker
 app.get('/talker', (_req, res) => {
   const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
-  // res.status(200).json(talker);
 
   if (talker.length > 0) {
     return res.status(200).json(talker);
   }
   if (talker.length === 0) {
     return res.status(200).json([]);
+  }
+});
+
+app.get('/talker/:id', (req, res) => {
+  const { id } = req.params;
+  const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+  const talkerId = talker.find((t) => t.id === +id);
+
+  if (talkerId) {
+    return res.status(200).json(talkerId);
+  }
+  if (!talkerId) {
+    return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
   }
 });
 
