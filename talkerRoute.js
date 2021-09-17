@@ -14,9 +14,9 @@ const talkerRouter = express.Router();
 talkerRouter.get('/', async (_req, res) => {
   const talkers = await getAllTalkers;
   console.log(talkers);
-  if (talkers.length === 0) {
-    return res.status(200).json([]);
-  }
+  // if (talkers.length === 0) {
+  //   return res.status(200).json([]);
+  // }
   return res.status(200).json(talkers);
 });
 
