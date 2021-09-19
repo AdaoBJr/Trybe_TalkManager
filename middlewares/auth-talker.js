@@ -36,7 +36,7 @@ const rateAuth = (req, res, next) => {
   
   if (
     !Number.isInteger(rate)
-    || (rate < 0 || rate > 5)
+    || (rate <= 0 || rate > 5)
   ) {
     return res.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
   }
@@ -47,7 +47,7 @@ const rateAuth = (req, res, next) => {
 const talkAuth = (req, res, next) => {
   const { talk } = req.body;
 
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined) {
     return res
       .status(400)
       .json(

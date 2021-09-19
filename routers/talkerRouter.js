@@ -66,4 +66,34 @@ router.post(
   },
 );
 
+// --- Requisito 5 ---
+router.put(
+  '/:id', 
+  authToken,
+  nameAuth,
+  ageAuth,
+  talkAuth,
+  watchedAtAuth,
+  rateAuth,
+  (req, res) => {
+    const { id } = req.params;
+    readTalkerFile()
+      .then((data) => {
+        const talkers = data;
+        const talkerById = talkers.find((talker) => talker.id === parseInt(id, 10));
+        
+        if (!talkerById) {
+          return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+        }
+        const talkerArrayIndex = talkers.indexOf(talkerById);
+        
+        const newTalker = { id: talkerById.id, ...req.body };
+
+        talkers[talkerArrayIndex] = newTalker;
+        fs.writeFile('./talker.json', JSON.stringify(talkers));
+        res.status(200).json({ ...newTalker });
+      });
+  },
+);
+
 module.exports = router;
