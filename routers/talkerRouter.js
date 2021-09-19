@@ -96,4 +96,26 @@ router.put(
   },
 );
 
+router.delete(
+  '/:id',
+  authToken,
+  (req, res) => {
+    const { id } = req.params;
+    readTalkerFile()
+      .then((data) => {
+        const talkers = data;
+        const talkerById = talkers.find((talker) => talker.id === parseInt(id, 10));
+        
+        if (!talkerById) {
+          return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+        }
+
+        const newTalkers = talkers.filter((talker) => talker !== talkerById);
+        fs.writeFile('./talker.json', JSON.stringify(newTalkers));
+
+        res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+      });
+  },
+);
+
 module.exports = router;
