@@ -16,7 +16,7 @@ const talkValid = (talk) => {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     };
   }
-}
+};
 
 const dataValid = (date, rate) => {
   if (!dateRegex.test(date)) {
