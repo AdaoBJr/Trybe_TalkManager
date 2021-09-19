@@ -1,4 +1,4 @@
-const authMiddleware = (req, res, next) => {
+const authLogin = (req, res, next) => {
   const { email, password } = req.body;
 
   const EMAIL_REGEX = new RegExp(/^[\w.]+@[a-z]+.\w{2,3}$/g); 
@@ -18,4 +18,4 @@ const authMiddleware = (req, res, next) => {
   next();
 };
 
-module.exports = authMiddleware;
+module.exports = authLogin;
