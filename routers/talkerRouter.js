@@ -17,6 +17,19 @@ function readTalkerFile() {
   return fs.readFile(TALKER_FILE, 'utf-8').then((data) => JSON.parse(data)); // Info vem em formato de string  
 }
 
+// --- Requisito 7 ---
+
+router.get('/search', authToken, (req, res) => {
+  readTalkerFile()
+    .then((data) => {
+      const { q } = req.query;
+
+      if (!q) return res.status(200).json(data);
+      const searchedTalker = data.filter((talker) => talker.name.includes(q));
+      return res.status(200).json(searchedTalker);
+    });
+});
+
 // --- Requisito 1 ---
 router.get('/', (_req, res) => {
   readTalkerFile()
@@ -95,6 +108,8 @@ router.put(
       });
   },
 );
+
+// --- Requisito 6 ---
 
 router.delete(
   '/:id',
