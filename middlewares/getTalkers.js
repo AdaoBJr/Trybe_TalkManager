@@ -1,3 +1,4 @@
+// 1 - Crie o endpoint GET /talker
 const fs = require('fs').promises;
 
 const PATH = './talker.json';
