@@ -1,16 +1,16 @@
+const emailRegex = /^[a-z0-9._-]+@[a-z0-9]+\.([a-z.]+)?$/i;
 module.exports = (email, password) => {
-  const emailRegex = /^[a-z0-9._-]+@[a-z0-9]+\.([a-z.]+)?$/i;
   if (!email) {
-    return 'noEmail';
+    return { message: 'O campo "email" é obrigatório' };
   }
   if (!emailRegex.test(email)) {
-    return 'wrongEmail';
+    return { message: 'O "email" deve ter o formato "email@email.com"' };
   }
   if (!password) {
-    return 'noPassword';
+    return { message: 'O campo "password" é obrigatório' };
   }
   if (password.length < 6) {
-    return 'wrongPassword';
+    return { message: 'O "password" deve ter pelo menos 6 caracteres' };
   }
   return true;
 };
