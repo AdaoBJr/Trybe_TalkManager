@@ -2,12 +2,17 @@
 const getTalkers = require('./getTalkers');
 const getTalkersById = require('./getTalkersById');
 const login = require('./login');
+const auth = require('./authorization');
+const valid = require('./valid');
 const createTalker = require('./createTalker');
+const modTalker = require('./modTalker');
 
 module.exports = {
-  // readMiddleware,
   getTalkers,
   getTalkersById,
   login,
+  valid,
+  auth,
   createTalker,
+  modTalker,
 };

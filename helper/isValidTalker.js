@@ -11,7 +11,7 @@ const ageValid = (age) => {
 };
 
 const talkValid = (talk) => {
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || talk.rate === undefined || talk.rate === null) {
     return {
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
     };

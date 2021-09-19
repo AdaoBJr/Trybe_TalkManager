@@ -13,7 +13,7 @@ module.exports = (_req, res, _next) => {
         return res.status(200).json(JSON.parse(data));
     })
     .catch((err) => {
-      console.error(`Impossível ler arquivo ${PATH}\n Erro: ${err}`);
+      console.error(err);
       // process.exit(1);
     });
 };
