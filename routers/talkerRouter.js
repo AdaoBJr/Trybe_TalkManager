@@ -110,7 +110,6 @@ router.put(
 );
 
 // --- Requisito 6 ---
-
 router.delete(
   '/:id',
   authToken,
