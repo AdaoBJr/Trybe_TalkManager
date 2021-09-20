@@ -98,3 +98,26 @@ app.put('/talker/:id',
         fs.writeFile(talkers, JSON.stringify(response));
         return res.status(200).json(bodyModified);
 }));
+
+app.delete('/talker/:id',
+    authToken,
+    async (req, res) => {
+    const { id } = req.params;
+    const talkersJson = await fs.readFile(talkers);
+    const z = JSON.parse(talkersJson);
+    const currId = z.findIndex((index) => Number(id) === index.id);
+    z.splice(currId, 1);
+    fs.writeFile(talkers, JSON.stringify(z));
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+});
+
+app.get('/search', authToken, (req, res) => {
+    const query = req.query.q;
+    const talkers = JSON.parse(fs.readFileSync(talkers));
+    const found = talkers.filter(({ name }) => name.includes(query));
+
+    if (found) {
+        return res.status(200).json(found);
+    }
+    return res.status(200).json(talkers);
+});
