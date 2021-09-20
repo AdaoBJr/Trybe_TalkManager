@@ -2,6 +2,7 @@ const express = require('express');
 const {
   getAllTalkers,
   writeNewTalker,
+  writeUpdatedTalkers,
 } = require('./fsModule');
 const {
   getTalkerById,
@@ -23,20 +24,38 @@ talkerRouter.get('/', async (_req, res) => {
 talkerRouter.get('/:id', getTalkerById);
 
 talkerRouter.post('/', checkHeaderToken, validateTalker, async (req, res) => {
-  const {
-    name, age, talk,
-  } = req.body;
+  const { name, age, talk } = req.body;
   const talkers = await getAllTalkers;
   const talker = {
+    name,
+    age,
     id: talkers.length + 1,
+    talk,
+  };
+  await writeNewTalker(talker);
+  console.log('last step');
+  return res.status(201).json(talker);
+});
+
+talkerRouter.put('/:id', checkHeaderToken, validateTalker, async (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const allTalkers = await getAllTalkers;
+  console.log(allTalkers);
+  const talkerIndex = allTalkers.findIndex((talker) => talker.id === parseInt(id, 10));
+  allTalkers[talkerIndex] = await {
+    ...allTalkers[talkerIndex],
     name,
     age,
     talk,
   };
-  await writeNewTalker(talker);
+  await writeUpdatedTalkers(allTalkers);
+  return res.status(200).json(allTalkers[talkerIndex]);
+});
 
-  console.log('last step');
-  return res.status(201).json(talker);
+talkerRouter.delete('/:id', checkHeaderToken, (req, res) => {
+  const {id} = req.params;
+
 });
 
 module.exports = talkerRouter;
