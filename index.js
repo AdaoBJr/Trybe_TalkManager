@@ -113,8 +113,8 @@ app.delete('/talker/:id',
 
 app.get('/search', authToken, (req, res) => {
     const query = req.query.q;
-    const talkers = JSON.parse(fs.readFileSync(talkers));
-    const found = talkers.filter(({ name }) => name.includes(query));
+    const talkersJson = JSON.parse(fs.readFileSync(talkers));
+    const found = talkersJson.filter(({ name }) => name.includes(query));
 
     if (found) {
         return res.status(200).json(found);
