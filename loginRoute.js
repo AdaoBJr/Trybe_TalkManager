@@ -22,7 +22,7 @@ const validateUserInfo = (email, isValidEmail, password, res) => {
   }
   if (!isValidEmail) {
     return res.status(400).json({
-      message: 'O email deve ter o formato "email@email.com"',
+      message: "O \"email\" deve ter o formato \"email@email.com\"",
     });
   }
   if (!password) {
