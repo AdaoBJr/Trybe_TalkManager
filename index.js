@@ -47,7 +47,6 @@ app.get('/talker', async (_req, res) => {
 
 app.get('/talker/search', authToken, talkerSearch);
 
-
 app.get('/talker/:id', rescue(async (req, res) => {
     const talkersJson = await fs.readFile(talkers);
     const response = JSON.parse(talkersJson);
