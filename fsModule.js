@@ -18,9 +18,8 @@ const writeNewTalker = async (talker) => {
   .catch((err) => console.log(err));
 };
 
-const writeUpdatedTalkers = (updatedTalkers) => {
-  return fs.writeFile('./talker.json', JSON.stringify(updatedTalkers));
-};
+const writeUpdatedTalkers = (updatedTalkers) =>
+  fs.writeFile('./talker.json', JSON.stringify(updatedTalkers));
 
 module.exports = {
   getAllTalkers,

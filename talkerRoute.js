@@ -53,9 +53,9 @@ talkerRouter.put('/:id', checkHeaderToken, validateTalker, async (req, res) => {
   return res.status(200).json(allTalkers[talkerIndex]);
 });
 
-talkerRouter.delete('/:id', checkHeaderToken, (req, res) => {
-  const {id} = req.params;
+// talkerRouter.delete('/:id', checkHeaderToken, (req, res) => {
+//   const {id} = req.params;
 
-});
+// });
 
 module.exports = talkerRouter;
