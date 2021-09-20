@@ -6,6 +6,7 @@ const auth = require('./authorization');
 const valid = require('./valid');
 const createTalker = require('./createTalker');
 const modTalker = require('./modTalker');
+const removeTalker = require('./removeTalker');
 
 module.exports = {
   getTalkers,
@@ -15,4 +16,5 @@ module.exports = {
   auth,
   createTalker,
   modTalker,
+  removeTalker,
 };

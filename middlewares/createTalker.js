@@ -13,11 +13,14 @@ module.exports = rescue(async (req, res, _next) => {
   const { name, age, talk } = req.body;
   
   const validation = isValidTalker(name, age, talk);
+  console.log(validation, 'valid');
   
   if (validation.message) {
     return res.status(400).json(validation);
   }
   const talkers = await getTalkers(pathArquivo);
+  console.log(talkers, 'talkers');
+  
   const id = talkers.len + 1;
   talkers.data.push({ name, age, id, talk });
   await fs.writeFile(pathArquivo, JSON.stringify(talkers.data));

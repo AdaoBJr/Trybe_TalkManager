@@ -9,6 +9,7 @@ const {
   valid,
   createTalker,
   modTalker,
+  removeTalker,
 } = require('./middlewares');
 
 const HTTP_OK_STATUS = 200;
@@ -23,6 +24,7 @@ app.use('/talker/:id', getTalkersById);
 app.use('/talker', getTalkers);
 app.post('/talker', auth, valid, createTalker);
 app.put('/talker/:id', auth, valid, modTalker);
+app.delete('/talker/:id', auth, removeTalker);
 
 // não remova esse endpoint, é para o avaliador funcionar
 app.get('/', (_request, response) => {
