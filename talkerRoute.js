@@ -12,6 +12,24 @@ const {
 
 const talkerRouter = express.Router();
 
+talkerRouter.get('/search', checkHeaderToken, async (req, res) => {
+  const {
+    searchTerm,
+  } = req.query;
+  const allTalkers = await getAllTalkers();
+  const talkersArray = allTalkers.filter((talker) => talker.name.toLowerCase().includes(searchTerm.toLowerCase()));
+
+  console.log(talkersArray);
+  if (!talkersArray) {
+    return res.status(200).json([]);
+  }
+  if (!searchTerm || searchTerm.length === 0) {
+    return res.status(200).json(allTalkers);
+  }
+
+  return res.status(200).json(talkersArray);
+});
+
 talkerRouter.get('/', async (_req, res) => {
   const talkers = await getAllTalkers();
   if (talkers.length === 0) {
@@ -40,6 +58,11 @@ talkerRouter.post('/', checkHeaderToken, validateTalker, async (req, res) => {
 talkerRouter.put('/:id', checkHeaderToken, validateTalker, async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
+  // if (talk.rate < 1) {
+  //   return res.status(400).json({
+  //     message: 'O campo "rate" deve ser um inteiro de 1 à 5'
+  //   });
+  // }
   const allTalkers = await getAllTalkers();
   console.log(allTalkers);
   const talkerIndex = allTalkers.findIndex((talker) => talker.id === parseInt(id, 10));
