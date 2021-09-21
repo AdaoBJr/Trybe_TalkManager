@@ -10,6 +10,7 @@ const {
   createTalker,
   modTalker,
   removeTalker,
+  searchTalkers,
 } = require('./middlewares');
 
 const HTTP_OK_STATUS = 200;
@@ -20,6 +21,7 @@ app.use(bodyParser.json());
 
 // app.use('/talker', readMiddleware);
 app.post('/login', login);
+app.get('/talker/search', auth, searchTalkers);
 app.get('/talker/:id', getTalkersById);
 app.post('/talker', auth, valid, createTalker);
 app.get('/talker', getTalkers);
