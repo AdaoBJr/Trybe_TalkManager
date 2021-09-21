@@ -73,24 +73,42 @@ const validateTalker = (req, res, next) => {
       message: 'A pessoa palestrante deve ser maior de idade',
     });
   }
-  if(!talk) {
+  if (!talk) {
     return res.status(400).json({
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
-    })
-  }
-  if(!talk.watchedAt || !talk.rate || (!talk && Object.keys(talk).length === 0)) {
-    return res.status(400).json({
-      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
-    })
-  }
-  if (!validatesDate(talk.watchedAt)) {
-    return res.status(400).json({
-      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"'
     })
   }
   if (talk.rate % 1 !== 0) {
     return res.status(400).json({
+      // message: 'O campo "rate" deve ser um inteiro de 1 à 5'
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
+
+    })
+  }
+  if (!talk.watchedAt) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
+    })
+  }
+  if (!talk.rate) {
+    return res.status(400).json({
       message: 'O campo "rate" deve ser um inteiro de 1 à 5'
+      // message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
+    })
+  }
+  if (Object.keys(talk).length === 0) {
+    return res.status(400).json({
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
+    })
+  }
+  // if (!talk.watchedAt || !talk.rate || (!talk && Object.keys(talk).length === 0)) {
+  //   return res.status(400).json({
+  //     message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios'
+  //   })
+  // }
+  if (!validatesDate(talk.watchedAt)) {
+    return res.status(400).json({
+      message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"'
     })
   }
   if(talk.rate < 1 || talk.rate > 5) {

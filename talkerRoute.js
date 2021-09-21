@@ -38,60 +38,77 @@ talkerRouter.get('/search', checkHeaderToken, (req, res) => {
 });
 
 talkerRouter.get('/', async (_req, res) => {
-  const talkers = await getAllTalkers();
-  if (talkers.length === 0) {
-      return res.status(200).json([]);
-    }
-  // console.log(talkers);
-  return res.status(200).json(talkers);
+  try {
+    const talkers = await getAllTalkers();
+    if (talkers.length === 0) {
+        return res.status(200).json([]);
+      }
+    // console.log(talkers);
+    return res.status(200).json(talkers);
+
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 talkerRouter.get('/:id', getTalkerById);
 
 talkerRouter.post('/', checkHeaderToken, validateTalker, async (req, res) => {
   const { name, age, talk } = req.body;
-  const talkers = await getAllTalkers();
-  const talker = {
-    name,
-    age,
-    id: talkers.length + 1,
-    talk,
-  };
-  await writeNewTalker(talker);
-  console.log('last step');
-  return res.status(201).json(talker);
+  try {
+    const talkers = await getAllTalkers();
+    const talker = {
+      name,
+      age,
+      id: talkers.length + 1,
+      talk,
+    };
+    await writeNewTalker(talker);
+    console.log('last step');
+    return res.status(201).json(talker);
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 talkerRouter.put('/:id', checkHeaderToken, validateTalker, async (req, res) => {
   const { id } = req.params;
-  const { name, age, talk } = req.body;
-  // if (talk.rate < 1) {
-  //   return res.status(400).json({
-  //     message: 'O campo "rate" deve ser um inteiro de 1 à 5'
-  //   });
-  // }
-  const allTalkers = await getAllTalkers();
-  console.log(allTalkers);
-  const talkerIndex = allTalkers.findIndex((talker) => talker.id === parseInt(id, 10));
-  allTalkers[talkerIndex] = await {
-    ...allTalkers[talkerIndex],
-    name,
-    age,
-    talk,
-  };
-  await writeUpdatedTalkers(allTalkers);
-  return res.status(200).json(allTalkers[talkerIndex]);
+  try {
+    const { name, age, talk } = req.body;
+    // if (talk.rate < 1) {
+    //   return res.status(400).json({
+    //     message: 'O campo "rate" deve ser um inteiro de 1 à 5'
+    //   });
+    // }
+    const allTalkers = await getAllTalkers();
+    console.log(allTalkers);
+    const talkerIndex = allTalkers.findIndex((talker) => talker.id === parseInt(id, 10));
+    allTalkers[talkerIndex] = await {
+      ...allTalkers[talkerIndex],
+      name,
+      age,
+      talk,
+    };
+    await writeUpdatedTalkers(allTalkers);
+    return res.status(200).json(allTalkers[talkerIndex]);
+  } catch (err) {
+    console.log(error);
+  }
 });
 
 talkerRouter.delete('/:id', checkHeaderToken, async (req, res) => {
   const { id } = req.params;
-  const allTalkers = await getAllTalkers();
-  console.log(allTalkers);
-  const talkerIndex = allTalkers.findIndex((talker) => talker.id === parseInt(id, 10));
-
-  await allTalkers.splice(talkerIndex, 1);
-  writeUpdatedTalkers(allTalkers);
-  return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  try {
+    const allTalkers = await getAllTalkers();
+    console.log(allTalkers);
+    const talkerIndex = allTalkers.findIndex((talker) => talker.id === parseInt(id, 10));
+  
+    await allTalkers.splice(talkerIndex, 1);
+    writeUpdatedTalkers(allTalkers);
+    return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  } catch (err) {
+    console.log(err);
+  }
 });
 
 module.exports = talkerRouter;
