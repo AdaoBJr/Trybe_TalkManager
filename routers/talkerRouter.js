@@ -126,6 +126,10 @@ const watchedAtCheck = (request, response, next) => {
 const rateCheck = (request, response, next) => {
   const { talk } = request.body;
   const { rate } = talk;
+  
+  if (rate < 1 || rate > 5) {
+    return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
+   }
 
   if (!rate) {
     return response.status(400).json(
@@ -133,9 +137,6 @@ const rateCheck = (request, response, next) => {
     );
   }
 
-  if (rate < 1 || rate > 5) {
-    return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' });
-   }
    next();
 };
 
@@ -156,5 +157,25 @@ router.post('/', tokenCheck, nameCheck, ageCheck, talkCheck, watchedAtCheck,
   })
   .catch((e) => res.status(400).json(e));
 });
+
+router.put('/:id',
+  tokenCheck, nameCheck, ageCheck, talkCheck, rateCheck, watchedAtCheck, (req, res) => {
+    fs.readFile(talkers, 'utf8')
+    .then((info) => JSON.parse(info))
+    .then((info) => {
+      const { id } = req.params;
+      const dataFilter = info.filter((talk) => talk.id !== Number(id));
+      const edited = {
+        ...req.body,
+        id: Number(id),
+      };
+      dataFilter.push(edited);
+      const data = dataFilter;
+      fs.writeFile('./talker.json', JSON.stringify(data));
+
+      return res.status(200).json(edited);
+    })
+    .catch((e) => res.status(400).json(e));
+  });
 
 module.exports = router;
