@@ -136,7 +136,6 @@ const rateCheck = (request, response, next) => {
       { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' },
     );
   }
-
    next();
 };
 
@@ -176,6 +175,20 @@ router.put('/:id',
       return res.status(200).json(edited);
     })
     .catch((e) => res.status(400).json(e));
+  });
+
+  router.delete('/:id', tokenCheck, (req, res) => {
+    fs.readFile(talkers, 'utf8')
+    .then((info) => JSON.parse(info))
+    .then((info) => {
+      const { id } = req.params;
+      const dataFilter = info.filter((talker) => talker.id !== Number(id));
+
+      const data = dataFilter;
+      fs.writeFile('./talker.json', JSON.stringify(data));
+      return res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    })
+    .catch((erro) => res.status(400).json(erro));
   });
 
 module.exports = router;
