@@ -1,8 +1,7 @@
 const express = require('express');
 
 const fs = require('fs').promises;
-
-const { token, data, Age, Name, thisTalk } = require('./post.js');
+const { token, date, age, name, thisTalk } = require('../middleware/talkPost.js');
 
 const router = express.Router();
 
@@ -42,10 +41,10 @@ router.get('/:id', async (req, res) => {
 
 router.post('/',
   token,
-  Name,
-  Age,
-  data,
+  name,
+  age,
   thisTalk,
+  date,
   async (req, res) => {
     const file = await readFile();
     const id = file.length + 1;
@@ -62,11 +61,11 @@ router.post('/',
 });
 
 router.put('/:id',
-token,
-Name,
-Age,
-data,
-thisTalk,
+  token,
+  name,
+  age,
+  thisTalk,
+  date,
   async (req, res) => {
   const { id } = req.params;
   const { name, age, talk } = req.body;
