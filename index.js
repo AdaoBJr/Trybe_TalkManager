@@ -14,9 +14,9 @@ const HTTP_FAIL_STATUS = 404;
 const VALID_EMAIL = /^[\w]+@([\w]+\.)+[\w]{2,4}$/gi;
 const FAIL_MESSAGE = { message: 'Pessoa palestrante não encontrada' };
 const REQUIRED_EMAIL = { message: 'O campo "email" é obrigatório' };
-const INVALID_EMAIL = { message: 'O email deve ter o formato "email@email.com"' };
+const INVALID_EMAIL = { message: 'O "email" deve ter o formato "email@email.com"' };
 const REQUIRED_PASSWORD = { message: 'O campo "password" é obrigatório' };
-const INVALID_PASSWORD = { message: 'O password deve ter pelo menos 6 caracteres' };
+const INVALID_PASSWORD = { message: 'O "password" deve ter pelo menos 6 caracteres' };
 
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
@@ -69,3 +69,5 @@ app.post('/login', isValidEmail, isValidPassword, (_require, response) => {
   const myToken = crypto.randomBytes(8).toString('hex');
   response.status(HTTP_OK_STATUS).send({ token: myToken });
 });
+
+// Requisito 04
