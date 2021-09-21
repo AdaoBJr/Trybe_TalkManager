@@ -46,10 +46,10 @@ app.get('/talker/:id', (request, response) => {
 const isValidEmail = (request, response, next) => {
   const { email } = request.body;
   if (!email || email.length === 0) {
-    response.status(HTTP_ALERT_STATUS).send(REQUIRED_EMAIL);
+    return response.status(HTTP_ALERT_STATUS).send(REQUIRED_EMAIL);
   }
   if (!VALID_EMAIL.test(email)) {
-    response.status(HTTP_ALERT_STATUS).send(INVALID_EMAIL);
+    return response.status(HTTP_ALERT_STATUS).send(INVALID_EMAIL);
   }
   next();
 };
@@ -57,15 +57,15 @@ const isValidEmail = (request, response, next) => {
 const isValidPassword = (request, response, next) => {
   const { password } = request.body;
   if (!password || password.length === 0) {
-    response.status(HTTP_ALERT_STATUS).send(REQUIRED_PASSWORD);
+    return response.status(HTTP_ALERT_STATUS).send(REQUIRED_PASSWORD);
   }
   if (password.length < 6) {
-    response.status(HTTP_ALERT_STATUS).send(INVALID_PASSWORD);
+    return response.status(HTTP_ALERT_STATUS).send(INVALID_PASSWORD);
   }
   next();
 };
 
-app.post('./login', isValidEmail, isValidPassword, (_require, response) => {
+app.post('/login', isValidEmail, isValidPassword, (_require, response) => {
   const myToken = crypto.randomBytes(8).toString('hex');
   response.status(HTTP_OK_STATUS).send({ token: myToken });
 });
