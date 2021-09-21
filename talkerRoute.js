@@ -1,4 +1,5 @@
 const express = require('express');
+const fs = require('fs');
 const {
   getAllTalkers,
   writeNewTalker,
@@ -12,22 +13,28 @@ const {
 
 const talkerRouter = express.Router();
 
-talkerRouter.get('/search', checkHeaderToken, async (req, res) => {
+talkerRouter.get('/search', checkHeaderToken, (req, res) => {
   const {
     searchTerm,
   } = req.query;
-  const allTalkers = await getAllTalkers();
-  const talkersArray = allTalkers.filter((talker) => talker.name.toLowerCase().includes(searchTerm.toLowerCase()));
-
-  console.log(talkersArray);
-  if (!talkersArray) {
-    return res.status(200).json([]);
+  try {
+    // const allTalkers = await getAllTalkers();
+    const allTalkers = fs.readFileSync('./talker.json', 'UTF-8');
+    console.log(allTalkers);
+    const talkersArray = JSON.parse(allTalkers).filter((talker) => {
+      console.log(talker);
+      return talker.name?.toLowerCase().includes(searchTerm?.toLowerCase());
+    });
+    if (!talkersArray) {
+      return res.status(200).json([]);
+    }
+    if (!searchTerm || searchTerm.length === 0) {
+      return res.status(200).json(allTalkers);
+    }
+    return res.status(200).json(talkersArray);
+  } catch (err) {
+    console.log(err);
   }
-  if (!searchTerm || searchTerm.length === 0) {
-    return res.status(200).json(allTalkers);
-  }
-
-  return res.status(200).json(talkersArray);
 });
 
 talkerRouter.get('/', async (_req, res) => {

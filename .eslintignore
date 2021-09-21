@@ -3,3 +3,4 @@ tests
 
 loginRoute.js
 talkerMiddleWares.js
+talkerRoute.js
