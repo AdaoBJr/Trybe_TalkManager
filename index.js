@@ -29,7 +29,7 @@ app.listen(PORT, () => {
 
 // Requisito 01
 app.get('/talker', (_request, response) => {
-  response.status(HTTP_OK_STATUS).send(TALKERS);
+  response.status(HTTP_OK_STATUS).json(TALKERS);
 });
 
 // Requisito 02
@@ -37,19 +37,19 @@ app.get('/talker/:id', (request, response) => {
   const { id } = request.params;
   const talker = TALKERS.find((talk) => talk.id === parseInt(id, 10));
   if (!talker) {
-    return response.status(HTTP_FAIL_STATUS).send(FAIL_MESSAGE);
+    return response.status(HTTP_FAIL_STATUS).json(FAIL_MESSAGE);
   }
-  response.status(HTTP_OK_STATUS).send(talker);
+  response.status(HTTP_OK_STATUS).json(talker);
 });
 
 // Requisito 03
 const isValidEmail = (request, response, next) => {
   const { email } = request.body;
   if (!email || email.length === 0) {
-    return response.status(HTTP_ALERT_STATUS).send(REQUIRED_EMAIL);
+    return response.status(HTTP_ALERT_STATUS).json(REQUIRED_EMAIL);
   }
   if (!VALID_EMAIL.test(email)) {
-    return response.status(HTTP_ALERT_STATUS).send(INVALID_EMAIL);
+    return response.status(HTTP_ALERT_STATUS).json(INVALID_EMAIL);
   }
   next();
 };
@@ -57,17 +57,18 @@ const isValidEmail = (request, response, next) => {
 const isValidPassword = (request, response, next) => {
   const { password } = request.body;
   if (!password || password.length === 0) {
-    return response.status(HTTP_ALERT_STATUS).send(REQUIRED_PASSWORD);
+    return response.status(HTTP_ALERT_STATUS).json(REQUIRED_PASSWORD);
   }
   if (password.length < 6) {
-    return response.status(HTTP_ALERT_STATUS).send(INVALID_PASSWORD);
+    return response.status(HTTP_ALERT_STATUS).json(INVALID_PASSWORD);
   }
   next();
 };
 
 app.post('/login', isValidEmail, isValidPassword, (_require, response) => {
+  console.log('/login');
   const myToken = crypto.randomBytes(8).toString('hex');
-  response.status(HTTP_OK_STATUS).send({ token: myToken });
+  response.status(HTTP_OK_STATUS).json({ token: myToken });
 });
 
 // Requisito 04
