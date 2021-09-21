@@ -1,9 +1,9 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const { gerarToken, validarEmail, validarSenha } = require('./funcoes');
 
 const talkerFile = './talker.json';
-// const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
 
 const app = express();
 app.use(bodyParser.json());
@@ -17,7 +17,7 @@ app.get('/', (_request, response) => {
 });
 // ------------------------------------------ //
 
-// cria /talker
+// test getAllTalkers.test.js
 app.get('/talker', (_req, res) => {
   const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
 
@@ -29,16 +29,37 @@ app.get('/talker', (_req, res) => {
   }
 });
 
+// test getTalkerById.test.js
 app.get('/talker/:id', (req, res) => {
   const { id } = req.params;
   const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
-  const talkerId = talker.find((t) => t.id === +id);
+  const talkerId = talker.find((t) => t.id === Number(id));
 
   if (talkerId) {
     return res.status(200).json(talkerId);
   }
   if (!talkerId) {
     return res.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+  }
+});
+
+// test login.test.js
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
+  // const token = req.headers.authorization;
+  const validaEmail = validarEmail(email);
+  const validaSenha = validarSenha(password);
+
+  if (validaEmail.Ok && validaSenha.Ok) {
+  const token = gerarToken();
+  return res.status(200).json({ token });
+  }
+
+  if (!validaEmail.Ok) {
+    return res.status(validaEmail.status).json({ message: validaEmail.message });
+  }
+  if (!validaSenha.Ok) {
+    return res.status(validaSenha.status).json({ message: validaSenha.message });
   }
 });
 
