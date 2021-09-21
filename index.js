@@ -21,8 +21,8 @@ app.use(bodyParser.json());
 // app.use('/talker', readMiddleware);
 app.post('/login', login);
 app.use('/talker/:id', getTalkersById);
-app.use('/talker', getTalkers);
 app.post('/talker', auth, valid, createTalker);
+app.use('/talker', getTalkers);
 app.put('/talker/:id', auth, valid, modTalker);
 app.delete('/talker/:id', auth, removeTalker);
 
