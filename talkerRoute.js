@@ -15,20 +15,20 @@ const talkerRouter = express.Router();
 
 talkerRouter.get('/search', checkHeaderToken, (req, res) => {
   const {
-    searchTerm,
+    q,
   } = req.query;
   try {
     // const allTalkers = await getAllTalkers();
     const allTalkers = fs.readFileSync('./talker.json', 'UTF-8');
-    console.log(allTalkers);
+    // console.log(allTalkers);
     const talkersArray = JSON.parse(allTalkers).filter((talker) => {
-      console.log(talker);
-      return talker.name?.toLowerCase().includes(searchTerm?.toLowerCase());
+      // console.log(talker);
+      return talker.name?.toLowerCase().includes(q?.toLowerCase());
     });
     if (!talkersArray) {
       return res.status(200).json([]);
     }
-    if (!searchTerm || searchTerm.length === 0) {
+    if (!q || q.length === 0) {
       return res.status(200).json(allTalkers);
     }
     return res.status(200).json(talkersArray);
