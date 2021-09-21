@@ -1,12 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const fs = require('fs');
+const fs = require('fs').promises;
 const crypto = require('crypto');
 
 const app = express();
 app.use(bodyParser.json());
 
-const TALKERS = JSON.parse(fs.readFileSync('talker.json'));
+const getTalkers = async () => {
+  const talkers = await fs.readFile('./talker.json', 'utf8');
+  return JSON.parse(talkers);
+};
+
 const PORT = '3000';
 const HTTP_OK_STATUS = 200;
 const HTTP_ALERT_STATUS = 400;
@@ -28,13 +32,15 @@ app.listen(PORT, () => {
 });
 
 // Requisito 01
-app.get('/talker', (_request, response) => {
+app.get('/talker', async (_request, response) => {
+  const TALKERS = await getTalkers();
   response.status(HTTP_OK_STATUS).json(TALKERS);
 });
 
 // Requisito 02
-app.get('/talker/:id', (request, response) => {
+app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
+  const TALKERS = await getTalkers();
   const talker = TALKERS.find((talk) => talk.id === parseInt(id, 10));
   if (!talker) {
     return response.status(HTTP_FAIL_STATUS).json(FAIL_MESSAGE);
@@ -65,7 +71,7 @@ const isValidPassword = (request, response, next) => {
   next();
 };
 
-app.post('/login', isValidEmail, isValidPassword, (_require, response) => {
+app.post('/login', isValidPassword, isValidEmail, (_require, response) => {
   console.log('/login');
   const myToken = crypto.randomBytes(8).toString('hex');
   response.status(HTTP_OK_STATUS).json({ token: myToken });
