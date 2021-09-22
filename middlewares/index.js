@@ -1,10 +1,10 @@
-const getAllTalkers = require('./middlewares/getAllTalkers');
-const getTalkerById = require('./middlewares/getTalkerById');
-const login = require('./middlewares/login');
-const createTalker = require('./middlewares/createTalker');
-const editTalker = require('./middlewares/editTalker');
-const deleteTalker = require('./middlewares/deleteTalker');
-const searchTalker = require('./middlewares/searchTalker');
+const getAllTalkers = require('./getAllTalkers');
+const getTalkerById = require('./getTalkerById');
+const login = require('./login');
+const createTalker = require('./createTalker');
+const editTalker = require('./editTalker');
+const deleteTalker = require('./deleteTalker');
+const searchTalker = require('./searchTalker');
 
 module.exports = {
   getAllTalkers,
