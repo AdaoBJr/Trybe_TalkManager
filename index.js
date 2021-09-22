@@ -1,7 +1,13 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const { gerarToken, validarEmail, validarSenha } = require('./funcoes');
+const {
+  gerarToken,
+  validarEmail,
+  validarSenha,
+  validarToken,
+  validarTalker,
+} = require('./funcoes');
 
 const talkerFile = './talker.json';
 
@@ -46,7 +52,6 @@ app.get('/talker/:id', (req, res) => {
 // test login.test.js
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
-  // const token = req.headers.authorization;
   const validaEmail = validarEmail(email);
   const validaSenha = validarSenha(password);
 
@@ -62,6 +67,30 @@ app.post('/login', (req, res) => {
     return res.status(validaSenha.status).json({ message: validaSenha.message });
   }
 });
+
+// test createTalker.test.js
+app.post('/talker', (req, res) => {
+  const { name, age, talk } = req.body;
+  const validaTalker = validarTalker(name, age, talk);
+  const { authorization } = req.headers;
+  const validaToken = validarToken(authorization); // auth.token?
+
+  if (!validaToken.Ok) {
+    return res.status(validaToken.status).json({ message: validaToken.message });
+  }
+  if (!validaTalker.Ok) {
+    return res.status(validaTalker.status).json({ message: validaTalker.message });
+  }
+
+  const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+  const novaPessoa = { id: talker.length + 1, name, age, talk };
+  talker.push(novaPessoa);
+  fs.writeFileSync(talkerFile, JSON.stringify(talker));
+  return res.status(201).json(novaPessoa);
+});
+
+// app.put('/talker/:id', (req, res) => {
+// });
 
 app.listen(PORT, () => {
   console.log('Online');
