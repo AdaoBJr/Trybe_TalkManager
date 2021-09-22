@@ -12,12 +12,13 @@ const {
 } = require('../middlewares/index.js');
 
 const addValidation = [
+  validateToken,
   validateAge,
   validateName,
-  validateRate,
   validateTalk,
-  validateToken,
-  validateWatchedAt];
+  validateRate,
+  validateWatchedAt,
+];
 
 const router = Router();
 
