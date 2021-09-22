@@ -1,9 +1,5 @@
 const { StatusCodes: { OK } } = require('http-status-codes');
 const { readFiles } = require('../helpers/filesHandle');
-const deleteTalker = require('./deleteTalker');
-const editTalker = require('./editTalker');
-const getAllTalkers = require('./getAllTalkers');
-const getTalkerById = require('./getTalkerById');
 
 module.exports = async (req, res) => {
   const { query } = req.query;
