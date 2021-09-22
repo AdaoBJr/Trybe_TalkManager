@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { readFileTalker } = require('../helpers');
+
 const HTTP_OK_STATUS = 200;
 const HTTP_401_STATUS = 401;
 const NOT_FOUND_TOKEN = { message: 'Token não encontrado' };
@@ -15,8 +15,8 @@ const deleteTalker = async (request, response) => {
     return response.status(HTTP_401_STATUS).json(INVALID_TOKEN);
   }
   const id = Number(request.params.id);
-  const talkers = await readFileTalker();
-  const talker = talkers.filter((filtertalker) => filtertalker.id !== Number(id));
+  const talkers = JSON.parse(await fs.readFile('talker.json', 'utf8'));
+  const talker = talkers.filter((filtertalker) => filtertalker.id !== id);
   await fs.writeFile('talker.json', JSON.stringify(talker));
   response.status(HTTP_OK_STATUS).json(DELETE_OK);
 };
