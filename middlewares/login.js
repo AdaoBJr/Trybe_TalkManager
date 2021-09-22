@@ -8,7 +8,7 @@ const PASSWORD_IS_REQUIRED = { message: 'O campo "password" é obrigatório' };
 const INVALID_PASSWORD = { message: 'O "password" deve ter pelo menos 6 caracteres' };
 
 const login = (_require, response) => {
-  const { email } = request.body;
+  const { email, password } = request.body;
   if (!email) {
     return response.status(HTTP_400_STATUS).json(EMAIL_IS_REQUIRED);
   }
