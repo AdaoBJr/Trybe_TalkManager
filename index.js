@@ -89,8 +89,27 @@ app.post('/talker', (req, res) => {
   return res.status(201).json(novaPessoa);
 });
 
-// app.put('/talker/:id', (req, res) => {
-// });
+// npm run test editTalker.test.js
+app.put('/talker/:id', (req, res) => {
+  const { id } = req.params;
+  const { name, age, talk } = req.body;
+  const validaTalker = validarTalker(name, age, talk);
+  const { authorization } = req.headers;
+  const validaToken = validarToken(authorization);
+
+  if (!validaToken.Ok) {
+    return res.status(validaToken.status).json({ message: validaToken.message });
+  }
+  if (!validaTalker.Ok) {
+    return res.status(validaTalker.status).json({ message: validaTalker.message });
+  }
+  const talker = JSON.parse(fs.readFileSync(talkerFile, 'utf8'));
+  const talkerId = talker.filter((t) => t.id !== Number(id));
+  const editaPessoa = { id: Number(id), name, age, talk };
+  talkerId.push(editaPessoa);
+  fs.writeFileSync(talkerFile, JSON.stringify(talkerId));
+  return res.status(200).json(editaPessoa);
+});
 
 app.listen(PORT, () => {
   console.log('Online');

@@ -27,7 +27,7 @@ exports.validarSenha = (password) => {
 exports.validarToken = (token) => {
   const regex = /^[\w]{16}$/i;
   const Token = regex.test(token); // retorna true or false
-  if (!token) {
+  if (!token || !token.length === 0) {
     return { status: 401, message: 'Token não encontrado' };
   }
   if (!Token) {
@@ -75,7 +75,7 @@ const validarRate = (talk) => {
 };
 
 const validarTalk = (talk) => {
-  if (!talk || !talk.watchedAt || !talk.rate) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return {
       status: 400,
       message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' };
