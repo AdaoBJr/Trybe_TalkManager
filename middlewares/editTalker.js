@@ -3,7 +3,7 @@ const fs = require('fs').promises;
 const HTTP_OK_STATUS = 200;
 const HTTP_401_STATUS = 401;
 const HTTP_400_STATUS = 400;
-const REGEX_DATE = /\d{2}\/\d{2}\/\d{4}/g;
+const REGEX_DATE = new RegExp(/^(0?[1-9]|[12][0-9]|3[01])[/-](0?[1-9]|1[012])[/-]\d{4}$/);
 const NOT_FOUND_TOKEN = { message: 'Token não encontrado' };
 const INVALID_TOKEN = { message: 'Token inválido' };
 const NAME_IS_REQUIRED = { message: 'O campo "name" é obrigatório' };
@@ -51,8 +51,7 @@ const isValidAge = (request, response, next) => {
 
 const isValidTalk = (request, response, next) => {
   const { talk } = request.body;
-  const { watchedAt, rate } = talk;
-  if (!talk || !watchedAt || (!rate && rate !== 0)) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return response.status(HTTP_400_STATUS).json(INVALID_TALK);
   }
   next();
