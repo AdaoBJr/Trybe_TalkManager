@@ -8,10 +8,17 @@ const {
   validateRate,
   validateTalk,
   validateToken,
-  validateWatchedAt
-} = require('../middlewares/index.js')
+  validateWatchedAt,
+} = require('../middlewares/index.js');
 
-const addValidation = [validateAge, validateName, validateRate, validateTalk, validateToken, validateWatchedAt];
+const addValidation = [
+  validateAge,
+  validateName,
+  validateRate,
+  validateTalk,
+  validateToken,
+  validateWatchedAt];
+
 const router = Router();
 
 router.get('/', getAllTalkers);

@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const { StatusCodes: { OK } } = require('http-status-codes');
 const talkerRoute = require('./routes/talker');
 const loginRoute = require('./routes/login');
-const { StatusCodes: { OK } } = require('http-status-codes');
 
 const app = express();
 app.use(bodyParser.json());

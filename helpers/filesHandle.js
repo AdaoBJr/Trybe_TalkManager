@@ -10,4 +10,4 @@ const writeFiles = async (talker) => {
   return file;
 };
 
-module.exports = { readFiles, writeFiles, };
+module.exports = { readFiles, writeFiles };
