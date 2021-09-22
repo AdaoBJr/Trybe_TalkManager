@@ -212,7 +212,7 @@ app.delete('/talker/:id', isValidToken, async (request, response) => {
 });
 
 // Requisito 07
-app.get('/talker/search', isValidToken, async function searchTalker(request, response) {
+app.get('/talker/search', isValidToken, async (request, response) => {
   const { q } = request.query;
   const talkers = getAllTalkers();
   if (!q) {
