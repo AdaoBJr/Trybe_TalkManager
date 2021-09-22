@@ -22,7 +22,9 @@ const NAME_IS_REQUIRED = { message: 'O campo "name" é obrigatório' };
 const INVALID_NAME = { message: 'O "name" deve ter pelo menos 3 caracteres' };
 const AGE_IS_REQUIRED = { message: 'O campo "age" é obrigatório' };
 const INVALID_AGE = { message: 'A pessoa palestrante deve ser maior de idade' };
-const INVALID_TALK = { message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios' };
+const INVALID_TALK = {
+  message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios',
+};
 const INVALID_DATE = { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
 const INVALID_RATE = { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
 
@@ -129,9 +131,21 @@ const isValidTalk = (request, response, next) => {
   if (!talk || !watchedAt || !rate) {
     return response.status(HTTP_400_STATUS).json(INVALID_TALK);
   }
+  next();
+};
+
+const isValidWatchedAt = (request, response, next) => {
+  const { talk } = request.body;
+  const { watchedAt } = talk;
   if (!REGEX_DATE.test(watchedAt)) {
     return response.status(HTTP_400_STATUS).json(INVALID_DATE);
   }
+  next();
+};
+
+const isValidRate = (request, response, next) => {
+  const { talk } = request.body;
+  const { rate } = talk;
   if (rate < 1 || rate > 5) {
     return response.status(HTTP_400_STATUS).json(INVALID_RATE);
   }
@@ -144,6 +158,8 @@ app.post(
   isValidName,
   isValidAge,
   isValidTalk,
+  isValidWatchedAt,
+  isValidRate,
   async (request, response, _next) => {
     const { name, age, talk } = request.body;
     const talker = await getAllTalkers();
@@ -156,7 +172,8 @@ app.post(
     talker.push(newTalker);
     await fs.writeFile('./talker.json', JSON.stringify(talker));
     response.status(HTTP_201_STATUS).json(newTalker);
-});
+  },
+);
 
 // Requisito 05
 app.put(
@@ -165,6 +182,8 @@ app.put(
   isValidName,
   isValidAge,
   isValidTalk,
+  isValidWatchedAt,
+  isValidRate,
   async (request, response, _next) => {
     const { name, age, talk } = request.body;
     const { id } = request.params;
@@ -175,8 +194,9 @@ app.put(
       id: Number(id),
       talk: { ...talk },
     };
-    const getTalker = talker.filter((talker) => talker.id !== id);
+    const getTalker = talker.filter((filtertalker) => filtertalker.id !== id);
     getTalker.push(editTalker);
     await fs.writeFile('./talker.json', JSON.stringify(getTalker));
     response.status(HTTP_OK_STATUS).json(editTalker);
-});
+  },
+);
