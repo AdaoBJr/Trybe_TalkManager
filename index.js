@@ -11,7 +11,7 @@ const HTTP_401_STATUS = 401;
 const HTTP_404_STATUS = 404;
 const VALID_EMAIL = /^[\w]+@([\w]+\.)+[\w]{2,4}$/gi;
 const VALID_DATA = /\d{2}\/\d{2}\/\d{4}/g;
-const FAIL_MESSAGE = { message: 'Pessoa palestrante não encontrada' };
+const NOT_REGISTERED = { message: 'Pessoa palestrante não encontrada' };
 const REQUIRED_EMAIL = { message: 'O campo "email" é obrigatório' };
 const INVALID_EMAIL = { message: 'O "email" deve ter o formato "email@email.com"' };
 const REQUIRED_PASSWORD = { message: 'O campo "password" é obrigatório' };
@@ -46,19 +46,19 @@ const getAllTalkers = async () => {
 
 // Requisito 01
 app.get('/talker', async (_request, response) => {
-  const TALKERS = await getAllTalkers();
-  response.status(HTTP_OK_STATUS).json(TALKERS);
+  const talkers = await getAllTalkers();
+  response.status(HTTP_OK_STATUS).json(talkers);
 });
 
 // Requisito 02
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
-  const TALKERS = await getAllTalkers();
-  const talker = TALKERS.find((talk) => talk.id === parseInt(id, 10));
-  if (!talker) {
-    return response.status(HTTP_404_STATUS).json(FAIL_MESSAGE);
+  const talkers = await getAllTalkers();
+  const talkerById = talkers.find((talker) => talker.id === parseInt(id, 10));
+  if (!talkerById) {
+    return response.status(HTTP_404_STATUS).json(NOT_REGISTERED);
   }
-  response.status(HTTP_OK_STATUS).json(talker);
+  response.status(HTTP_OK_STATUS).json(talkerById);
 });
 
 // Requisito 03
