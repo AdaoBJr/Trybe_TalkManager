@@ -2,9 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const crypto = require('crypto');
 
-const getAllTalkers  = require('./middlewares/getAllTalkers');
-const getTalkerById  = require('./middlewares/getTalkerById');
-const login  = require('./middlewares/login');
+const getAllTalkers = require('./middlewares/getAllTalkers');
+const getTalkerById = require('./middlewares/getTalkerById');
+const login = require('./middlewares/login');
 
 const app = express();
 app.use(bodyParser.json());

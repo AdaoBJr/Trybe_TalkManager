@@ -18,6 +18,6 @@ function login(req, res, next) {
     next();
   }
 
-  module.exports = {
-    login,
-  };
+module.exports = {
+  login,
+};
