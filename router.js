@@ -3,15 +3,13 @@ const express = require('express');
 const talkerRouter = express.Router();
 
 const HTTP_OK_STATUS = 200;
-const NOT_FOUND = 404;
-const CREATED = 201;
 
-const { talkersAll,
-        talkerGet,
+const { getAllTalkers,
+        getTalker,
         postTalker, 
         putTalker, 
         deleteTalker, 
-        filterTalkers } = require('./data');
+        filterTalkers } = require('./read');
 
 const { tokenValidation,
         nameValidation,
@@ -31,12 +29,12 @@ rateValidation,
 async (request, response) => {
   const { body } = request;
   const talker = await postTalker(body);
-  response.status(CREATED).json(talker);
+  response.status(201).json(talker);
 },
 );
 
 talkerRouter.get('/', async (_request, response) => {
-  const talkers = await talkersAll();
+  const talkers = await getAllTalkers();
   response.status(HTTP_OK_STATUS).json(talkers);
 });
 
@@ -48,11 +46,9 @@ talkerRouter.get('/search', tokenValidation, async (request, response) => {
 
 talkerRouter.get('/:id', async (request, response) => {
 const { id } = request.params;
-const talker = await talkerGet(id);
-if (!talker) { 
-  return response.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' }); 
-}
-response.status(HTTP_OK_STATUS).json(talker);
+const talker = await getTalker(id);
+if (!talker) return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
+response.status(200).json(talker);
 });
 
 talkerRouter.put(
@@ -67,7 +63,7 @@ talkerRouter.put(
     const { id } = request.params;
     const { body } = request;
     const talker = await putTalker(id, body);
-    response.status(HTTP_OK_STATUS).json(talker);
+    response.status(200).json(talker);
   },
 );
 
@@ -77,7 +73,7 @@ talkerRouter.delete(
   async (request, response) => {
     const { id } = request.params;
     await deleteTalker(id);
-    response.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    response.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 

@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { randomBytes } = require('crypto');
-const { emailValid,
-  passwordValid,
+const { emailValidation,
+  passwordValidation,
 } = require('./middleware');
 const talkerRouter = require('./router');
 
@@ -17,13 +17,12 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
-app.post('/login', emailValid, passwordValid, async (request, response) => {
+app.post('/login', emailValidation, passwordValidation, async (request, response) => {
   const token = randomBytes(8).toString('hex');
   response.status(HTTP_OK_STATUS).json({ token });
 });
 
 app.use('/talker', talkerRouter);
-
 app.listen(PORT, () => {
   console.log('Online');
 });

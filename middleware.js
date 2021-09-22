@@ -1,34 +1,34 @@
-const emailValid = (require, response, next) => {
+const emailValidation = (require, response, next) => {
   const { email } = require.body;
 
-  if (!email || email === '') {
-    return response.status(400).json({ message: 'O campo "email" é obrigatório' });
-  }
+  if (!email || email === '') { 
+    return response.status(400).json({ message: 'O campo "email" é obrigatório' }); 
+}
 
   const emailRegex = new RegExp(/[a-z0-9]+@[a-z0-9]+\.[a-z0-9]{2,3}(\.[a-z0-9]+)?$/);
 
-  if (!emailRegex.test(email)) {
-    return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' });
-  }
+  if (!emailRegex.test(email)) { 
+  return response.status(400).json({ message: 'O "email" deve ter o formato "email@email.com"' }); 
+}
 
   next();
 };
 
-const passwordValid = (require, response, next) => {
+const passwordValidation = (require, response, next) => {
   const { password } = require.body;
 
-  if (!password || password === '') {
-    return response.status(400).json({ message: 'O campo "password" é obrigatório' });
-  }
+  if (!password || password === '') { 
+    return response.status(400).json({ message: 'O campo "password" é obrigatório' }); 
+}
 
-  if (password.length < 6) {
-    return response.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' });
-  }
+  if (password.length < 6) { 
+    return response.status(400).json({ message: 'O "password" deve ter pelo menos 6 caracteres' }); 
+}
 
   next();
 };
 
-const tokenValid = (require, response, next) => {
+const tokenValidation = (require, response, next) => {
   const { authorization } = require.headers;
   if (!authorization || authorization === '') { 
     return response.status(401).json({ message: 'Token não encontrado' }); 
@@ -41,7 +41,7 @@ const tokenValid = (require, response, next) => {
   next();
 };
 
-const nameValid = (require, response, next) => {
+const nameValidation = (require, response, next) => {
   const { name } = require.body;
 
   if (!name || name === '') {
@@ -53,7 +53,7 @@ const nameValid = (require, response, next) => {
   next();
 };
 
-const ageValid = (require, response, next) => {
+const ageValidation = (require, response, next) => {
   const { age } = require.body;
   if (!age || age === '') {
       return response.status(400).json({ message: 'O campo "age" é obrigatório' }); 
@@ -64,7 +64,7 @@ const ageValid = (require, response, next) => {
   next();
 };
 
-const talkValid = (require, response, next) => {
+const talkValidation = (require, response, next) => {
   const { talk } = require.body;
   if (!talk || talk === '') {
     return response.status(400).json({
@@ -73,7 +73,7 @@ const talkValid = (require, response, next) => {
   next();
 };  
 
-const watchedAtValid = (require, response, next) => {
+const watchedAtValidation = (require, response, next) => {
   const { talk: { watchedAt } } = require.body;
 
   if (!watchedAt || watchedAt === '') { 
@@ -89,26 +89,26 @@ const watchedAtValid = (require, response, next) => {
   }
   next();
 };
-const rateValid = (require, response, next) => {
+const rateValidation = (require, response, next) => {
   const { talk: { rate } } = require.body;
-    if (!rate || rate === '') { 
-      return response.status(400).json({ 
-        message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
-      }); 
-  }
   if (rate < 1 || rate > 5) {
     return response.status(400).json({ message: 'O campo "rate" deve ser um inteiro de 1 à 5' }); 
-}
+  }
+  if (!rate || rate === '') { 
+    return response.status(400).json({ 
+      message: 'O campo "talk" é obrigatório e "watchedAt" e "rate" não podem ser vazios', 
+    }); 
+  }
   next();
 };
 
 module.exports = { 
-  emailValid, 
-  passwordValid, 
-  tokenValid,
-  nameValid,
-  ageValid,
-  talkValid,
-  watchedAtValid,
-  rateValid,
+  emailValidation, 
+  passwordValidation, 
+  tokenValidation,
+  nameValidation,
+  ageValidation,
+  talkValidation,
+  watchedAtValidation,
+  rateValidation,
 };
