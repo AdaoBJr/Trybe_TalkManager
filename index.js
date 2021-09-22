@@ -34,25 +34,26 @@ app.post('/login', login.login, (_req, res) => {
 });
 app.get('/talker', getAllTalkers);
 app.get('/talker/search', validateToken, searchTalker);
-app.post('/talker', validateToken,
+app.post('/talker',
+  validateToken,
   validateName,
   validateAge,
   validateObject,
   validateWatchedAt,
   validateRate,
-  storeTalker
-);
-app.put('/talker/:id', validateToken,
+  storeTalker);
+
+app.put('/talker/:id',
+  validateToken,
   validateName,
   validateAge,
   validateObject,
   validateWatchedAt,
   validateRate,
-  editTalker
-);
+  editTalker);
+
 app.get('/talker/:id', getTalkerById);
 app.delete('/talker/:id', validateToken, deleteTalker);
-
 
 app.listen(PORT, () => {
   console.log('Online');
