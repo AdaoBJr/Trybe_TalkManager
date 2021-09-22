@@ -85,21 +85,11 @@ const isValidEmail = (request, response, next) => {
   next();
 };
 
-const login = async (_require, response) => {
+const login = (_require, response) => {
   const myToken = crypto.randomBytes(8).toString('hex');
   return response.status(HTTP_OK_STATUS).json({ token: myToken });
 };
 
-// Requisito 01
-app.get('/talker', getAllTalkers);
-
-// Requisito 02
-app.get('/talker/:id', getTalkerById);
-
-// Requisito 03
-app.post('/login', isValidPassword, isValidEmail, login);
-
-// Requisito 04
 const isValidToken = (request, response, next) => {
   const { authorization } = request.headers;
   if (!authorization) {
@@ -160,6 +150,30 @@ const isValidRate = (request, response, next) => {
   next();
 };
 
+const createTalker = async (request, response, _next) => {
+  const { name, age, talk } = request.body;
+  const talker = await readFileTalker();
+  const newTalker = {
+    name,
+    age,
+    id: talker.length + 1,
+    talk: { ...talk },
+  };
+  talker.push(newTalker);
+  await fs.writeFile('./talker.json', JSON.stringify(talker));
+  return response.status(HTTP_201_STATUS).json(newTalker);
+};
+
+// Requisito 01
+app.get('/talker', getAllTalkers);
+
+// Requisito 02
+app.get('/talker/:id', getTalkerById);
+
+// Requisito 03
+app.post('/login', isValidPassword, isValidEmail, login);
+
+// Requisito 04
 app.post(
   '/talker',
   isValidToken,
@@ -168,19 +182,7 @@ app.post(
   isValidTalk,
   isValidWatchedAt,
   isValidRate,
-  async (request, response, _next) => {
-    const { name, age, talk } = request.body;
-    const talker = await getAllTalkers();
-    const newTalker = {
-      name,
-      age,
-      id: talker.length + 1,
-      talk: { ...talk },
-    };
-    talker.push(newTalker);
-    await fs.writeFile('./talker.json', JSON.stringify(talker));
-    response.status(HTTP_201_STATUS).json(newTalker);
-  },
+  createTalker,
 );
 
 // Requisito 05
