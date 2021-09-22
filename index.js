@@ -38,6 +38,17 @@ app.get('/talker', (_req, res) => {
     res.status(HTTP_OK_STATUS).json(content);
   });
 });
+app.get('/talker/search', validateToken, async (req, res) => {
+  const { q } = req.params;
+  const readTalkers = await fsPromise.readFile(talkers, 'utf-8');
+  const content = JSON.parse(readTalkers);
+  
+  if (!q || q === '') return res.status(HTTP_OK_STATUS).json(content);
+
+  const talker = content.filter((r) => r.name.includes(q));
+
+  res.status(HTTP_OK_STATUS).json(talker);
+});
 
 app.get('/talker/:id', (req, res) => {
   fs.readFile(talkers, 'utf-8', (err, data) => {
@@ -110,6 +121,16 @@ app.put('/talker/:id',
     const completeContent = JSON.stringify(content);
     await fsPromise.writeFile(talkers, completeContent);
     return res.status(HTTP_OK_STATUS).json(updateContent);
+});
+
+app.delete('/talker/:id', validateToken, async (req, res) => {
+  const { id } = req.params;
+  const readTalkers = await fsPromise.readFile(talkers, 'utf-8');
+  const content = JSON.parse(readTalkers);
+  const removeIdContent = content.find((d) => d.id !== Number(id));
+  const newContent = JSON.stringify(removeIdContent);
+  await fsPromise.writeFile(talkers, newContent);
+  return res.status(HTTP_OK_STATUS).send({ message: 'Pessoa palestrante deletada com sucesso' });
 });
 
 app.listen(PORT, () => {
