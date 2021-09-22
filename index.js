@@ -1,7 +1,5 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const app = express();
-app.use(bodyParser.json());
 
 const getAllTalkers = require('./middlewares/getAllTalkers');
 const getTalkerById = require('./middlewares/getTalkerById');
@@ -10,6 +8,9 @@ const createTalker = require('./middlewares/createTalker');
 const editTalker = require('./middlewares/editTalker');
 const deleteTalker = require('./middlewares/deleteTalker');
 const searchTalker = require('./middlewares/searchTalker');
+
+const app = express();
+app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -26,12 +27,6 @@ app.listen(PORT, () => {
 // Requisito 01
 app.get('/talker', getAllTalkers);
 
-// Requisito 02
-app.get('/talker/:id', getTalkerById);
-
-// Requisito 03
-app.post('/login', login);
-
 // Requisito 04
 app.post(
   '/talker',
@@ -43,6 +38,12 @@ app.post(
   createTalker.isValidRate,
   createTalker.createTalker,
 );
+
+// Requisito 07
+app.get('/talker/search', searchTalker);
+
+// Requisito 02
+app.get('/talker/:id', getTalkerById);
 
 // Requisito 05
 app.put(
@@ -59,5 +60,5 @@ app.put(
 // Requisito 06
 app.delete('/talker/:id', deleteTalker);
 
-// Requisito 07
-app.get('/talker/search', searchTalker);
+// Requisito 03
+app.post('/login', login);
