@@ -13,6 +13,10 @@ app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
 });
 
+app.get('/talker/:id', (_request, response) => {
+  response.status(HTTP_OK_STATUS).json(talker);
+});
+
 app.get('/talker', (_request, response) => {
   response.status(HTTP_OK_STATUS).json(talker);
 });
