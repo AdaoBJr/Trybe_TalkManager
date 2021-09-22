@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const fsPromise = require('fs').promises;
 
 const talkers = './talker.json';
 
@@ -8,6 +9,12 @@ const {
   validateEmail,
   validatePassword,
   createToken,
+  validateToken,
+  validateName,
+  validateAge,
+  validateWatchedAt,
+  validateRate,
+  validateTalk,
 } = require('./middleware/validations');
 
 const app = express();
@@ -49,6 +56,33 @@ app.post('/login', validateEmail, validatePassword, (_req, res) => res.status(HT
     token: createToken(),
   },
 ));
+
+app.post('/talker',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { name, age, talk: { rate, watchedAt } } = req.body;
+    const readTalkers = await fsPromise.readFile(talkers, 'utf-8');
+    const content = JSON.parse(readTalkers);
+    const id = content.length + 1;
+    const insertNew = {
+      id,
+      name,
+      age,
+      talk: {
+        rate,
+        watchedAt,
+      },
+    };
+    content.push(insertNew);
+    const completeContent = JSON.stringify(content);
+    await fsPromise.writeFile(talkers, completeContent);
+    return res.status(201).json(insertNew);
+});
 
 app.listen(PORT, () => {
   console.log('Online');
