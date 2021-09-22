@@ -210,3 +210,17 @@ app.delete('/talker/:id', isValidToken, async (request, response) => {
   await fs.writeFile('talker.json', JSON.stringify(talker));
   response.status(HTTP_OK_STATUS).json(DELETE_OK);
 });
+
+// Requisito 07
+app.get('/talker/search', isValidToken, async function searchTalker(request, response) {
+  const { q } = request.query;
+  const talkers = getAllTalkers();
+  if (!q) {
+    return response.status(HTTP_OK_STATUS).json(talkers);
+  }
+  const talker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
+  if (talker) {
+    return response.status(HTTP_OK_STATUS).json(talker);
+  }
+  response.status(HTTP_OK_STATUS).json([]);
+});
