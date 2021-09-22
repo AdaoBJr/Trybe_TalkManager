@@ -3,14 +3,6 @@ const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const crypto = require('crypto');
 
-const app = express();
-app.use(bodyParser.json());
-
-const getTalkers = async () => {
-  const talkers = await fs.readFile('./talker.json', 'utf8');
-  return JSON.parse(talkers);
-};
-
 const PORT = '3000';
 const HTTP_OK_STATUS = 200;
 const HTTP_201_STATUS = 201;
@@ -34,6 +26,9 @@ const INVALID_TALK = { message: 'O campo "talk" é obrigatório e "watchedAt" e 
 const INVALID_DATE = { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
 const INVALID_RATE = { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
 
+const app = express();
+app.use(bodyParser.json());
+
 // não remova esse endpoint, e para o avaliador funcionar
 app.get('/', (_request, response) => {
   response.status(HTTP_OK_STATUS).send();
@@ -43,16 +38,22 @@ app.listen(PORT, () => {
   console.log('Online');
 });
 
+// Início do meu código (exceto constantes)
+const getAllTalkers = async () => {
+  const allTalkers = await fs.readFile('./talker.json', 'utf8');
+  return JSON.parse(allTalkers);
+};
+
 // Requisito 01
 app.get('/talker', async (_request, response) => {
-  const TALKERS = await getTalkers();
+  const TALKERS = await getAllTalkers();
   response.status(HTTP_OK_STATUS).json(TALKERS);
 });
 
 // Requisito 02
 app.get('/talker/:id', async (request, response) => {
   const { id } = request.params;
-  const TALKERS = await getTalkers();
+  const TALKERS = await getAllTalkers();
   const talker = TALKERS.find((talk) => talk.id === parseInt(id, 10));
   if (!talker) {
     return response.status(HTTP_404_STATUS).json(FAIL_MESSAGE);
@@ -138,8 +139,15 @@ const isValidTalk = (request, response, next) => {
 };
 
 app.post('/talker', isValidToken, isValidName, isValidAge, isValidTalk, async (request, response, _next) => {
-  const talker = await getTalkers();
+  const talker = await getAllTalkers();
   const newTalker = { id: talker.length + 1, ...request.body };
   fs.writeFile('./talker.json', JSON.stringify([...talker, newTalker]));
   response.status(HTTP_201_STATUS).json(newTalker);
+});
+
+// Requisito 05
+app.put('/talker/:id', isValidToken, isValidName, isValidAge, isValidTalk, async (request, response, _next) => {
+  const { id } = req.params;
+  const talkers = await getAllTalkers();
+
 });
