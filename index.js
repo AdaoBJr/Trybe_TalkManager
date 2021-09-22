@@ -27,6 +27,7 @@ const INVALID_TALK = {
 };
 const INVALID_DATE = { message: 'O campo "watchedAt" deve ter o formato "dd/mm/aaaa"' };
 const INVALID_RATE = { message: 'O campo "rate" deve ser um inteiro de 1 à 5' };
+const DELETE_OK = { message: 'Pessoa palestrante deletada com sucesso' };
 
 const app = express();
 app.use(bodyParser.json());
@@ -200,3 +201,12 @@ app.put(
     response.status(HTTP_OK_STATUS).json(editTalker);
   },
 );
+
+// Requisito 06
+app.delete('/talker/:id', isValidToken, async (request, response) => {
+  const { id } = request.params;
+  const talkers = await getAllTalkers();
+  const talker = talkers.filter((filtertalker) => filtertalker.id !== Number(id));
+  await fs.writeFile('talker.json', JSON.stringify(talker));
+  response.status(HTTP_OK_STATUS).json(DELETE_OK);
+});
