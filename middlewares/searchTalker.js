@@ -1,4 +1,4 @@
-const { readFileTalker } = require('../helpers');
+const fs = require('fs').promises;
 const HTTP_OK_STATUS = 200;
 const HTTP_401_STATUS = 401;
 const NOT_FOUND_TOKEN = { message: 'Token não encontrado' };
@@ -13,7 +13,7 @@ const searchTalker = async (request, response) => {
     return response.status(HTTP_401_STATUS).json(INVALID_TOKEN);
   }
   const { q } = request.query;
-  const talkers = readFileTalker();
+  const talkers = JSON.parse(await fs.readFile('talker.json', 'utf-8'));
   if (!q) {
     return response.status(HTTP_OK_STATUS).json(talkers);
   }
