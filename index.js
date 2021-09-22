@@ -1,16 +1,23 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+
 const fs = require('fs').promises;
 const crypto = require('crypto');
+
+const helpers = require('./helpers');
+const {
+  readFileTalker,
+} = helpers;
+
 const middlewares = require('./middlewares');
 const {
   getAllTalkers,
-  getTalkerById,
-  login,
-  createTalker,
-  editTalker,
-  deleteTalker,
-  searchTalker,
+  // getTalkerById,
+  // login,
+  // createTalker,
+  // editTalker,
+  // deleteTalker,
+  // searchTalker,
 } = middlewares;
 
 const PORT = '3000';
@@ -52,16 +59,16 @@ app.listen(PORT, () => {
 });
 
 // Início do meu código (exceto constantes)
-const readFileTalker = async () => {
-  const allTalkers = await fs.readFile('./talker.json', 'utf8');
-  const alltalkersJSON = JSON.parse(allTalkers);
-  return alltalkersJSON;
-};
+// const readFileTalker = async () => {
+//   const allTalkers = await fs.readFile('./talker.json', 'utf8');
+//   const alltalkersJSON = JSON.parse(allTalkers);
+//   return alltalkersJSON;
+// };
 
-const getAllTalkers = async (_request, response) => {
-  const allTalkers = await readFileTalker();
-  return response.status(HTTP_OK_STATUS).json(allTalkers);
-};
+// const getAllTalkers = async (_request, response) => {
+//   const allTalkers = await readFileTalker();
+//   return response.status(HTTP_OK_STATUS).json(allTalkers);
+// };
 
 const getTalkerById = async (request, response) => {
   const { id } = request.params;
