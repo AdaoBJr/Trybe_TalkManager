@@ -1,4 +1,5 @@
 const crypto = require('crypto');
+
 const HTTP_OK_STATUS = 200;
 const HTTP_400_STATUS = 400;
 const REGEX_EMAIL = /^[^\s@]+@[^\s@]+$/;

@@ -1,4 +1,5 @@
 const fs = require('fs').promises;
+
 const HTTP_OK_STATUS = 200;
 const HTTP_401_STATUS = 401;
 const NOT_FOUND_TOKEN = { message: 'Token não encontrado' };
