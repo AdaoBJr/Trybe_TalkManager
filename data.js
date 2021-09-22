@@ -12,4 +12,16 @@ const talker = async (id) => {
   return talkers.find((response) => response.id === Number(id));
 };
 
-module.exports = { talkersAll, talker };
+const postTalker = async (newTalker) => {
+  const talkerFile = './talker.json';
+  const talkers = await talkersAll();
+  const talk = {
+      id: talkers.length + 1,
+      ...newTalker,
+  };
+  talkers.push(talk);
+  await fs.writeFile(talkerFile, JSON.stringify(talkers));
+  return talk;
+};
+
+module.exports = { talkersAll, talker, postTalker };

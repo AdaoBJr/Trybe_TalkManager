@@ -1,14 +1,19 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { randomBytes } = require('crypto');
-const { talkersAll, talker } = require('./data.js');
-const { emailValid, passwordValid } = require('./middleware.js');
+const { talkersAll, talker, postTalker } = require('./data.js');
+const {
+  emailValid,
+  passwordValid, 
+  tokenValid, 
+  nameValid, ageValid, talkValid, watchedAtValid, rateValid } = require('./middleware.js');
 
 const app = express();
 app.use(bodyParser.json());
 
 const HTTP_OK_STATUS = 200;
 const NOT_FOUND = 404;
+const CREATED = 201;
 const PORT = '3000';
 
 // não remova esse endpoint, e para o avaliador funcionar
@@ -20,6 +25,20 @@ app.get('/talker', async (_request, response) => {
   const talkers = await talkersAll();
     response.status(HTTP_OK_STATUS).json(talkers);
 });
+
+app.post(
+  '/talker',
+  tokenValid,
+  nameValid,
+  ageValid,
+  talkValid,
+  watchedAtValid,
+  rateValid,
+  async (request, response) => {
+    const value = await postTalker(request.body);
+    response.status(CREATED).json(value);
+},
+);
 
 app.get('/talker/:id', async (request, response) => {
   const id = await talker(request.params.id);
