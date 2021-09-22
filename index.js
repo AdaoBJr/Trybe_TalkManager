@@ -63,13 +63,6 @@ const getTalkerById = async (request, response) => {
   return response.status(HTTP_OK_STATUS).json(talkerById);
 };
 
-// Requisito 01
-app.get('/talker', getAllTalkers);
-
-// Requisito 02
-app.get('/talker/:id', getTalkerById);
-
-// Requisito 03
 const isValidPassword = (request, response, next) => {
   const { password } = request.body;
   if (!password) {
@@ -92,10 +85,19 @@ const isValidEmail = (request, response, next) => {
   next();
 };
 
-app.post('/login', isValidPassword, isValidEmail, (_require, response) => {
+const login = async (_require, response) => {
   const myToken = crypto.randomBytes(8).toString('hex');
-  response.status(HTTP_OK_STATUS).json({ token: myToken });
-});
+  return response.status(HTTP_OK_STATUS).json({ token: myToken });
+};
+
+// Requisito 01
+app.get('/talker', getAllTalkers);
+
+// Requisito 02
+app.get('/talker/:id', getTalkerById);
+
+// Requisito 03
+app.post('/login', isValidPassword, isValidEmail, login);
 
 // Requisito 04
 const isValidToken = (request, response, next) => {
