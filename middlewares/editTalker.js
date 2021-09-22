@@ -1,5 +1,5 @@
 const fs = require('fs').promises;
-const { readFileTalker } = require('../helpers');
+
 const HTTP_OK_STATUS = 200;
 const HTTP_401_STATUS = 401;
 const HTTP_400_STATUS = 400;
@@ -76,10 +76,10 @@ const isValidRate = (request, response, next) => {
   next();
 };
 
-const editTalker = async (request, response, _next) => {
+const editTalker = async (request, response) => {
   const { name, age, talk } = request.body;
   const { id } = request.params;
-  const talker = await readFileTalker();
+  const talker = JSON.parse(await fs.readFile('talker.json', 'utf8'));
   const talkerEdit = {
     name,
     age,
@@ -88,7 +88,7 @@ const editTalker = async (request, response, _next) => {
   };
   const getTalker = talker.filter((filtertalker) => filtertalker.id !== id);
   getTalker.push(talkerEdit);
-  await fs.writeFile('./talker.json', JSON.stringify(getTalker));
+  await fs.writeFile('talker.json', JSON.stringify(getTalker));
   return response.status(HTTP_OK_STATUS).json(talkerEdit);
 };
 
