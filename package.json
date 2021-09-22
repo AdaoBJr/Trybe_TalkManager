@@ -9,7 +9,7 @@
     "start": "node index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
     "dev": "nodemon index.js",
-    "test01": "jest --runInBand getTalkerById.test.js",
+    "test01": "jest --runInBand getAllTalkers.test.js",
     "test02": "jest --runInBand getTalkerById.test.js",
     "test03": "jest --runInBand login.test.js",
     "test04": "jest --runInBand createTalker.test.js",
