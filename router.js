@@ -3,6 +3,8 @@ const express = require('express');
 const talkerRouter = express.Router();
 
 const HTTP_OK_STATUS = 200;
+const NOT_FOUND = 404;
+const CREATED = 201;
 
 const { talkersAll,
         talkerGet,
@@ -29,7 +31,7 @@ rateValidation,
 async (request, response) => {
   const { body } = request;
   const talker = await postTalker(body);
-  response.status(201).json(talker);
+  response.status(CREATED).json(talker);
 },
 );
 
@@ -47,8 +49,10 @@ talkerRouter.get('/search', tokenValidation, async (request, response) => {
 talkerRouter.get('/:id', async (request, response) => {
 const { id } = request.params;
 const talker = await talkerGet(id);
-if (!talker) return response.status(404).json({ message: 'Pessoa palestrante não encontrada' });
-response.status(200).json(talker);
+if (!talker) { 
+  return response.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' }); 
+}
+response.status(HTTP_OK_STATUS).json(talker);
 });
 
 talkerRouter.put(
@@ -63,7 +67,7 @@ talkerRouter.put(
     const { id } = request.params;
     const { body } = request;
     const talker = await putTalker(id, body);
-    response.status(200).json(talker);
+    response.status(HTTP_OK_STATUS).json(talker);
   },
 );
 
@@ -73,7 +77,7 @@ talkerRouter.delete(
   async (request, response) => {
     const { id } = request.params;
     await deleteTalker(id);
-    response.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+    response.status(HTTP_OK_STATUS).json({ message: 'Pessoa palestrante deletada com sucesso' });
   },
 );
 
