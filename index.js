@@ -12,7 +12,7 @@ const {
 const middlewares = require('./middlewares');
 const {
   getAllTalkers,
-  // getTalkerById,
+  getTalkerById,
   // login,
   // createTalker,
   // editTalker,
@@ -70,15 +70,15 @@ app.listen(PORT, () => {
 //   return response.status(HTTP_OK_STATUS).json(allTalkers);
 // };
 
-const getTalkerById = async (request, response) => {
-  const { id } = request.params;
-  const allTalkers = await readFileTalker();
-  const talkerById = allTalkers.find((talker) => talker.id === parseInt(id, 10));
-  if (!talkerById) {
-    return response.status(HTTP_404_STATUS).json(NOT_REGISTERED);
-  }
-  return response.status(HTTP_OK_STATUS).json(talkerById);
-};
+// const getTalkerById = async (request, response) => {
+//   const { id } = request.params;
+//   const allTalkers = await readFileTalker();
+//   const talkerById = allTalkers.find((talker) => talker.id === parseInt(id, 10));
+//   if (!talkerById) {
+//     return response.status(HTTP_404_STATUS).json(NOT_REGISTERED);
+//   }
+//   return response.status(HTTP_OK_STATUS).json(talkerById);
+// };
 
 const isValidPassword = (request, response, next) => {
   const { password } = request.body;
