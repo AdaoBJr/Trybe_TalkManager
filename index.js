@@ -42,25 +42,32 @@ app.listen(PORT, () => {
 });
 
 // Início do meu código (exceto constantes)
-const getAllTalkers = async (_request, response) => {
+const readFileTalker = async () => {
   const allTalkers = await fs.readFile('./talker.json', 'utf8');
   const alltalkersJSON = JSON.parse(allTalkers);
-  return response.status(HTTP_OK_STATUS).json(alltalkersJSON);
+  return alltalkersJSON;
+};
+
+const getAllTalkers = async (_request, response) => {
+  const allTalkers = await readFileTalker();
+  return response.status(HTTP_OK_STATUS).json(allTalkers);
+};
+
+const getTalkerById = async (request, response) => {
+  const { id } = request.params;
+  const allTalkers = await readFileTalker();
+  const talkerById = allTalkers.find((talker) => talker.id === parseInt(id, 10));
+  if (!talkerById) {
+    return response.status(HTTP_404_STATUS).json(NOT_REGISTERED);
+  }
+  return response.status(HTTP_OK_STATUS).json(talkerById);
 };
 
 // Requisito 01
 app.get('/talker', getAllTalkers);
 
 // Requisito 02
-app.get('/talker/:id', async (request, response) => {
-  const { id } = request.params;
-  const talkers = await getAllTalkers();
-  const talkerById = talkers.find((talker) => talker.id === parseInt(id, 10));
-  if (!talkerById) {
-    return response.status(HTTP_404_STATUS).json(NOT_REGISTERED);
-  }
-  response.status(HTTP_OK_STATUS).json(talkerById);
-});
+app.get('/talker/:id', getTalkerById);
 
 // Requisito 03
 const isValidPassword = (request, response, next) => {
