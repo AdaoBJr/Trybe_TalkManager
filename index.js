@@ -2,6 +2,9 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const { StatusCodes: { OK, NOT_FOUND } } = require('http-status-codes');
+const validateEmail = require('./middlewares/validateEmail');
+const validatePassword = require('./middlewares/validatePassword');
+const generateToken = require('./helpers/generateToken');
 
 const app = express();
 app.use(bodyParser.json());
@@ -28,4 +31,8 @@ app.get('/talker/:id', async (req, res) => {
   const talker = result.find((person) => person.id === parseInt(id, 10));
   if (!talker) return res.status(NOT_FOUND).json({ message: 'Pessoa palestrante não encontrada' });
   res.status(OK).json(talker);
+});
+
+app.post('/login', validateEmail, validatePassword, (_req, res) => {
+  res.status(OK).json({ token: generateToken(16) });
 });
