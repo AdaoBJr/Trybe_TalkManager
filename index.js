@@ -168,20 +168,20 @@ const editTalker = async (request, response, _next) => {
   const { name, age, talk } = request.body;
   const { id } = request.params;
   const talker = await readFileTalker();
-  const editTalker = {
+  const talkerEdit = {
     name,
     age,
     id: Number(id),
     talk: { ...talk },
   };
   const getTalker = talker.filter((filtertalker) => filtertalker.id !== id);
-  getTalker.push(editTalker);
+  getTalker.push(talkerEdit);
   await fs.writeFile('./talker.json', JSON.stringify(getTalker));
-  return response.status(HTTP_OK_STATUS).json(editTalker);
+  return response.status(HTTP_OK_STATUS).json(talkerEdit);
 };
 
-const deleteTalker = async (_request, response) => {
-  const id = Number(req.params.id);
+const deleteTalker = async (request, response) => {
+  const id = Number(request.params.id);
   const talkers = await readFileTalker();
   const talker = talkers.filter((filtertalker) => filtertalker.id !== Number(id));
   await fs.writeFile('talker.json', JSON.stringify(talker));
