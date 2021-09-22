@@ -3,6 +3,7 @@ const addTalker = require('../middlewares/addTalker');
 const editTalker = require('../middlewares/editTalker');
 const deleteTalker = require('../middlewares/deleteTalker');
 const getAllTalkers = require('../middlewares/getAllTalkers');
+const searchTalker = require('../middlewares/searchTalker');
 const getTalkerById = require('../middlewares/getTalkerById');
 const {
   validateAge,
@@ -24,6 +25,7 @@ const addValidation = [
 
 const router = Router();
 
+router.get('/search', validateToken, searchTalker);
 router.get('/', getAllTalkers);
 router.get('/:id', getTalkerById);
 router.post('/', ...addValidation, addTalker);
