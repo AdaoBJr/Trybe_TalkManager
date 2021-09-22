@@ -164,6 +164,22 @@ const createTalker = async (request, response, _next) => {
   return response.status(HTTP_201_STATUS).json(newTalker);
 };
 
+const editTalker = async (request, response, _next) => {
+  const { name, age, talk } = request.body;
+  const { id } = request.params;
+  const talker = await readFileTalker();
+  const editTalker = {
+    name,
+    age,
+    id: Number(id),
+    talk: { ...talk },
+  };
+  const getTalker = talker.filter((filtertalker) => filtertalker.id !== id);
+  getTalker.push(editTalker);
+  await fs.writeFile('./talker.json', JSON.stringify(getTalker));
+  return response.status(HTTP_OK_STATUS).json(editTalker);
+};
+
 // Requisito 01
 app.get('/talker', getAllTalkers);
 
@@ -187,28 +203,14 @@ app.post(
 
 // Requisito 05
 app.put(
-  '/talker',
+  '/talker/:id',
   isValidToken,
   isValidName,
   isValidAge,
   isValidTalk,
   isValidWatchedAt,
   isValidRate,
-  async (request, response, _next) => {
-    const { name, age, talk } = request.body;
-    const { id } = request.params;
-    const talker = await getAllTalkers();
-    const editTalker = {
-      name,
-      age,
-      id: Number(id),
-      talk: { ...talk },
-    };
-    const getTalker = talker.filter((filtertalker) => filtertalker.id !== id);
-    getTalker.push(editTalker);
-    await fs.writeFile('./talker.json', JSON.stringify(getTalker));
-    response.status(HTTP_OK_STATUS).json(editTalker);
-  },
+  editTalker,
 );
 
 // Requisito 06
