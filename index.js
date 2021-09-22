@@ -9,12 +9,12 @@ const HTTP_201_STATUS = 201;
 const HTTP_400_STATUS = 400;
 const HTTP_401_STATUS = 401;
 const HTTP_404_STATUS = 404;
-const VALID_EMAIL = /^[\w]+@([\w]+\.)+[\w]{2,4}$/gi;
+const REGEX_EMAIL = /^[\w]+@([\w]+\.)+[\w]{2,4}$/gi;
 const VALID_DATA = /\d{2}\/\d{2}\/\d{4}/g;
 const NOT_REGISTERED = { message: 'Pessoa palestrante não encontrada' };
-const REQUIRED_EMAIL = { message: 'O campo "email" é obrigatório' };
+const EMAIL_IS_REQUIRED = { message: 'O campo "email" é obrigatório' };
 const INVALID_EMAIL = { message: 'O "email" deve ter o formato "email@email.com"' };
-const REQUIRED_PASSWORD = { message: 'O campo "password" é obrigatório' };
+const PASSWORD_IS_REQUIRED = { message: 'O campo "password" é obrigatório' };
 const INVALID_PASSWORD = { message: 'O "password" deve ter pelo menos 6 caracteres' };
 const NOT_FOUND_TOKEN = { message: 'Token não encontrado' };
 const INVALID_TOKEN = { message: 'Token inválido' };
@@ -62,24 +62,24 @@ app.get('/talker/:id', async (request, response) => {
 });
 
 // Requisito 03
-const isValidEmail = (request, response, next) => {
-  const { email } = request.body;
-  if (!email || email.length === 0) {
-    return response.status(HTTP_400_STATUS).json(REQUIRED_EMAIL);
+const isValidPassword = (request, response, next) => {
+  const { password } = request.body;
+  if (!password) {
+    return response.status(HTTP_400_STATUS).json(PASSWORD_IS_REQUIRED);
   }
-  if (!VALID_EMAIL.test(email)) {
-    return response.status(HTTP_400_STATUS).json(INVALID_EMAIL);
+  if (password.length < 6) {
+    return response.status(HTTP_400_STATUS).json(INVALID_PASSWORD);
   }
   next();
 };
 
-const isValidPassword = (request, response, next) => {
-  const { password } = request.body;
-  if (!password || password.length === 0) {
-    return response.status(HTTP_400_STATUS).json(REQUIRED_PASSWORD);
+const isValidEmail = (request, response, next) => {
+  const { email } = request.body;
+  if (!email) {
+    return response.status(HTTP_400_STATUS).json(EMAIL_IS_REQUIRED);
   }
-  if (password.length < 6) {
-    return response.status(HTTP_400_STATUS).json(INVALID_PASSWORD);
+  if (!REGEX_EMAIL.test(email)) {
+    return response.status(HTTP_400_STATUS).json(INVALID_EMAIL);
   }
   next();
 };
