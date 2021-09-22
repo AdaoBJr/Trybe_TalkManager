@@ -51,8 +51,7 @@ const isValidAge = (request, response, next) => {
 
 const isValidTalk = (request, response, next) => {
   const { talk } = request.body;
-  const { watchedAt, rate } = talk;
-  if (!talk || !watchedAt || (!rate && rate !== 0)) {
+  if (!talk || !talk.watchedAt || (!talk.rate && talk.rate !== 0)) {
     return response.status(HTTP_400_STATUS).json(INVALID_TALK);
   }
   next();
