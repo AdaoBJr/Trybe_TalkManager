@@ -126,7 +126,7 @@ const isValidAge = (request, response, next) => {
 const isValidTalk = (request, response, next) => {
   const { talk } = request.body;
   const { watchedAt, rate } = talk;
-  if (!talk || !watchedAt || !rate) {
+  if (!talk || !watchedAt || (!rate && rate !== 0)) {
     return response.status(HTTP_400_STATUS).json(INVALID_TALK);
   }
   next();
@@ -180,6 +180,27 @@ const editTalker = async (request, response, _next) => {
   return response.status(HTTP_OK_STATUS).json(editTalker);
 };
 
+const deleteTalker = async (_request, response) => {
+  const id = Number(req.params.id);
+  const talkers = await readFileTalker();
+  const talker = talkers.filter((filtertalker) => filtertalker.id !== Number(id));
+  await fs.writeFile('talker.json', JSON.stringify(talker));
+  response.status(HTTP_OK_STATUS).json(DELETE_OK);
+};
+
+const searchTalker = async (request, response) => {
+  const { q } = request.query;
+  const talkers = readFileTalker();
+  if (!q) {
+    return response.status(HTTP_OK_STATUS).json(talkers);
+  }
+  const talker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
+  if (talker) {
+    return response.status(HTTP_OK_STATUS).json(talker);
+  }
+  return response.status(HTTP_OK_STATUS).json([]);
+};
+
 // Requisito 01
 app.get('/talker', getAllTalkers);
 
@@ -214,24 +235,7 @@ app.put(
 );
 
 // Requisito 06
-app.delete('/talker/:id', isValidToken, async (request, response) => {
-  const { id } = request.params;
-  const talkers = await getAllTalkers();
-  const talker = talkers.filter((filtertalker) => filtertalker.id !== Number(id));
-  await fs.writeFile('talker.json', JSON.stringify(talker));
-  response.status(HTTP_OK_STATUS).json(DELETE_OK);
-});
+app.delete('/talker/:id', isValidToken, deleteTalker);
 
 // Requisito 07
-app.get('/talker/search', isValidToken, async (request, response) => {
-  const { q } = request.query;
-  const talkers = getAllTalkers();
-  if (!q) {
-    return response.status(HTTP_OK_STATUS).json(talkers);
-  }
-  const talker = talkers.filter(({ name }) => name.toLowerCase().includes(q.toLowerCase()));
-  if (talker) {
-    return response.status(HTTP_OK_STATUS).json(talker);
-  }
-  response.status(HTTP_OK_STATUS).json([]);
-});
+app.get('/talker/search', isValidToken, searchTalker);
