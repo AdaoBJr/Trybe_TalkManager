@@ -159,8 +159,24 @@ app.post(
 });
 
 // Requisito 05
-app.put('/talker/:id', isValidToken, isValidName, isValidAge, isValidTalk, async (request, response, _next) => {
-  const { id } = req.params;
-  const talkers = await getAllTalkers();
-
+app.put(
+  '/talker',
+  isValidToken,
+  isValidName,
+  isValidAge,
+  isValidTalk,
+  async (request, response, _next) => {
+    const { name, age, talk } = request.body;
+    const { id } = request.params;
+    const talker = await getAllTalkers();
+    const editTalker = {
+      name,
+      age,
+      id: Number(id),
+      talk: { ...talk },
+    };
+    const getTalker = talker.filter((talker) => talker.id !== id);
+    getTalker.push(editTalker);
+    await fs.writeFile('./talker.json', JSON.stringify(getTalker));
+    response.status(HTTP_OK_STATUS).json(editTalker);
 });
