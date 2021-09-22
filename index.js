@@ -1,30 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-
-const {
-  getAllTalkers,
-  getTalkerById,
-  login,
-  createTalker,
-  editTalker,
-  deleteTalker,
-  searchTalker,
-} = require('./middlewares');
-
-const {
-  readFileTalker,
-  isValidPassword,
-  isValidEmail,
-  isValidToken,
-  isValidName,
-  isValidAge,
-  isValidTalk,
-  isValidWatchedAt,
-  isValidRate,
-} = require('./helpers');
-
 const app = express();
 app.use(bodyParser.json());
+
+const getAllTalkers = require('./middlewares/getAllTalkers');
+const getTalkerById = require('./middlewares/getTalkerById');
+const login = require('./middlewares/login');
+const createTalker = require('./middlewares/createTalker');
+const editTalker = require('./middlewares/editTalker');
+const deleteTalker = require('./middlewares/deleteTalker');
+const searchTalker = require('./middlewares/searchTalker');
 
 const HTTP_OK_STATUS = 200;
 const PORT = '3000';
@@ -45,34 +30,34 @@ app.get('/talker', getAllTalkers);
 app.get('/talker/:id', getTalkerById);
 
 // Requisito 03
-app.post('/login', isValidPassword, isValidEmail, login);
+app.post('/login', login);
 
 // Requisito 04
 app.post(
   '/talker',
-  isValidToken,
-  isValidName,
-  isValidAge,
-  isValidTalk,
-  isValidWatchedAt,
-  isValidRate,
-  createTalker,
+  createTalker.isValidToken,
+  createTalker.isValidName,
+  createTalker.isValidAge,
+  createTalker.isValidTalk,
+  createTalker.isValidWatchedAt,
+  createTalker.isValidRate,
+  createTalker.createTalker,
 );
 
 // Requisito 05
 app.put(
   '/talker/:id',
-  isValidToken,
-  isValidName,
-  isValidAge,
-  isValidTalk,
-  isValidWatchedAt,
-  isValidRate,
-  editTalker,
+  editTalker.isValidToken,
+  editTalker.isValidName,
+  editTalker.isValidAge,
+  editTalker.isValidTalk,
+  editTalker.isValidWatchedAt,
+  editTalker.isValidRate,
+  editTalker.editTalker,
 );
 
 // Requisito 06
-app.delete('/talker/:id', isValidToken, deleteTalker);
+app.delete('/talker/:id', deleteTalker);
 
 // Requisito 07
-app.get('/talker/search', isValidToken, searchTalker);
+app.get('/talker/search', searchTalker);
