@@ -42,16 +42,14 @@ app.listen(PORT, () => {
 });
 
 // Início do meu código (exceto constantes)
-const getAllTalkers = async () => {
+const getAllTalkers = async (_request, response) => {
   const allTalkers = await fs.readFile('./talker.json', 'utf8');
-  return JSON.parse(allTalkers);
+  const alltalkersJSON = JSON.parse(allTalkers);
+  return response.status(HTTP_OK_STATUS).json(alltalkersJSON);
 };
 
 // Requisito 01
-app.get('/talker', async (_request, response) => {
-  const talkers = await getAllTalkers();
-  response.status(HTTP_OK_STATUS).json(talkers);
-});
+app.get('/talker', getAllTalkers);
 
 // Requisito 02
 app.get('/talker/:id', async (request, response) => {
