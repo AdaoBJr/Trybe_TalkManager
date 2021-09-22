@@ -8,7 +8,14 @@
     "restore": "cp tests/seed.json talker.json",
     "start": "node index.js",
     "lint": "eslint --no-inline-config --no-error-on-unmatched-pattern -c .eslintrc.json .",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test01": "jest --runInBand getTalkerById.test.js",
+    "test02": "jest --runInBand getTalkerById.test.js",
+    "test03": "jest --runInBand login.test.js",
+    "test04": "jest --runInBand createTalker.test.js",
+    "test05": "jest --runInBand editTalker.test.js",
+    "test06": "jest --runInBand deleteTalker.test.js",
+    "test07": "jest --runInBand searchTalker.test.js"
   },
   "keywords": [],
   "author": "",
