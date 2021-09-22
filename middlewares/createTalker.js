@@ -1,8 +1,8 @@
 const fs = require('fs').promises;
-const { readFileTalker } = require('../helpers');
+
 const HTTP_201_STATUS = 201;
-const HTTP_401_STATUS = 401;
 const HTTP_400_STATUS = 400;
+const HTTP_401_STATUS = 401;
 const REGEX_DATE = /\d{2}\/\d{2}\/\d{4}/g;
 const NOT_FOUND_TOKEN = { message: 'Token não encontrado' };
 const INVALID_TOKEN = { message: 'Token inválido' };
@@ -78,7 +78,7 @@ const isValidRate = (request, response, next) => {
 
 const createTalker = async (request, response, _next) => {
   const { name, age, talk } = request.body;
-  const talker = await readFileTalker();
+  const talker = JSON.parse(await fs.readFile('talker.json', 'utf-8'));
   const newTalker = {
     name,
     age,
@@ -86,7 +86,7 @@ const createTalker = async (request, response, _next) => {
     talk: { ...talk },
   };
   talker.push(newTalker);
-  await fs.writeFile('./talker.json', JSON.stringify(talker));
+  await fs.writeFile('talker.json', JSON.stringify(talker));
   return response.status(HTTP_201_STATUS).json(newTalker);
 };
 
