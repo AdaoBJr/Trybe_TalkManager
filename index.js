@@ -1,13 +1,14 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const { randomBytes } = require('crypto');
-const { talkersAll, talker, postTalker } = require('./data.js');
+const { talkersAll, talker, postTalker, deleteTalker } = require('./data.js');
 const {
   emailValid,
   passwordValid, 
   tokenValid, 
   nameValid, ageValid, talkValid, watchedAtValid, rateValid } = require('./middleware.js');
-
+  
+// const talkerRouter = express.Router();
 const app = express();
 app.use(bodyParser.json());
 
@@ -52,6 +53,16 @@ app.post('/login', emailValid, passwordValid, async (request, response) => {
   const token = randomBytes(8).toString('hex');
   response.status(HTTP_OK_STATUS).json({ token });
 });
+
+app.delete(
+  '/:id',
+  tokenValid,
+  async (request, response) => {
+    const { id } = request.params;
+    await deleteTalker(id);
+    response.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
+  },
+);
 
 app.listen(PORT, () => {
   console.log('Online');

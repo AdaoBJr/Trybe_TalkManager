@@ -24,4 +24,12 @@ const postTalker = async (newTalker) => {
   return talk;
 };
 
-module.exports = { talkersAll, talker, postTalker };
+const deleteTalker = async (id) => {
+  const talkerFile = './talker.json';
+  const talkers = await talkersAll();
+  const indexTalker = talkers.findIndex((ITEM) => ITEM.id === Number(id));
+  talkers.splice(indexTalker, 1);
+  await fs.writeFile(talkerFile, JSON.stringify(talkers));
+};
+
+module.exports = { talkersAll, talker, postTalker, deleteTalker };
