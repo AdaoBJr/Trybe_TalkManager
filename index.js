@@ -2,6 +2,16 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs').promises;
 const crypto = require('crypto');
+const middlewares = require('./middlewares');
+const {
+  getAllTalkers,
+  getTalkerById,
+  login,
+  createTalker,
+  editTalker,
+  deleteTalker,
+  searchTalker,
+} = middlewares;
 
 const PORT = '3000';
 const HTTP_OK_STATUS = 200;
