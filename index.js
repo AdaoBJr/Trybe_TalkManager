@@ -84,6 +84,34 @@ app.post('/talker',
     return res.status(201).json(insertNew);
 });
 
+app.put('/talker/:id',
+  validateToken,
+  validateName,
+  validateAge,
+  validateTalk,
+  validateWatchedAt,
+  validateRate,
+  async (req, res) => {
+    const { id } = req.params;
+    const { name, age, talk: { watchedAt, rate } } = req.body;
+    const readTalkers = await fsPromise.readFile(talkers, 'utf-8');
+    const content = JSON.parse(readTalkers);
+    const searchTalker = content.find((t) => t.id === Number(id));
+    const searchIndex = content.findIndex((i) => i.id === Number(id));
+
+    content[searchIndex] = {
+      id: searchTalker.id,
+      name,
+      age,
+      talk: { watchedAt, rate },
+    };
+    
+    const updateContent = content[searchIndex];
+    const completeContent = JSON.stringify(content);
+    await fsPromise.writeFile(talkers, completeContent);
+    return res.status(HTTP_OK_STATUS).json(updateContent);
+});
+
 app.listen(PORT, () => {
   console.log('Online');
 });
