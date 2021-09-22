@@ -1,12 +1,12 @@
 const fs = require('fs').promises;
 
-async function read(path) {
+async function readFile(path) {
   try {
-      const file = await fs.read(path, 'utf-8');
+      const file = await fs.readFile(path, 'utf8');
       return JSON.parse(file);
   } catch (error) { 
     console.log(error);
   }
 }
 
-module.exports = read;
+module.exports = readFile;
