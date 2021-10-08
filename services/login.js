@@ -63,7 +63,7 @@ function signupInfo(email, password) {
   return newUser;
 }
 
-function verifyToken(_database, targetToken) {
+function verifyToken(targetToken) {
   const { emptyToken, invalidToken } = MessagesError;
 
   const MIN_TOKEN_LENGTH = 16;
