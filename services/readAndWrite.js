@@ -1,7 +1,10 @@
+// Importação do FS
 const { readFile, writeFile } = require('fs').promises;
 
+// encoding do arquivo a ser escrito
 const ENCODING = 'utf8';
 
+// Função para ler arquivos
 async function handleFileReading(filePath, encoding = ENCODING) {
   try {
     const fileContent = await readFile(filePath, encoding);
@@ -13,6 +16,7 @@ async function handleFileReading(filePath, encoding = ENCODING) {
   }
 }
 
+// Função para escrever em arquivos
 async function handleFileWriting(filePath, newContent, encoding = ENCODING) {
   try {
     const stringifyContent = JSON.stringify(newContent);
@@ -23,4 +27,5 @@ async function handleFileWriting(filePath, newContent, encoding = ENCODING) {
   }
 }
 
+// Exportação das funções
 module.exports = { handleFileReading, handleFileWriting };
