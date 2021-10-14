@@ -13,7 +13,7 @@ function searchById(database, targetId) {
 function searchByName(database, targetName) {
   // Formata a palavra passada para string em minúsculo
   const formatString = String(targetName).toLowerCase();
-  // Filtra os palestrantes de acordo com a correspndência de nome
+  // Filtra os palestrantes de acordo com a correspondência de nome
   const filteredResults = database.filter(({ name }) => name.toLowerCase().includes(formatString));
 
   // Retorna o resultado da busca
