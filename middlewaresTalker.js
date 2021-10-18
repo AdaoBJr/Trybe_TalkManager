@@ -142,6 +142,14 @@ const deleteTalker = async (req, res) => {
   res.status(200).json({ message: 'Pessoa palestrante deletada com sucesso' });
 };
 
+const searchQueryTalker = async (req, res) => {
+  const { q } = req.query;
+  const content = await fs.readFile(talkerJSON, 'utf-8');
+  const contentInJSON = JSON.parse(content);
+  const filteredTalkers = contentInJSON.filter((eachTalker) => eachTalker.name.includes(q));
+  res.status(200).json(filteredTalkers);
+};
+
 module.exports = {
  readFile,
  readFileId,
@@ -153,4 +161,5 @@ module.exports = {
  readAndWrite,
  attTalker,
  deleteTalker,
+ searchQueryTalker,
 };
