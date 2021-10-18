@@ -1,7 +1,5 @@
 const express = require('express');
-const { tokenMiddleware } = require('./middlewaresLogin');
-const { validateEmail } = require('./middlewaresLogin');
-const { validatePassword } = require('./middlewaresLogin');
+const { tokenMiddleware, validateEmail, validatePassword } = require('./middlewaresLogin');
 
 const router = express.Router();
 
